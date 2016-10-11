@@ -1,0 +1,793 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>如何设计搭建一个社工库 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="http://le4f.net/post/post/build-social-engineer-evildata-search-engine
+如何设计搭建一个社工库从初起设计一个社工库，到现在的Beta，前前后后零零整整花了不下一个月的时间，林林总总记录下来，留给需要之人
+泄露数据库格式不一，长相奇">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="如何设计搭建一个社工库"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/记录/">记录</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>如何设计搭建一个社工库</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2016-03-21T13:16:28.000Z"><a href="/2016-03-21-e5-a6-82-e4-bd-95-e8-ae-be-e8-ae-a1-e6-90-ad-e5-bb-ba-e4-b8-80-e4-b8-aa-e7-a4-be-e5-b7-a5-e5-ba-93.html">2016-03-21</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#如何设计搭建一个社工库"><span class="section table-of-contents-text">如何设计搭建一个社工库</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#整体架构"><span class="section table-of-contents-text">整体架构</span></a></li><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#整理数据"><span class="section table-of-contents-text">整理数据</span></a></li><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#几个Tips"><span class="section table-of-contents-text">几个Tips</span></a></li></ol></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p><a href="http://le4f.net/post/post/build-social-engineer-evildata-search-engine" target="_blank" rel="external">http://le4f.net/post/post/build-social-engineer-evildata-search-engine</a></p>
+<h4 id="如何设计搭建一个社工库"><a href="#如何设计搭建一个社工库" class="headerlink" title="如何设计搭建一个社工库"></a>如何设计搭建一个社工库</h4><p>从初起设计一个社工库，到现在的Beta，前前后后零零整整花了不下一个月的时间，林林总总记录下来，留给需要之人</p>
+<p>泄露数据库格式不一，长相奇葩，因需将用户名、密码、邮箱、哈希等信息按表分列入库，故整理数据是很耗时间的一步</p>
+<h5 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h5><p>选择了Debian x64+Mysql+Mysqlcft+Sphinx+Nginx+PHP</p>
+<p>轻量的sqlite数据库，但查询速度及空间消耗过大，对请求时sqlite处理效率较差</p>
+<p>mangodb，但mangodb在分布计算中有更好的优势而在社工库搭建中优势并不明显</p>
+<p>在mysql和postgresql中，选择历久弥新的mysql</p>
+<p>为方便社工库移植，使用VM建一个虚拟机，所有数据库均在虚拟机中，LNMP环境对外只提供PHP查询接口</p>
+<p>实际测试中，CentOS6.4虚拟机中因断电损失过多数据，并不如预想中稳定，且对CoreSeek版本较老的mmseg中文分词编译会出现各种各样的问题，难以解决。32位的操作系统在sphinx单个索引大小上会有限制，几次折腾后还是迁回了Debian7 X64</p>
+<h5 id="整理数据"><a href="#整理数据" class="headerlink" title="整理数据"></a>整理数据</h5><p>一般使用bash脚本完成。DEMO：</p>
+<p>普通格式：</p>
+<pre><code>#!/bin/bash
+sed &apos;/^[ \t]\{0,\}$/d&apos; $1  sed &apos;s/[\t ]/\t/g&apos;  sed &apos;s/\r//g&apos; sed &apos;/^\s*$/d&apos;  awk -F&quot;\t&quot; &apos;{print &quot;NULL&quot;$1&quot;&quot;$2&quot;&quot;$1&quot;xxxx&quot; }&apos;  iconv -c -f gb18030 -t UTF-8  sort  uniq 
+he`&lt;/pre&gt;
+UCmember格式：
+&lt;pre&gt;`#!/bin/bash
+sed &apos;s/[\r\n ]//g&apos; $1  tr -d &apos;\n&apos;  sed &quot;s/INSERTINTO\`bbs\_uc\_members\`VALUES(//g&quot;  sed &quot;s/&apos;,&apos;/\t/g&quot;  sed &quot;s/,&apos;/\t/g&quot;  sed &quot;s/&apos;,/\t/g&quot; sed &quot;s/&apos;);/\n/g&quot;  awk -F&quot;\t&quot; &apos;{ print &quot;NULL&quot;$2&quot;&quot;$3&quot;&quot;$9&quot;&quot;$4&quot;&quot;$7&quot;xxxx+xxxx+evil++&quot;}&apos;  sed &quot;/+evil++/d&quot;`&lt;/pre&gt;
+PW_MEMBER格式：
+&lt;pre&gt;`#!/bin/bash
+sed &apos;s/[\r\n ]//g&apos; $1  tr -d &apos;\n&apos;  sed &quot;s/INSERTINTO\`pw_members\`VALUES(&apos;/\n/g&quot;  sed &quot;s/&apos;,&apos;/\t/g&quot;  awk -F&quot;\t&quot; &apos;{ print $1&quot;&quot;$2&quot;&quot;$3&quot;&quot;$5&quot;xxxx&quot;}&apos;  sed &quot;/+evil++/d&quot;`&lt;/pre&gt;
+文件内格式不同的处理脚本eg：
+&lt;pre&gt;`#!/bin/bash
+sed &apos;s/\r//g&apos; $1  sed &quot;s/&apos;/[fenhao]/g&quot;  sed &apos;s/[ \t]\{1,\}/\t/g&apos;  sed &apos;s/-/\t/g&apos;  awk -F &quot;\t&quot; &apos;{ if ($2~/@163.com/)
+{
+if ($3~/^$/) {print &quot;NULL&quot;$1&quot;&quot;$2$3&quot;&quot;}
+else {print &quot;NULL&quot;$1&quot;&quot;$3&quot;&quot;}
+}
+else
+{print &quot;NULL&quot;$1&quot;&quot;$2&quot;&quot;}
+}&apos;  iconv -c -f gb18030 -t UTF-8  sort  uniq`&lt;/pre&gt;
+批量按行导入：
+&lt;pre&gt;`#!/bin/bash
+sed &apos;/^[ \t]\{0,\}$/d&apos; $1  sed &apos;s/\r//g&apos;  sed &apos;/^\s*$/d&apos;  awk &apos;{print &quot;NULL&quot;$0&quot;xxxx&quot; }&apos;`&lt;/pre&gt;
+对于数据库设计也尤为重要。测试后、按表存储、单表记录数不超过3W，否则建全文索引时间过长。
+
+##### 库表设计
+
+&lt;pre&gt;`CREATE TABLE `evil_xxxx_1` (
+`id` INT( 10 ) NOT NULL AUTO_INCREMENT,
+`username` VARCHAR( 64 ) ,
+`password` VARCHAR( 64 ) ,
+`passhash` VARCHAR( 64 ) ,
+`email` VARCHAR( 64 )
+);
+
+CREATE TABLE `evil_ucmember_1` (
+`id` INT( 10 ) NOT NULL AUTO_INCREMENT,
+`username` VARCHAR( 64 ) ,
+`password` VARCHAR( 64 ) ,
+`passhash` VARCHAR( 64 ) ,
+`salt` VARCHAR( 16 ) ,
+`email` VARCHAR( 64 ) ,
+`ip` VARCHAR( 32 ) ,
+`site` VARCHAR( 64 ) ,
+PRIMARY KEY (id)
+);
+
+CREATE TABLE `evil_multinfo_1` (
+`id` INT( 10 ) NOT NULL AUTO_INCREMENT,
+`info` VARCHAR( 1024 ) ,
+`site` VARCHAR( 64 ) ,
+PRIMARY KEY (id)
+);`&lt;/pre&gt;
+分表的一个方案：
+&lt;pre&gt;`INSERT INTO evil_xx_1(evil_xx.id,evil_xx.username,evil_xx.password,evil_xx.passhash) SELECT (evil_xx.id,evil_xx.username,evil_xx.password,evil_xx.passhash)FROM evil_xx where user.id &amp;lt;= 30;`&lt;/pre&gt;
+
+##### 命令查询
+
+&lt;pre&gt;`show table status;//查看数据库状态
+desc table; //查看表结构
+set names &apos;utf8&apos;;//设置编码，数据表统一编码UTF-8
+drop index index_name on table_name; //删除索引
+alter table table_name add primary key(id);//添加主键
+alter table table_name drop PRIMARY KEY;//去掉主键
+truncate table table_name;//清空表中数据
+alter table 表名 rename to 新表名;//重命名表
+alter table table_name change Name Name varchar(16);//重命名列及格式
+alter table table_name add column xxxx varchar(64) after aaaa;//添加列
+alter table 表名 drop column 列名;//删除列
+set @t=0;
+update table_name set id=(@t:=@t+1);//重建ID`&lt;/pre&gt;
+
+##### 导入数据
+
+&lt;pre&gt;`load data infile &apos;/tmp/xxxx.sql&apos; 
+into table `evil_xxxx` 
+fields terminated by &apos;&apos;
+lines terminated by &apos;\n&apos;;`&lt;/pre&gt;
+速度相对较快
+
+##### 关于索引
+
+中文全文索引主要依赖mysqlctf和sphinx，测试发现，sphinx对于分词索引速度较快，但分词的原因导致诸如搜索humor却搜索不到humorous的情况，而mysqlctf索引速度相对较慢且无进度信息，但索引大小可控，一般全文索引1G数据库信息对应MYI大小为5-9G
+
+关于Coreseek的编译使用，官方有较多文档
+
+Sphinx配置文件（全文检索包括分词及最小分词5字母）
+&lt;pre&gt;`source evil_xxx
+{
+  type              = mysql
+  sql_host          = localhost
+  sql_user          = ooo
+  sql_pass          = xxx
+  sql_db            = db
+  sql_port          = 3306
+  sql_query_pre     = SET NAMES utf8
+  sql_query         = SELECT id,username,password,passhash,email FROM xxxx
+  sql_query_info    = SELECT * FROM xxxx WHERE id=$id
+}
+
+index evil_xxx
+{
+  source            = evil_xxx
+  path              = /usr/local/coreseek/var/data/evil_xxx
+  docinfo           = extern
+  mlock             = 0
+  morphology        = none
+  min_word_len      = 1
+  html_strip        = 0
+  charset_dictpath  = /usr/local/mmseg3/etc/
+  charset_type      = zh_cn.utf-8
+  ngram_len         = 0
+  min_infix_len     = 5
+  enable_star       = 1//允许模糊搜索
+}`&lt;/pre&gt;
+检索时调用官方API即可
+
+关于MYSQLCFT建立索引的方法
+
+首先是安装插件
+&lt;pre&gt;`wget http://mysqlcft.googlecode.com/files/mysqlcft-1.0.0-x86_64-bin.tar.gz
+tar zxvf mysqlcft-1.0.0-x86_64-bin.tar.gz
+mkdir -p /usr/local/mysqlcft/lib/mysql/plugin/
+cp mysqlcft.so /usr/local/mysqlcft/lib/mysql/plugin/`&lt;/pre&gt;
+登陆mysql后
+&lt;pre&gt;`INSTALL PLUGIN mysqlcft SONAME &apos;mysqlcft.so&apos;;
+SHOW PLUGINS;`&lt;/pre&gt;
+安装OK后建立索引
+&lt;pre&gt;`ALTER IGNORE TABLE 数据库名.表名 ADD FULLTEXT INDEX 全文联合索引名 (字段名1,字段名2) WITH PARSER mysqlcft;`&lt;/pre&gt;
+如
+&lt;pre&gt;`ALTER IGNORE TABLE db.evil_xxxx ADD FULLTEXT INDEX fullindex(username，password,passhash,email) WITH PARSER mysqlcft;`&lt;/pre&gt;
+在搜索时
+&lt;pre&gt;`SELECT * FROM evil_xxxx WHERE MATCH(username,password,passhash,email) AGAINST (&apos;searchinfo&apos; IN BOOLEAN MODE);`&lt;/pre&gt;
+重建索引
+&lt;pre&gt;`REPAIR TABLE 数据库名.表名 QUICK;
+</code></pre><h5 id="几个Tips"><a href="#几个Tips" class="headerlink" title="几个Tips"></a>几个Tips</h5><ul>
+<li>增加来源数据库/网站字段，方便针对查询</li>
+<li>同库分隔符格式不同，正则替换</li>
+<li>数据库引擎选择myisam（而不是INNODB），可使用alter转换</li>
+<li>入库分隔符为避免与密码字符重合，可使用类似==aaaa==等分隔符替换入库</li>
+<li>数据库中有的邮箱在前密码在后，有的密码在前，邮箱在后，使用awk多写几行分支语句</li>
+<li>配置my.cnf文件使得mysql数据处理效率最大化<br>From Le4F’Blog</li>
+</ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2016-03-21-e5-a6-82-e4-bd-95-e8-ae-be-e8-ae-a1-e6-90-ad-e5-bb-ba-e4-b8-80-e4-b8-aa-e7-a4-be-e5-b7-a5-e5-ba-93.html" data-title="如何设计搭建一个社工库" data-url="http://www.linux52.com/2016-03-21-e5-a6-82-e4-bd-95-e8-ae-be-e8-ae-a1-e6-90-ad-e5-bb-ba-e4-b8-80-e4-b8-aa-e7-a4-be-e5-b7-a5-e5-ba-93.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

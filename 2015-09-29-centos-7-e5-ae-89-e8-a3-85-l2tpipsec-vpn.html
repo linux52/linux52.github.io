@@ -1,0 +1,859 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>Centos 7 安装 l2tp/ipsec vpn | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="1.安装 l2tp ipsec 所需要的软件包
+yum install epel-release
+yum install openswan xl2tpd ppp lsof
+
+2.设置ipsec
+2.1 编辑 /etc/ipsec.conf
+vi /etc/ipsec.conf
+把下面xx.xxx.x">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="Centos 7 安装 l2tp/ipsec vpn"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/便宜vps/">便宜vps</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>Centos 7 安装 l2tp/ipsec vpn</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-09-29T14:20:51.000Z"><a href="/2015-09-29-centos-7-e5-ae-89-e8-a3-85-l2tpipsec-vpn.html">2015-09-29</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#1-安装-l2tp-ipsec-所需要的软件包"><span class="section table-of-contents-text">1.安装 l2tp ipsec 所需要的软件包</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#2-设置ipsec"><span class="section table-of-contents-text">2.设置ipsec</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-1-编辑-etc-ipsec-conf"><span class="section table-of-contents-text">2.1 编辑 /etc/ipsec.conf</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-2-编辑-etc-ipsec-secrets"><span class="section table-of-contents-text">2.2 编辑/etc/ipsec.secrets</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-3-修改-添加-etc-sysctl-conf"><span class="section table-of-contents-text">2.3 修改/添加 /etc/sysctl.conf</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-4-让修改后的sysctl-conf生效"><span class="section table-of-contents-text">2.4 让修改后的sysctl.conf生效</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#sysctl-p"><span class="section table-of-contents-text">sysctl -p</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-5-验证ipsec运行状态"><span class="section table-of-contents-text">2.5 验证ipsec运行状态</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#3-设置-l2tp"><span class="section table-of-contents-text">3. 设置 l2tp</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#3-1-编辑-etc-xl2tpd-xl2tpd-conf"><span class="section table-of-contents-text">3.1 编辑 /etc/xl2tpd/xl2tpd.conf</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#3-2-编辑-etc-ppp-options-xl2tpd"><span class="section table-of-contents-text">3.2 编辑 /etc/ppp/options.xl2tpd</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#3-3-配置用户名-密码-编辑-etc-ppp-chap-secrets"><span class="section table-of-contents-text">3.3 配置用户名,密码:编辑 /etc/ppp/chap-secrets</span></a></li></ol></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#Secrets-for-authentication-using-CHAP"><span class="section table-of-contents-text">Secrets for authentication using CHAP</span></a></li><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#client-server-secret-IP-addresses"><span class="section table-of-contents-text">client        server  secret                  IP addresses</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#3-4-启动xl2tp"><span class="section table-of-contents-text">3.4 启动xl2tp</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#4-开放端口以及转发"><span class="section table-of-contents-text">4. 开放端口以及转发</span></a></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <h2 id="1-安装-l2tp-ipsec-所需要的软件包"><a href="#1-安装-l2tp-ipsec-所需要的软件包" class="headerlink" title="1.安装 l2tp ipsec 所需要的软件包"></a>1.安装 l2tp ipsec 所需要的软件包</h2><blockquote>
+<p>yum install epel-release</p>
+<p>yum install openswan xl2tpd ppp lsof</p>
+</blockquote>
+<h2 id="2-设置ipsec"><a href="#2-设置ipsec" class="headerlink" title="2.设置ipsec"></a>2.设置ipsec</h2><blockquote>
+<h3 id="2-1-编辑-etc-ipsec-conf"><a href="#2-1-编辑-etc-ipsec-conf" class="headerlink" title="2.1 编辑 /etc/ipsec.conf"></a>2.1 编辑 /etc/ipsec.conf</h3><blockquote>
+<p>vi /etc/ipsec.conf</p>
+<p>把下面xx.xxx.xxx.xxx换成你自己主机实际的外网固定IP。其他的不动。</p>
+<p>&nbsp;</p>
+<p>config setup</p>
+<p>protostack=netkey</p>
+<p>dumpdir=/var/run/pluto/</p>
+<p>nat_traversal=yes</p>
+<p>virtual_private=%v4:10.0.0.0/8,%v4:192.168.0.0/16,%v4:172.16.0.0/12,%v4:25.0.0.0/8,%v4:100.64.0.0/10,%v6:fd00::/8,%v6:fe80::/10</p>
+<p>conn L2TP-PSK-NAT</p>
+<p>rightsubnet=vhost:%priv</p>
+<p>also=L2TP-PSK-noNAT</p>
+<p>conn L2TP-PSK-noNAT</p>
+<p>authby=secret</p>
+<p>pfs=no</p>
+<p>auto=add</p>
+<p>keyingtries=3</p>
+<p>dpddelay=30</p>
+<p>dpdtimeout=120</p>
+<p>dpdaction=clear</p>
+<p>rekey=no</p>
+<p>ikelifetime=8h</p>
+<p>keylife=1h</p>
+<p>type=transport</p>
+<p>left=xxx.xxx.xxx.xxx</p>
+<p>leftprotoport=17/1701</p>
+<p>right=%any</p>
+<p>rightprotoport=17/%any</p>
+</blockquote>
+<h3 id="2-2-编辑-etc-ipsec-secrets"><a href="#2-2-编辑-etc-ipsec-secrets" class="headerlink" title="2.2 编辑/etc/ipsec.secrets"></a>2.2 编辑/etc/ipsec.secrets</h3><blockquote>
+<p>vi /etc/ipsec.secrets</p>
+<p>include /etc/ipsec.d/*.secrets</p>
+<p>/etc/ipsec.secrets 文件里面默认有一句包含 /etc/ipsec.d/<em>.secrets 的语句.所以可以直接在 /etc/ipsec.d 目录下新建一自己的个 </em>.secrets 文件.也可以直接把它注释掉,添加下面的配置语句.</p>
+<p>vi /etc/ipsec.d/my.secrets</p>
+<p>&nbsp;</p>
+<pre>xxx.xxx.xxx.xxx %any: PSK "kuaile"</pre>
+
+<p>&nbsp;</p>
+<p>xx.xxx.xxx.xxx换成你自己VPS实际的外网固定IP, YourPsk你自己定一个，到时候连VPN的时候用，比如可以填csdn.net, 注意空格。</p>
+</blockquote>
+<h3 id="2-3-修改-添加-etc-sysctl-conf"><a href="#2-3-修改-添加-etc-sysctl-conf" class="headerlink" title="2.3 修改/添加 /etc/sysctl.conf"></a>2.3 修改/添加 /etc/sysctl.conf</h3><blockquote>
+<p>vi /etc/sysctl.conf</p>
+<p>确保下面的字段都有，对应的值或下面一样。省事的话直接在/etc/sysctl.conf的末尾直接把下面内容的粘过去。</p>
+<p>&nbsp;</p>
+<pre>net.ipv4.ip_forward = 1</pre>
+
+<pre>net.ipv4.conf.default.accept_redirects = 0</pre>
+
+<pre>net.ipv4.conf.default.send_redirects = 0
+
+net.ipv4.conf.eth0.rp_filter = 0</pre>
+
+<pre>net.ipv4.conf.default.rp_filter = 0</pre>
+
+
+</blockquote>
+<h3 id="2-4-让修改后的sysctl-conf生效"><a href="#2-4-让修改后的sysctl-conf生效" class="headerlink" title="2.4 让修改后的sysctl.conf生效"></a>2.4 让修改后的sysctl.conf生效</h3><h3 id="sysctl-p"><a href="#sysctl-p" class="headerlink" title="sysctl -p"></a>sysctl -p</h3><h3 id="2-5-验证ipsec运行状态"><a href="#2-5-验证ipsec运行状态" class="headerlink" title="2.5 验证ipsec运行状态"></a>2.5 验证ipsec运行状态</h3><blockquote>
+<p>ipsec setup start</p>
+<p>ipsec verify</p>
+<p>verify的内容如下所示，那么就离成功不远了。没有 红色 的fail 就可以了.</p>
+<p>&nbsp;</p>
+<p>[root@Centos7 ~]# ipsec verify</p>
+<p>Verifying installed system and configuration files</p>
+<p>Version check and ipsec on-path                       [OK]</p>
+<p>Libreswan 3.8 (netkey) on 3.10.0-123.9.3.el7.x86_64</p>
+<p>Checking for IPsec support in kernel                  [OK]</p>
+<p>NETKEY: Testing XFRM related proc values</p>
+<p>ICMP default/send_redirects                  [OK]</p>
+<p>ICMP default/accept_redirects                [OK]</p>
+<p>XFRM larval drop                             [OK]</p>
+<p>Pluto ipsec.conf syntax                               [OK]</p>
+<p>Hardware random device                                [N/A]</p>
+<p>Checking rp_filter                                    [OK]</p>
+<p>Checking that pluto is running                        [OK]</p>
+<p>Pluto listening for IKE on udp 500                   [OK]</p>
+<p>Pluto listening for IKE/NAT-T on udp 4500            [OK]</p>
+<p>Pluto ipsec.secret syntax                            [OK]</p>
+<p>Checking NAT and MASQUERADEing                        [TEST INCOMPLETE]</p>
+<p>Checking ‘ip’ command                                 [OK]</p>
+<p>Checking ‘iptables’ command                           [OK]</p>
+<p>Checking ‘prelink’ command does not interfere with FIPSChecking for obsolete ipsec.conf options              [OK]</p>
+<p>Opportunistic Encryption                              [DISABLED]</p>
+<p>[root@Centos7 ~]#</p>
+</blockquote>
+</blockquote>
+<h2 id="3-设置-l2tp"><a href="#3-设置-l2tp" class="headerlink" title="3. 设置 l2tp"></a>3. 设置 l2tp</h2><blockquote>
+<h3 id="3-1-编辑-etc-xl2tpd-xl2tpd-conf"><a href="#3-1-编辑-etc-xl2tpd-xl2tpd-conf" class="headerlink" title="3.1 编辑 /etc/xl2tpd/xl2tpd.conf"></a>3.1 编辑 /etc/xl2tpd/xl2tpd.conf</h3><blockquote>
+<p>vim /etc/xl2tpd/xl2tpd.conf</p>
+<p>&nbsp;</p>
+<p>[global]</p>
+<p>ipsec saref = yes</p>
+<p>listen-addr = xxx.xxx.xxx.xxx         ;这里是你的主机外网ip地址,;号是注释,和一般的配置文件不同</p>
+<p>; Use refinfo of 22 if using an SAref kernel patch based on openswan 2.6.35 or</p>
+<p>;  when using any of the SAref kernel patches for kernels up to 2.6.35.</p>
+<p>; saref refinfo = 30</p>
+<p>;</p>
+<p>force userspace = yes</p>
+<p>;</p>
+<p>; debug tunnel = yes</p>
+<p>[lns default]</p>
+<p>ip range = 10.0.10.2-10.0.10.100      ;这里是VPN client的内网ip地址范围</p>
+<p>local ip = 10.0.10.1                  ;这里是VPN server的内网地址</p>
+<p>refuse chap = yes</p>
+<p>refuse pap = yes</p>
+<p>require authentication = yes</p>
+<p>name = LinuxVPNserver</p>
+<p>ppp debug = yes</p>
+<p>pppoptfile = /etc/ppp/options.xl2tpd</p>
+<p>length bit = yes</p>
+<p>###</p>
+</blockquote>
+<h3 id="3-2-编辑-etc-ppp-options-xl2tpd"><a href="#3-2-编辑-etc-ppp-options-xl2tpd" class="headerlink" title="3.2 编辑 /etc/ppp/options.xl2tpd"></a>3.2 编辑 /etc/ppp/options.xl2tpd</h3><blockquote>
+<p>vi /etc/ppp/options.xl2tpd</p>
+<p>&nbsp;</p>
+<p>name l2tpd</p>
+<p>require-mschap-v2</p>
+<p>ms-dns 8.8.8.8</p>
+<p>ms-dns 8.8.4.4</p>
+<p>ipcp-accept-local</p>
+<p>ipcp-accept-remote</p>
+<p>#ms-dns  8.8.8.8</p>
+<p>noccp</p>
+<p>auth</p>
+<p>crtscts</p>
+<p>idle 1800</p>
+<p>mtu 1410</p>
+<p>mru 1410</p>
+<p>nodefaultroute</p>
+<p>debug</p>
+<p>lock</p>
+<p>proxyarp</p>
+<p>connect-delay 5000</p>
+<p>&nbsp;</p>
+<h3 id="3-3-配置用户名-密码-编辑-etc-ppp-chap-secrets"><a href="#3-3-配置用户名-密码-编辑-etc-ppp-chap-secrets" class="headerlink" title="3.3 配置用户名,密码:编辑 /etc/ppp/chap-secrets"></a>3.3 配置用户名,密码:编辑 /etc/ppp/chap-secrets</h3><p>vim /etc/ppp/chap-secrets</p>
+<p>client和secret自己填，server和IP留<em>号，l2tp 可以用上面自己设定的 l2tpd .</em> 通用</p>
+<h1 id="Secrets-for-authentication-using-CHAP"><a href="#Secrets-for-authentication-using-CHAP" class="headerlink" title="Secrets for authentication using CHAP"></a>Secrets for authentication using CHAP</h1><h1 id="client-server-secret-IP-addresses"><a href="#client-server-secret-IP-addresses" class="headerlink" title="client        server  secret                  IP addresses"></a>client        server  secret                  IP addresses</h1><p>username <em> userpass </em></p>
+</blockquote>
+<h3 id="3-4-启动xl2tp"><a href="#3-4-启动xl2tp" class="headerlink" title="3.4 启动xl2tp"></a>3.4 启动xl2tp</h3><blockquote>
+<p><pre>service xl2tpd start</pre><br>&nbsp;</p>
+</blockquote>
+</blockquote>
+<h2 id="4-开放端口以及转发"><a href="#4-开放端口以及转发" class="headerlink" title="4. 开放端口以及转发"></a>4. 开放端口以及转发</h2><blockquote>
+<p>原样执行下面所有命令</p>
+<p>&nbsp;</p>
+<p>/sbin/iptables -A INPUT -p udp -m policy –dir in –pol ipsec -m udp –dport 1701 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p udp -m udp –dport 1701 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p udp -m udp –dport 500 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p udp -m udp –dport 4500 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p esp -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -m policy –dir in –pol ipsec -j ACCEPT</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>/sbin/iptables -A FORWARD -d 10.0.10.0/24 -j ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -s 10.0.10.0/24 -j ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -i ppp+ -m state –state NEW,RELATED,ESTABLISHED -j ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -m state –state RELATED,ESTABLISHED -j ACCEPT</p>
+<p>&nbsp;</p>
+<p>/sbin/iptables -t nat -A POSTROUTING -s 10.0.10.0/24 -o eth0 -j MASQUERADE</p>
+<p>&nbsp;<br>&nbsp;<br>再执行下面保存iptables</p>
+<p>service iptables save</p>
+<p>service iptables restart<br>&nbsp;<br>添加开机自启动</p>
+<p>systemd enabled ipsec</p>
+<p>systemd enabled xl2tpd<br>如果连接不上的话, 先关掉iptalbes试试 service iptables stop</p>
+</blockquote>
+<p>如果这时还连不上了，那么就是iptables的问题了</p>
+<p>特别注意iptables里的顺序， INPUT和FORWARD里的REJECT一定是写在最后面，否则写在他们之后的port就都被REJECT了！</p>
+<p>下面是我自己的iptables，可供参考</p>
+<p>##########################################################################################</p>
+<p>&nbsp;</p>
+<blockquote>
+<blockquote>
+<p>#! /bin/bash</p>
+<p>/sbin/iptables -F INPUT</p>
+<p>/sbin/iptables -Z INPUT</p>
+<p>/sbin/iptables -P INPUT ACCEPT</p>
+<p>/sbin/iptables -A INPUT -m state –state INVALID -j DROP</p>
+<p>/sbin/iptables -A INPUT -p icmp -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -i lo -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p tcp -m state –state NEW,RELATED,ESTABLISHED -m tcp –dport 22 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p tcp -m state –state NEW,RELATED,ESTABLISHED -m tcp –dport 80 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p tcp -m state –state NEW,RELATED,ESTABLISHED -m tcp –dport 1723 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p gre -m state –state NEW,RELATED,ESTABLISHED -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p udp -m policy –dir in –pol ipsec -m udp –dport 1701 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p udp -m udp –dport 1701 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p udp -m udp –dport 500 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p udp -m udp –dport 4500 -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -p esp -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -m policy –dir in –pol ipsec -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -m state –state RELATED,ESTABLISHED -j ACCEPT</p>
+<p>/sbin/iptables -A INPUT -j REJECT –reject-with icmp-host-prohibited</p>
+<p>/sbin/iptables -F FORWARD</p>
+<p>/sbin/iptables -Z FORWARD</p>
+<p>/sbin/iptables -P FORWARD ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -m state –state INVALID -j DROP</p>
+<p>#/sbin/iptables -A FORWARD -m policy –dir in –pol ipsec -j ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -d 10.0.10.0/24 -j ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -s 10.0.10.0/24 -j ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -i ppp+ -m state –state NEW,RELATED,ESTABLISHED -j ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -m state –state RELATED,ESTABLISHED -j ACCEPT</p>
+<p>/sbin/iptables -A FORWARD -j REJECT –reject-with icmp-host-prohibited</p>
+<p>/sbin/iptables -F OUTPUT</p>
+<p>/sbin/iptables -Z OUTPUT</p>
+<p>/sbin/iptables -P OUTPUT ACCEPT</p>
+<p>/sbin/iptables -A OUTPUT -m state –state INVALID -j DROP</p>
+<p>/sbin/iptables -F -t nat</p>
+<p>/sbin/iptables -Z -t nat</p>
+<p>/sbin/iptables -t nat -A POSTROUTING -s 10.0.10.0/24 -o eth0 -j MASQUERADE</p>
+</blockquote>
+</blockquote>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-09-29-centos-7-e5-ae-89-e8-a3-85-l2tpipsec-vpn.html" data-title="Centos 7 安装 l2tp/ipsec vpn" data-url="http://www.linux52.com/2015-09-29-centos-7-e5-ae-89-e8-a3-85-l2tpipsec-vpn.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

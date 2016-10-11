@@ -1,0 +1,646 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>.htaccess教程：简介、访问控制、验证、目录浏览控制 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="## 一、.htaccess简介### 1.什么是.htaccess.htaccess是一个纯文本文件，里面存放着Apache服务器配置相关的一些指令，它类似于Apache的站点配置文件，如httpd.conf（Apache2已经支持多站点，因此你的站点配置文件可能在/etc/apache2/con">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content=".htaccess教程：简介、访问控制、验证、目录浏览控制"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/apache/">apache</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>.htaccess教程：简介、访问控制、验证、目录浏览控制</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2016-08-20T04:46:36.000Z"><a href="/2016-08-20-htaccess-e6-95-99-e7-a8-8b-ef-bc-9a-e7-ae-80-e4-bb-8b-e3-80-81-e8-ae-bf-e9-97-ae-e6-8e-a7-e5-88-b6-e3-80-81-e9-aa-8c-e8-af-81-e3-80-81-e7-9b-ae-e5-bd-95-e6-b5-8f-e8-a7-88-e6-8e-a7-e5-88-b6.html">2016-08-20</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <div class="text"><br><br>## 一、.htaccess简介<br><br>### 1.什么是.htaccess<br><br>.htaccess是一个纯文本文件，里面存放着Apache服务器配置相关的一些指令，它类似于Apache的站点配置文件，如httpd.conf（Apache2已经支持多站点，因此你的站点配置文件可能在/etc/apache2/conf.d/目录下）。<br>.htaccess与httpd.conf配置文件不同的是，它<strong>只作用于当前目录</strong>。另外httpd.conf是在Apache服务启动的时候就加载的，而.htaccess<strong>只有在用户访问目录时加载</strong>，开销大、速度慢。<br>既然如此，为什么我们还要用.htaccess呢？因为它配置起来简单，它还支持重定向、URL重写以及访问验证，另外它管理起来很方便，可以很好适应网站迁移。总之，各有优缺点，主要就看你是要从全局考虑还是只配置单个目录。<br><br>### 2.AllowOverride All<br><br>通常情况下，Apache是默认启用.htaccess的，但是为了以防万一，请检查一下自己站点的配置文件，如httpd.conf，是否有这行：<br><pre>AllowOverride All<br></pre><br>这行允许重写配置文件。也就是如果能够从.htaccess加载配置文件，那么就以.htaccess为配置文件对其所在目录进行配置。<br><br>### 3.500错误<br><br>如果你租用了云服务提供商的主机或者空间，那么他们可能不会给你读写httpd.conf文件的权限，你也不可能检查<strong>AllowOverride</strong>命令参数是否为<strong>All</strong>，这时，你可以新建一个目录，在里面写一个.htaccess文件，文件中随意写入一些服务器看不懂的东西，然后访问该目录里的一个页面，耐心等待<strong>500错误</strong>的出现。<br>如果没有出现，那么.htaccess没有被启用，你需要向你的服务供应商寻求帮助；如果出现了，那么恭喜你，你可以对当前目录重写Apache配置。<br><strong>/!\注意：</strong>.htaccess语法错误可能会影响整个站点，如果你不确定这样做是否安全，请联系你的云服务供应商。<br><br>### 4.有用的文档<br><br><em>   <a href="http://lesca.me/archives/htaccess-appendix.html#htaccess_regex" target="_blank" rel="external">.htaccess正则表达式</a>
+</em>   <a href="http://lesca.me/archives/htaccess-appendix.html#redirect_codes" target="_blank" rel="external">HTTP协议重定向编码</a><br><br>## 二、.htaccess访问控制(Allow/Deny)<br><br>### 1.访问控制基础：Order命令<br><br>为了限制用户访问一些关键目录，.htaccess可以提供目录访问限制。你只需要在要限制的目录中，加入如下.htaccess文件：<br><pre># no one gets in here!<br>deny from all<br></pre><br>这会限制所有用户通过浏览器访问该目录，这太一刀切了，因此我们还可以增加一些特定的条件，如允许指定IP地址的访问：<br><pre>Order Allow,Deny<br>Deny from All<br>Allow from 192.168.0.0/24<br></pre><br><br>### Order命令<br><br>Order命令是一个难点，也是配置apache的基础，它决定了Apache处理访问规则的顺序。<br><br><em>   通过<strong>Allow,Deny</strong>参数，Apache首先找到并应用<strong>Allow</strong>命令，然后应用<strong>Deny</strong>命令，以阻止所有访问。
+</em>   通过<strong>Deny,Allow</strong>参数，Apache首先找到并应用<strong>Deny</strong>命令，然后应用<strong>Allow</strong>命令，以允许所有访问。<br>了解Order的用法后，再仔细考虑下上面的例子，你或许能够发现<strong>Deny</strong>命令是多余的，以下用法和之前的描述语义相同：<br><pre>Order Allow,Deny<br>Allow from 192.168.0/24<br></pre><br><br>### 2.利用.htaccess过滤域名或网络主机(Allow/Deny)<br><br>下例可以限制所有含有“domain.com”的网络主机访问网站：<br><pre>Order Allow,Deny<br>Allow from all<br>Deny from .<em>domain.com.</em><br></pre><br><strong>{!}Info</strong>：有关htaccess的正则表达式用法，请查阅本站《<a href="http://lesca.me/archives/htaccess-appendix.html#htaccess_regex" target="_blank" rel="external">.htaccess正则表达式</a>》一文。<br><br>### 3.利用.htaccess禁止访问指定文件(Files)<br><br>Files命令可以用于过滤指定文件：<br><pre># secure htaccess file<br>&lt;Files .htaccess&gt;<br> order allow,deny<br> deny from all<br>&lt;/Files&gt;<br></pre><br><br>### 4.利用.htaccess禁止访问指定文件类型(FilesMatch)<br><br>下面的代码将限制访问所有.log和.exe文件：<br><pre>&lt;FilesMatch “.(log|exe)$”&gt;<br> Order allow,deny<br> Deny from all<br>&lt;/FilesMatch&gt;<br></pre><br>我们还可以通过<strong>Files</strong>命令描述文件类型，但是需要在命令后面加一个波浪线(~)，该符号启用Files命令的正则表达解析功能：<br><pre>&lt;Files ~ “^.<em>.([Ll][Oo][Gg])|([eE][xX][eE])”&gt;<br> Order allow,deny<br> Deny from all<br> Satisfy All<br>&lt;/Files&gt;<br></em></pre><br>有以下几点需要读者注意：
+
+   Files之后的<strong>波浪线</strong>用于开启“正则表达式”分析。请注意，这是个过时的用法，Apache<a href="http://httpd.apache.org/docs/2.2/mod/core.html#files" target="_blank" rel="external">更推荐使用&lt;FilesMatch&gt;指令</a><sup>[3]</sup><br><em>   正则表达式必须在<strong>双引号</strong>之间，有关htaccess的正则表达式用法，请查阅本站《<a href="http://lesca.me/archives/htaccess-appendix.html#htaccess_regex" target="_blank" rel="external">.htaccess正则表达式</a>》一文。
+</em>   双引号中的“管道符”(|)用于将两种文件类型（.log和.exe）分开，相当于逻辑“或”<br><em>   Order命令必须嵌在Files节(Section)中，否则将会应用到所有文件
+</em>   <strong>Satisfy All</strong>表示必须同时满足主机级别(Allow/Denay)和用户级别(Require)的限制，All是默认值，该行可以省略。<br><br>### 5.高级访问控制(Rewrite)<br><br>我们还可以通过运用Rewrite实现更强大的访问控制，但是Rewrite不是本文讨论的内容。读者可以参看：<a href="http://lesca.me/archives/htaccess-rewrite.html#access_control" target="_blank" rel="external">利用RewriteCond和RewriteRule进行访问控制</a>一文。<br><br>## 三、利用.htaccess进行密码保护与验证<br><br>### 1.配置.htaccess<br><br><pre>AuthType Basic<br>AuthName “restricted area”<br>AuthUserFile /usr/local/var/www/html/.htpasses<br>require valid-user<br></pre><br>这个配置文件可以保护.htaccess所在的整个目录，简单说明下参数：<br><br><em>   <strong>AuthType：</strong>验证类型为基本类型，密码以<strong>明文</strong>方式传输到服务器上
+</em>   <strong>AuthName：</strong>验证提示，会出现在验证对话框中<br><em>   <strong>AuthUserFile：</strong>验证配置文件，用于匹配用户名与密码，该密码是加密保存的
+</em>   <strong>require valid-user：</strong>只有在AuthUserFile中出现的用户才可以通过验证<br>如果验证失败，则会出现<strong>401</strong>错误。<br><br>### 2.生成.htpasses文件<br><br>如何生成.htpasses文件呢？我们通过<code>htpasswd</code>命令生成密码文件：<br><pre>htpasswd -c /usr/local/var/www/html/.htpasses lesca<br></pre><br>它会提示你输入密码，并确认。之后将密码文件.htpasses保存在/usr/local/var/www/html/目录下。<br><br>### 3.对文件进行密码保护<br><br>保护与.htaccess在同一目录下的文件<strong>secure.php</strong>：<br><pre># password-protect single file<br>&lt;Files secure.php&gt;<br>AuthType Basic<br>AuthName “Prompt”<br>AuthUserFile /home/path/.htpasswd<br>Require valid-user<br>&lt;/Files&gt;<br></pre><br>保护.htaccess所在目录下的多个文件：<br><pre># password-protect multiple files<br>&lt;FilesMatch “^(execute|index|secure|insanity|biscuit)<em>$”&gt;<br>AuthType basic<br>AuthName “Development”<br>AuthUserFile /home/path/.htpasswd<br>Require valid-user<br>&lt;/FilesMatch&gt;<br></em></pre><br><br>### 4.对指定IP进行密码保护<br><br>仅允许IP地址为99.88.77.66的主机直接访问该目录，其他IP需要验证。<br><pre>AuthType Basic<br>AuthName “Personal”<br>AuthUserFile /home/path/.htpasswd<br>Require valid-user<br>Allow from 99.88.77.66<br>Satisfy Any<br></pre><br><br>### 5.安全性<br><br>出于安全考虑，将.htpasses文件存放在WEB目录树之外也许是个好方法，但是由于.htpasses是隐藏文件，而且Apache不会输出隐藏文件，因此可以满足基本的安全要求。这是通过在主配置文件中加入如下限制实现的：<br><pre>&lt;Files ~ “^.ht”&gt;<br> Order allow,deny<br> Deny from all<br> Satisfy All<br>&lt;/Files&gt;<br></pre><br>一般而言，这是默认设置，用户无需手动添加。我们唯一需要担心的是密码在网络传输过程中是<strong>明文</strong>形式，这很容易被黑客破译。Coz<sup>[1]</sup>提供了一个开源项目<a href="http://corz.org/serv/security/pajamas.php" title="php and javascript advanced md5 authentication system" target="_blank" rel="external">Pajamas</a>可以在本地利用JS对密码进行MD5加密，有兴趣的读者可以前去研究一下。<br><br>## 四、目录浏览与主页<br><br>如果你打开本站的下载页面<a href="http://download.lesca.me/" target="_blank" rel="external">http://download.lesca.me/</a>，就会发现你可以看见这个站点下的所有文件。像这样的特性也可以通.htaccess来设置用户是否有权限浏览服务器目录。<br><br>### 1.启用目录浏览<br><br><pre># enable directory browsing<br>Options All +Indexes<br></pre><br><br>### 2.禁用目录浏览<br><br><pre># disable directory browsing<br>Options All -Indexes<br></pre><br>我们还可以通过<strong>IndexIgnore</strong>指令来禁用目录浏览。<br><pre># prevent folder listing<br>IndexIgnore <br></pre><br>通过<strong>IndexIgnore</strong>指令，我们可以禁止对指定类型的文件浏览：<br><pre># prevent display of select file types<br>IndexIgnore <em>.wmv </em>.mp4 <em>.avi </em>.etc<br></pre><br><br>### 3.自定义目录浏览<br><br>如果你希望Apache在展示你的WEB目录时看起来与众不同，那么你需要启用<strong>FancyIndexing</strong>选项：<br><pre>&lt;IfModule mod_autoindex.c&gt;<br> IndexOptions FancyIndexing<br>&lt;/ifModule&gt;<br></pre><br>通过这个选项，你可以实现自定义图标、添加文件类型描述、按日期排序等。但是这些已经超过了本文的讨论范围，Lesca可以给你一个做好的<a href="http://corz.org/serv/resources/file_view.htaccess.txt?raw=true" title="file_view.htaccess" target="_blank" rel="external">例子</a>，你可以在<a href="http://corz.org/public/images/" target="_blank" rel="external">这页查看效果</a>。<br><br>### 4.配置目录主页文件<br><br>即使启用了目录浏览，Apache未必会展示该目录的内容，因为该目录可能存在像index.htm这样的默认主页文件。Apache会有限展示主页文件，我们可以通过.htaccess设置：<br><pre>DirectoryIndex index.html index.php index.htm<br></pre><br><br>### 5.配置错误页面<br><br>如果Apache遇到错误，就会输出错误页面。配置自定义的错误页面，也许可以挽留即将离开的用户。<br><pre># custom error documents<br>ErrorDocument 401 /err/401.php<br>ErrorDocument 403 /err/403.php<br>ErrorDocument 404 /err/404.php<br>ErrorDocument 500 /err/500.php<br></pre><br><br>## 五、URL重写与URL重定向<br><br>下一篇文章，我们将介绍htaccess的重头戏：<a href="http://lesca.me/archives/htaccess-rewrite.html" target="_blank" rel="external">URL重写与URL重定向</a><br><br>## References:<br><br>[1] <a href="http://corz.org/serv/tricks/htaccess.php" target="_blank" rel="external">.htaccess tips and tricks</a><br>[2] <a href="http://perishablepress.com/stupid-htaccess-tricks/" target="_blank" rel="external">Stupid htaccess Tricks</a><br>[3] <a href="http://httpd.apache.org/docs/2.2/mod/core.html#files" target="_blank" rel="external">Files Directive</a><br><br></div><br><div class="text_add"><br><br>本文出自 Lesca技术宅，转载时请注明出处及相应链接。<br><br>本文永久链接: <a href="http://lesca.me/archives/htaccess-basic.html" target="_blank" rel="external">http://lesca.me/archives/htaccess-basic.html</a><br><br></div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2016-08-20-htaccess-e6-95-99-e7-a8-8b-ef-bc-9a-e7-ae-80-e4-bb-8b-e3-80-81-e8-ae-bf-e9-97-ae-e6-8e-a7-e5-88-b6-e3-80-81-e9-aa-8c-e8-af-81-e3-80-81-e7-9b-ae-e5-bd-95-e6-b5-8f-e8-a7-88-e6-8e-a7-e5-88-b6.html" data-title=".htaccess教程：简介、访问控制、验证、目录浏览控制" data-url="http://www.linux52.com/2016-08-20-htaccess-e6-95-99-e7-a8-8b-ef-bc-9a-e7-ae-80-e4-bb-8b-e3-80-81-e8-ae-bf-e9-97-ae-e6-8e-a7-e5-88-b6-e3-80-81-e9-aa-8c-e8-af-81-e3-80-81-e7-9b-ae-e5-bd-95-e6-b5-8f-e8-a7-88-e6-8e-a7-e5-88-b6.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

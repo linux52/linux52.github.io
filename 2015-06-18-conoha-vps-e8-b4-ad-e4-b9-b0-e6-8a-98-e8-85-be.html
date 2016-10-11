@@ -1,0 +1,742 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>ConoHa vps购买折腾 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="听基友说conoha vps支持支付宝购买很便宜 1G内存的一个月也就45块左右 想要购买的点下面地址购买
+购买地址 
+最低冲入500日元=25块左右吧 上面地址注册可得到1000日元曾送
+
+注册就不说了 点右上解申请（注意一点就是那个密码要有特殊符号我就纠结半天没注册上）
+下面说挂载自定义iso
+">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="ConoHa vps购买折腾"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/便宜vps/">便宜vps</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>ConoHa vps购买折腾</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-06-17T16:02:44.000Z"><a href="/2015-06-18-conoha-vps-e8-b4-ad-e4-b9-b0-e6-8a-98-e8-85-be.html">2015-06-18</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p>听基友说conoha vps支持支付宝购买很便宜 1G内存的一个月也就45块左右 想要购买的点下面地址购买</p>
+<p><strong><span style="color: #ff0000;"><a href="https://www.conoha.jp/referral/?token=hq7jXg1HaJaehF4HhbF6NcNNZQ13pzfNE9rRFi1awhulcdd3Y9c-GYJ" title="购" target="_blank" rel="external">购买地址</a> </span></strong></p>
+<p><strong><span><span style="color: #000000;">最低冲入500日元=25块左右吧 上面地址注册可得到1000日元曾送</span></span></strong></p>
+<p><a href="http://dg2016.duapp.com/wp-content/uploads/2015/06/QQ图片20150617234529.png" target="_blank" rel="external"><img src="http://dg2016.duapp.com/wp-content/uploads/2015/06/QQ图片20150617234529-300x135.png" alt="QQ图片20150617234529"></a></p>
+<p>注册就不说了 点右上解申请（注意一点就是那个密码要有特殊符号我就纠结半天没注册上）</p>
+<p>下面说挂载自定义iso</p>
+<p><a href="http://dg2016.duapp.com/wp-content/uploads/2015/06/sh.tar.gz" title="脚本下载" target="_blank" rel="external">脚本下载</a> ftp地址就不给了</p>
+<p>转老左的吧</p>
+<p><strong>第一、部署Windows系统挂载准备工作</strong></p>
+<p>A - 我们需要有另外一台Linux机器用来执行相关的挂载命令</p>
+<p>B - 我们需要有ConoHa账户（没有机器你还安装什么），目前新注册账户有赠送1000日元（<a href="https://www.conoha.jp/referral/?token=hq7jXg1HaJaehF4HhbF6NcNNZQ13pzfNE9rRFi1awhulcdd3Y9c-GYJ" target="_blank" rel="external">ConoHa注册教程</a>），前提是我们注册账户后需要充值最低500日元（25元左右）。</p>
+<blockquote>
+<p>如你想使用Conoha VPS必须先注册账户：<a href="https://www.conoha.jp/referral/?token=hq7jXg1HaJaehF4HhbF6NcNNZQ13pzfNE9rRFi1awhulcdd3Y9c-GYJ" target="_blank" rel="external">进入</a> （目前新注册赠送1000日元）<br>C - 我们需要准备FTP格式的Windows ISO文件，且需要已经带有virtio驱动。</p>
+</blockquote>
+<p>D - 我们需要有足够的耐心和细心看完这篇文章，因为我为了这篇文章折腾一下午了。</p>
+<p>PS：我们也可以参考”<a href="http://www.laozuo.org/4019.html" target="_blank" rel="external">Vultr VPS挂载ISO安装Windows 2003系统完整过程</a>“文章，在Vultr VPS中自定义安装WINDOWS系统。</p>
+<p><strong>第二、ConoHa API安装Windows系统过程</strong></p>
+<p>A - 新开一台机器</p>
+<p>我们需要先开一台ConoHa机器，比如日本或者新加坡都可以，但之间也是有区别的，这里老左就开了一台日本的1GB内存方案，开通机器后先关闭机器，因为开着机器安装不成功。</p>
+<p>B - 创建API用户</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-1.jpg" alt="创建API用户"></p>
+<p>在后台菜单左侧API选项，因为我们没有创建用户，所以需要先追加一个用户，设置API密码（需要9位，数字+字母+特殊符号），创建完毕之后我们需要得到上面看到的店铺ID和店铺名称。</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-2.jpg" alt="api-conoha-2"></p>
+<p>C - API地址</p>
+<p>在上图中，我们可以看到”终点”，里面的信息可以找到API地址，比如我这里需要日本东京的API地址。</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-3.jpg" alt="api-conoha-3"></p>
+<p>我们这里先记着，可以先复制下来，等会都需要用到。</p>
+<p>D - 部署ISO</p>
+<blockquote>
+<p>curl -i -X POST \</p>
+<p>-H “Accept: application/json” \</p>
+<p>-d ‘{</p>
+<p>“auth”: {</p>
+<p>“passwordCredentials”: {</p>
+<p>“username”: “API店铺名称”,</p>
+<p>“password”: “API用户密码”</p>
+<p>},</p>
+<p>“tenantId”: “API店铺ID”</p>
+<p>}</p>
+<p>}’ \</p>
+<p><a href="https://identity.tyo1.conoha.io/v2.0/tokens（日本东京的API地址，如果你也是日本VPS就不要修改了）" target="_blank" rel="external">https://identity.tyo1.conoha.io/v2.0/tokens（日本东京的API地址，如果你也是日本VPS就不要修改了）</a><br>执行上面的脚本，以及对应的参数需要修改成我们自己的，上面脚本默认的是日本API，如果是新加坡我们需要更换。</p>
+</blockquote>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-4.jpg" alt="api-conoha-4"></p>
+<p>然后我们会看到返回一串字符，不要怕，我们就需要这个，找到其中的id后面的字符，比如我这里需要的是”1d425c497fc14192845d80de00656cfd”记录下来，因为后面需要用到X-Auth-Token参数上。</p>
+<blockquote>
+<p>curl -i -X POST \</p>
+<p>-H ‘Content-Type: application/json’ \</p>
+<p>-H “Accept: application/json” \</p>
+<p>-H “X-Auth-Token: （TAB空格）就是上面得到的id” \</p>
+<p>-d ‘{</p>
+<p>“iso-image”: {</p>
+<p>“url”: “FTP格式的ISO地址”</p>
+<p>}</p>
+<p>}’ \</p>
+<p><a href="https://compute.tyo1.conoha.io/v2/店铺ID/iso-images（这一行一样是东京的API）" target="_blank" rel="external">https://compute.tyo1.conoha.io/v2/店铺ID/iso-images（这一行一样是东京的API）</a><br>然后我们执行上面的脚本，鉴于版权以及各种原因，老左就不公开分享FTP格式地址的ISO地址，我们自行解决，我自己也是找书生要了一个地址，人家是用来帮助付费安装的，我就不免费公开了。</p>
+</blockquote>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-5.jpg" alt="api-conoha-5"></p>
+<p>执行后会出现上面的提示，如果我们需要检查是否挂载上去，通过下面的命令。</p>
+<blockquote>
+<p>curl -i -X GET \</p>
+<p>-H ‘Content-Type: application/json’ \</p>
+<p>-H “Accept: application/json” \</p>
+<p>-H “X-Auth-Token: （TAB空格）就是上面得到的id” \</p>
+<p><a href="https://compute.tyo1.conoha.io/v2/店铺ID/iso-images" target="_blank" rel="external">https://compute.tyo1.conoha.io/v2/店铺ID/iso-images</a><br>执行后，我们需要得到path后面的参数。</p>
+</blockquote>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-6.jpg" alt="api-conoha-6"></p>
+<p>PATH地址我们需要记录下来，后面有需要用到。</p>
+<p><strong>第三、设置VPS控制台键盘映射</strong></p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-7.jpg" alt="api-conoha-7"></p>
+<p>这里我们需要两样东东，上面的UUID需要记录下来等会用到，控制台键盘映射需要设置成EN-US</p>
+<blockquote>
+<p>curl -i -X POST \</p>
+<p>-H “Accept: application/json” \</p>
+<p>-H “X-Auth-Token: （TAB空格）就是上面得到的id” \</p>
+<p>-d ‘{“mountImage”: “之前一步记录下来的PATH路径”}’ \</p>
+<p><a href="https://compute.tyo1.conoha.io/v2/店铺ID/servers/VPS的UUID/action" target="_blank" rel="external">https://compute.tyo1.conoha.io/v2/店铺ID/servers/VPS的UUID/action</a><br>这一步就是真正的挂载过去了，检查是否成功，用下面命令。<br>curl -i -X GET \</p>
+<p>-H “Accept: application/json” \</p>
+<p>-H “X-Auth-Token: （TAB空格）就是上面得到的id” \</p>
+<p><a href="https://compute.tyo1.conoha.io/v2/店铺ID/servers/VPS的UUID" target="_blank" rel="external">https://compute.tyo1.conoha.io/v2/店铺ID/servers/VPS的UUID</a><br>如果有看到类似下面的挂载ISO地址，基本上没问题了。</p>
+</blockquote>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-9.jpg" alt="api-conoha-9"></p>
+<p>看到没有，有没有？到目前为止我们已经成功95%，后面我们就VPS开机（上面所有的步骤VPS都要关机状态，否则不要说为什么不成功）。</p>
+<p><strong> 第四、VNC部署WINDOWS系统</strong></p>
+<p>如果我们能完成上面的步骤，这一步就很简单了，我们开机VPS，然后通过VNC打开窗口部署WINDOWS系统。</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-10.jpg" alt="VNC部署WINDOWS系统"></p>
+<p>登录后按任意键从光驱启动，会看到我们熟悉的WINDOWS安装界面。</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-11.jpg" alt="Conoha vps部署window系统"></p>
+<p>老左连URL都截图下来，说明这篇文章的完整性不是忽悠的，肯定是可以安装成功的，只要你细心，认真。后面是不是很简单，如果我们会安装系统，认识中文，就可以把WINDOWS安装完成。</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-12.jpg" alt="api-conoha-12"></p>
+<p>是不是看着很美好，其中有一个细节，因为原本是LINUX有一个分区，我们需要格式化掉所有的盘，然后重新整一个盘然后安装。总之到这里了，对于你们来说都不是难事。</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-13.jpg" alt="api-conoha-13"></p>
+<p>因为是SSD固态硬盘，所以一切很快。其中根据我们用的ISO包，需要用到序列号，这个我们自己寻找。</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-14.jpg" alt="api-conoha-14"></p>
+<p>快成功了！</p>
+<p><img src="http://www.laozuo.org/wp-content/uploads/2015/06/api-conoha-15.jpg" alt="完整利用ConoHa VPS主机API接口自定义安装Windows系统过程"></p>
+<p>看到这里是不是完全确定可以OK？</p>
+<p>总结，这篇文章花费的时间较长，但至少已经能够完整的分享出来，所以如果有需要参考和转载的，麻烦注明出处，有几个IT类文章站稍微给点面子，转载就转载了，把我名字都换成你的了。如果还有朋友看到不会安装的，可以加到Q群，找我们安装，里面有些同学安装这些东东是职业的。</p>
+<p><div></div><br>本文固定链接: <a href="http://www.laozuo.org/6073.html" title="完整利用ConoHa VPS主机API接口自定义安装Windows系统过程" target="_blank" rel="external">http://www.laozuo.org/6073.html | 老左博客</a></p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-06-18-conoha-vps-e8-b4-ad-e4-b9-b0-e6-8a-98-e8-85-be.html" data-title="ConoHa vps购买折腾" data-url="http://www.linux52.com/2015-06-18-conoha-vps-e8-b4-ad-e4-b9-b0-e6-8a-98-e8-85-be.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

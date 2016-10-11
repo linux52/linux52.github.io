@@ -1,0 +1,747 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>Cowrie蜜罐部署教程 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="0.蜜罐分类：
+低交互：模拟服务和漏洞以便收集信息和恶意软件，但是攻击者无法和该系统进行交互；
+中等交互：在一个特有的控制环境中模拟一个生产服务，允许攻击者的部分交互；
+高交互：攻击者可以几乎自由的访问系统资源直至系统重新清除恢复。
+
+1.cowrie简介它是一个具有中等交互的SSH蜜罐，安装在Li">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="Cowrie蜜罐部署教程"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/freebuf/">freebuf</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>Cowrie蜜罐部署教程</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2016-09-09T03:30:48.000Z"><a href="/2016-09-09-cowrie-e8-9c-9c-e7-bd-90-e9-83-a8-e7-bd-b2-e6-95-99-e7-a8-8b.html">2016-09-09</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#0-蜜罐分类："><span class="section table-of-contents-text">0.蜜罐分类：</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#1-cowrie简介"><span class="section table-of-contents-text">1.cowrie简介</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#2-cowrie安装部署"><span class="section table-of-contents-text">2.cowrie安装部署</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#4-配置文件说明"><span class="section table-of-contents-text">4. 配置文件说明</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#5-阶段成果"><span class="section table-of-contents-text">5. 阶段成果</span></a></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <h2 id="0-蜜罐分类："><a href="#0-蜜罐分类：" class="headerlink" title="0.蜜罐分类："></a>0.蜜罐分类：</h2><blockquote>
+<p>低交互：模拟服务和漏洞以便收集信息和恶意软件，但是攻击者无法和该系统进行交互；</p>
+<p>中等交互：在一个特有的控制环境中模拟一个生产服务，允许攻击者的部分交互；</p>
+<p>高交互：攻击者可以几乎自由的访问系统资源直至系统重新清除恢复。<br><a href="http://image.3001.net/images/20160816/14713429741384.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713429741384.png!small" alt="Clipboard Image.png"></a></p>
+</blockquote>
+<h2 id="1-cowrie简介"><a href="#1-cowrie简介" class="headerlink" title="1.cowrie简介"></a><strong>1.cowrie简介</strong></h2><p><strong>它是一个具有中等交互的SSH蜜罐，安装在Linux中，它可以获取攻击者用于暴力破解的字典、输入的命令以及上传或下载的恶意文件。攻击者在上传恶意文件后，执行恶意文件的操作均会失败，所以对蜜罐本身来说比较安全。</strong></p>
+<p><a href="http://image.3001.net/images/20160816/14713421328918.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713421328918.png!small" alt="Clipboard Image.png"></a></p>
+<h2 id="2-cowrie安装部署"><a href="#2-cowrie安装部署" class="headerlink" title="2.cowrie安装部署"></a>2.cowrie安装部署</h2><p>以下步骤均为root权限执行</p>
+<p>l 添加非root用户</p>
+<pre><code>adduser cowrie –p &lt;span class=&quot;hljs-strong&quot;&gt;*****&lt;/span&gt;**(设置密码，一路回车即可)
+`&lt;/pre&gt;
+l 安装各种python相关包
+&lt;pre&gt;`apt-&lt;span class=&quot;hljs-keyword&quot;&gt;get&lt;/span&gt; install python-twistedpython-crypto python-pyasn1 python-gmpy2 python-mysqldb python-zope.&lt;span class=&quot;hljs-keyword&quot;&gt;interface&lt;/span&gt;
+`&lt;/pre&gt;
+l 安装virtualenv
+&lt;pre&gt;`apt-&lt;span class=&quot;hljs-keyword&quot;&gt;get&lt;/span&gt; install virtualenv
+`&lt;/pre&gt;
+l 下载cowire
+&lt;pre&gt;`&lt;span class=&quot;hljs-built_in&quot;&gt;cd&lt;/span&gt; /optgit &lt;span class=&quot;hljs-built_in&quot;&gt;clone&lt;/span&gt; http://github.com/micheloosterhof/cowrie
+`&lt;/pre&gt;
+l 配置python虚拟环境
+&lt;pre&gt;`cd &lt;span class=&quot;hljs-meta-keyword&quot;&gt;/opt/&lt;/span&gt;cowrie-master（cowrie-master就是我cowrie蜜罐的目录，如果目录不一致，重命名即可）virtualenv cowrie-envsource cowrie-env&lt;span class=&quot;hljs-meta-keyword&quot;&gt;/bin/&lt;/span&gt;activate(cowrie-env) $ pip install twistedcryptography pyopenssl gmpy2
+`&lt;/pre&gt;
+l 改变/opt/cowrie-master的拥有者
+&lt;pre&gt;`&lt;span class=&quot;hljs-keyword&quot;&gt;chown&lt;/span&gt; -R cowrie:cowrie /opt/cowrie-master
+`&lt;/pre&gt;
+l 建立cowrie配置文件
+&lt;pre&gt;`&lt;span class=&quot;hljs-selector-tag&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;cowrie&lt;/span&gt;&lt;span class=&quot;hljs-selector-class&quot;&gt;.cfg&lt;/span&gt;&lt;span class=&quot;hljs-selector-class&quot;&gt;.dist&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;cowrie&lt;/span&gt;&lt;span class=&quot;hljs-selector-class&quot;&gt;.cfg&lt;/span&gt;
+`&lt;/pre&gt;
+l 修改日志的umask为0022（默认为0077）
+&lt;pre&gt;`&lt;span class=&quot;hljs-built_in&quot;&gt;cd&lt;/span&gt; /opt/cowrie-mastervi start.sh
+`&lt;/pre&gt;
+[![Clipboard Image.png](http://image.3001.net/images/20160816/14713422633445.png!small)](http://image.3001.net/images/20160816/14713422633445.png)
+
+l 修改蜜罐的SSH端口（默认为2222）
+&lt;pre&gt;`&lt;span class=&quot;hljs-built_in&quot;&gt;cd&lt;/span&gt; /opt/cowrie-mastervi cowrie.cfg
+`&lt;/pre&gt;
+将linsten_port改为62223即可（最好大于60000，以防止被nmap默认扫描到）
+
+[![Clipboard Image.png](http://image.3001.net/images/20160816/14713422921080.png!small)](http://image.3001.net/images/20160816/14713422921080.png)
+
+l 将公网访问服务器22端口的请求做端口转发，转发到蜜罐的端口中
+&lt;pre&gt;`&lt;span class=&quot;hljs-attribute&quot;&gt;iptables&lt;/span&gt; -t nat -A PREROUTING -p tcp--dport &lt;span class=&quot;hljs-number&quot;&gt;22&lt;/span&gt; -j REDIRECT --to-port &lt;span class=&quot;hljs-number&quot;&gt;62223&lt;/span&gt;
+`&lt;/pre&gt;
+l 将真正的（非蜜罐）SSH管理端口改为65522
+&lt;pre&gt;`vi &lt;span class=&quot;hljs-meta-keyword&quot;&gt;/etc/&lt;/span&gt;ssh/sshd_config
+`&lt;/pre&gt;
+（备注：在第一次改SSH端口时，在前期测试时强烈建议同时保留22与65522，以防止修改保存后出现故障无法连接65522）
+
+[![Clipboard Image.png](http://image.3001.net/images/20160816/14713423512894.png!small)](http://image.3001.net/images/20160816/14713423512894.png)
+
+此处切换为cowrie用户操作
+
+&lt;span style=&quot;color: #333333;&quot;&gt; 启动蜜罐&lt;/span&gt;
+&lt;pre&gt;`&lt;span class=&quot;hljs-built_in&quot;&gt;cd&lt;/span&gt; /opt/cowrie-master./start.sh
+`&lt;/pre&gt;
+
+## 3\. 数据库安装部署
+
+cowrie中产生的日志杂乱无章，即使放到日志分析工具中也很难制定规则去筛选。然而cowrie具备将攻击IP、时间、历史执行命令等记录直接存在数据库中，下面将说明如何配置数据库。
+
+需要root权限或者sudo
+
+l 安装mysql基础环境
+&lt;pre&gt;`apt-get &lt;span class=&quot;hljs-keyword&quot;&gt;install&lt;/span&gt; libmysqlclient-devpython-dev pip &lt;span class=&quot;hljs-keyword&quot;&gt;install&lt;/span&gt; mysql-python apt-&lt;span class=&quot;hljs-keyword&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;install&lt;/span&gt; mysql-&lt;span class=&quot;hljs-keyword&quot;&gt;server&lt;/span&gt; python-mysqldb
+`&lt;/pre&gt;
+[![Clipboard Image.png](http://image.3001.net/images/20160816/1471342497649.png!small)](http://image.3001.net/images/20160816/1471342497649.png)
+
+l 配置数据库与表
+
+使用root用户建立名为cowrie的数据库并将该库中的所有表授权给cowrie
+&lt;pre&gt;`&lt;span class=&quot;hljs-selector-tag&quot;&gt;mysql&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;-pEnter&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;password&lt;/span&gt;: ******* &lt;span class=&quot;hljs-selector-tag&quot;&gt;mysql&lt;/span&gt;&amp;gt;&lt;span class=&quot;hljs-selector-tag&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;DATABASE&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;cowrie&lt;/span&gt;;&lt;span class=&quot;hljs-selector-tag&quot;&gt;mysql&lt;/span&gt;&amp;gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;GRANT&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;ALL&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;ON&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;cowrie&lt;/span&gt;.* &lt;span class=&quot;hljs-selector-tag&quot;&gt;TOcowrie&lt;/span&gt;@&lt;span class=&quot;hljs-keyword&quot;&gt;localhost&lt;/span&gt; IDENTIFIED BY &lt;span class=&quot;hljs-string&quot;&gt;&apos;your_password&apos;&lt;/span&gt;;&lt;span class=&quot;hljs-selector-tag&quot;&gt;mysql&lt;/span&gt;&amp;gt;&lt;span class=&quot;hljs-selector-tag&quot;&gt;exit&lt;/span&gt;
+`&lt;/pre&gt;
+此时进入cowrie安装目录中，使用cowrie用户登录数据库，进入cowrie库中，将/opt/cowrie/ doc/sql/mysql.sql作为数据源即可制成多个表。
+&lt;pre&gt;`&lt;span class=&quot;hljs-built_in&quot;&gt;cd&lt;/span&gt; /opt/cowrie-master mysql -u cowrie –pEnter password: ******* mysql&amp;gt;USE cowrie;mysql&amp;gt;&lt;span class=&quot;hljs-built_in&quot;&gt;source&lt;/span&gt; ./doc/sql/mysql.sqlmysql&amp;gt;&lt;span class=&quot;hljs-built_in&quot;&gt;exit&lt;/span&gt;
+`&lt;/pre&gt;
+停止cowrie，修改配置文件中的数据库配置，使配置文件中的密码与cowrie数据库用户密码一致。
+&lt;pre&gt;`./&lt;span class=&quot;hljs-keyword&quot;&gt;stop&lt;/span&gt;.shvi cowrie.cfg
+`&lt;/pre&gt;
+[![Clipboard Image.png](http://image.3001.net/images/20160816/14713425641004.png!small)](http://image.3001.net/images/20160816/14713425641004.png)
+
+保存后退出，并su到cowrie用户重启蜜罐
+&lt;pre&gt;`./&lt;span class=&quot;hljs-keyword&quot;&gt;start&lt;/span&gt;.sh
+</code></pre><p>cowrie库中的数据表如下：</p>
+<p><a href="http://image.3001.net/images/20160816/14713425861902.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713425861902.png!small" alt="Clipboard Image.png"></a></p>
+<h2 id="4-配置文件说明"><a href="#4-配置文件说明" class="headerlink" title="4. 配置文件说明"></a>4. 配置文件说明</h2><p>data/userdb.txt——设置外部连接蜜罐时的密码，可以设置稍微复杂但是在攻击字典里，诱使攻击者进行暴力破解并获取其行为。</p>
+<p><a href="http://image.3001.net/images/20160816/14713427507623.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713427507623.png!small" alt="Clipboard Image.png"></a></p>
+<p>log/cowrie.json与 log/cowrie.log——均为日志</p>
+<p><a href="http://image.3001.net/images/20160816/14713427565036.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713427565036.png!small" alt="Clipboard Image.png"></a></p>
+<p>txtcmds/*——均为假的命令，其实打开就会发现完全就是txt</p>
+<p><a href="http://image.3001.net/images/20160816/14713427601224.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713427601224.png!small" alt="Clipboard Image.png"></a></p>
+<p>dl/*——攻击者上传的文件均会复制到这里</p>
+<p><a href="http://image.3001.net/images/20160816/14713427664682.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713427664682.png!small" alt="Clipboard Image.png"></a></p>
+<p>honeyfs/etc/motd——自定义欢迎/警告banner</p>
+<p><a href="http://image.3001.net/images/20160816/14713427704917.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713427704917.png!small" alt="Clipboard Image.png"></a></p>
+<h2 id="5-阶段成果"><a href="#5-阶段成果" class="headerlink" title="5. 阶段成果"></a>5. 阶段成果</h2><p>如果想查询蜜罐中是否有攻击者的痕迹，SSH登录服务器后进入数据库，使用cowrie库，查询auth、sessions、input等表即可。<br>公网恶意IP可以从sessions表中去重获取，算是少量的威胁情报了，部分恶意IP如下。</p>
+<p><a href="http://image.3001.net/images/20160816/14713427888255.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713427888255.png!small" alt="Clipboard Image.png"></a></p>
+<p>记录攻击者操作如下：</p>
+<p><a href="http://image.3001.net/images/20160816/1471342793187.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/1471342793187.png!small" alt="Clipboard Image.png"></a></p>
+<p><a href="http://image.3001.net/images/20160816/14713427975480.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160816/14713427975480.png!small" alt="Clipboard Image.png"></a></p>
+<p>由上图可以看到攻击者在暴力破解成功后执行的命令，获取到这些恶意文件后进行分析，其大多数均为用于ddos的恶意程序，例如：</p>
+<p><img src="http://image.3001.net/images/20160816/14713428022725.png!small" alt="Clipboard Image.png"><img src="http://image.3001.net/images/20160816/14713428057388.png!small" alt="Clipboard Image.png"></p>
+<p>在长期收集蜜罐中的攻击者信息后，可以制定恶意IP列表直接在防火墙做阻断</p>
+<p><strong>*本文作者：RipZ，转载须注明来自FreeBuf.COM</strong></p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2016-09-09-cowrie-e8-9c-9c-e7-bd-90-e9-83-a8-e7-bd-b2-e6-95-99-e7-a8-8b.html" data-title="Cowrie蜜罐部署教程" data-url="http://www.linux52.com/2016-09-09-cowrie-e8-9c-9c-e7-bd-90-e9-83-a8-e7-bd-b2-e6-95-99-e7-a8-8b.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

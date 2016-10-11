@@ -1,0 +1,657 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>GitHub上10个最受欢迎的安全项目 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="开源项目最终还是迎来了属于它的胜利，虽然这胜利姗姗来迟，但终究还是实现了。在信息安全领域，尽管许多公司封锁了它们的专有软件代码，但仍有许多开源项目可供安全专家使用。
+其中，寻找开源安全相关项目的首选就是GitHub。你可以利用GitHub的搜索功能发现有用的工具，但是，GitHub有一个地方可以帮你">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="GitHub上10个最受欢迎的安全项目"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/freebuf/">freebuf</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>GitHub上10个最受欢迎的安全项目</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2016-09-09T03:18:57.000Z"><a href="/2016-09-09-github-e4-b8-8a10-e4-b8-aa-e6-9c-80-e5-8f-97-e6-ac-a2-e8-bf-8e-e7-9a-84-e5-ae-89-e5-85-a8-e9-a1-b9-e7-9b-ae.html">2016-09-09</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#1-osquery-–-源自Facebook"><span class="section table-of-contents-text">1. osquery – 源自Facebook </span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-Metasploit-Framework-–-源自Rapid7"><span class="section table-of-contents-text">2. Metasploit Framework – 源自Rapid7 </span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#3-Infer-–源自Facebook"><span class="section table-of-contents-text">3. Infer –源自Facebook </span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#4-Brakeman-–-源自PresidentBeef"><span class="section table-of-contents-text">4. Brakeman – 源自PresidentBeef </span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#5-Radare2-–-源自the-Radare项目"><span class="section table-of-contents-text">5. Radare2 – 源自the Radare项目</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#6-OS-X-Auditor-–-源自Jean-Philippe-Teissier"><span class="section table-of-contents-text">6. OS X Auditor – 源自Jean-Philippe Teissier </span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#7-BeEF-–-源自BeEF项目"><span class="section table-of-contents-text">7. BeEF – 源自BeEF项目 </span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#8-Cuckoo-–-源自Cuckoo沙盒项目"><span class="section table-of-contents-text">8. Cuckoo – 源自Cuckoo沙盒项目 </span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#9-Scumblr-–-源自Netflix"><span class="section table-of-contents-text">9. Scumblr – 源自Netflix </span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#10-Moloch-–-源自AOL"><span class="section table-of-contents-text">10. Moloch – 源自AOL </span></a></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p><a href="http://image.3001.net/images/20160907/14732567998627.jpg" target="_blank" rel="external"><img src="http://image.3001.net/images/20160907/14732567998627.jpg!small" alt="1421819031148798.jpg"></a></p>
+<blockquote>
+<p>开源项目最终还是迎来了属于它的胜利，虽然这胜利姗姗来迟，但终究还是实现了。在信息安全领域，尽管许多公司封锁了它们的专有软件代码，但仍有许多开源项目可供安全专家使用。</p>
+<p>其中，寻找开源安全相关项目的首选就是GitHub。你可以利用GitHub的搜索功能发现有用的工具，但是，GitHub有一个地方可以帮你获寻最热门的安全项目，就是所谓的GitHub Showcases板块，但是在 GitHub上，这个板块却鲜为人知。<br><strong>2014年开始，Showcases设立了最热门安全项目类别 。Showcases上罗列的项目主要按星级罗列，也就是说，通常列表显示的是当今 最流行的项目。</strong></p>
+</blockquote>
+<p>Showcases的“安全”类别包含24个项目。<strong>下面的项目为当下GitHub上最受欢迎的Top10 开源安全项目：</strong></p>
+<h3 id="1-osquery-–-源自Facebook"><a href="#1-osquery-–-源自Facebook" class="headerlink" title="1. osquery – 源自Facebook "></a><strong>1. osquery – 源自Facebook </strong></h3><p><a href="https://github.com/facebook/osquery" target="_blank" rel="external"><strong>osquery</strong></a>是一个高性能关系数据库的操作系统，允许编写SQL查询，探索操作系统数据。借助osquery，SQL表格表现的是抽象概念，比如运行过程、加载的内核模式、开放的网络连接、浏览器插件、硬件事件或文件 hash。</p>
+<h3 id="2-Metasploit-Framework-–-源自Rapid7"><a href="#2-Metasploit-Framework-–-源自Rapid7" class="headerlink" title="2. Metasploit Framework – 源自Rapid7 "></a><strong>2. Metasploit Framework – 源自Rapid7 </strong></h3><p><a href="https://github.com/rapid7/metasploit-framework" target="_blank" rel="external"><strong>Metasploit Framework</strong></a>是开发并执行针对远程目标设备漏洞利用代码的工具。</p>
+<h3 id="3-Infer-–源自Facebook"><a href="#3-Infer-–源自Facebook" class="headerlink" title="3. Infer –源自Facebook "></a><strong>3. Infer –源自Facebook </strong></h3><p><a href="https://github.com/facebook/infer" target="_blank" rel="external"><strong>Facebook Infer</strong></a>是一款静态分析工具，如果你给Infer一些Objective-C、Java或C代码，它会生成一个潜在漏洞列表。在关键漏洞转移至用户手机之前，任何人都可以使用Infer拦截关键漏洞，并帮助防止死机或性能差。</p>
+<h3 id="4-Brakeman-–-源自PresidentBeef"><a href="#4-Brakeman-–-源自PresidentBeef" class="headerlink" title="4. Brakeman – 源自PresidentBeef "></a><strong>4. Brakeman – 源自PresidentBeef </strong></h3><p><a href="https://github.com/presidentbeef/brakeman" target="_blank" rel="external"><strong>Brakeman</strong></a>是一个开源静态分析工具，负责检查Ruby on Rails应用程序的安全漏洞。</p>
+<h3 id="5-Radare2-–-源自the-Radare项目"><a href="#5-Radare2-–-源自the-Radare项目" class="headerlink" title="5. Radare2 – 源自the Radare项目"></a><strong>5. Radare2 – 源自the Radare项目</strong></h3><p><a href="https://github.com/radare/radare2" target="_blank" rel="external"><strong>Radare</strong></a>是一个取证工具以及可编写脚本的命令行十六进制编辑器，可以打开磁盘文件、支持分析二进制、反汇编代码、调试程序以及连接到远程gdb服务器…</p>
+<h3 id="6-OS-X-Auditor-–-源自Jean-Philippe-Teissier"><a href="#6-OS-X-Auditor-–-源自Jean-Philippe-Teissier" class="headerlink" title="6. OS X Auditor – 源自Jean-Philippe Teissier "></a><strong>6. OS X Auditor – 源自Jean-Philippe Teissier </strong></h3><p><a href="https://github.com/jipegit/OSXAuditor" target="_blank" rel="external"><strong>OS X Auditor</strong></a>是一个免费的Mac OS X计算机取证工具，负责分析多类型文件的可疑内容。</p>
+<h3 id="7-BeEF-–-源自BeEF项目"><a href="#7-BeEF-–-源自BeEF项目" class="headerlink" title="7. BeEF – 源自BeEF项目 "></a><strong>7. BeEF – 源自BeEF项目 </strong></h3><p><a href="https://github.com/beefproject/beef" target="_blank" rel="external"><strong>BeEF</strong></a>是The Browser Exploitation Framework的缩写，它是一个 专注网页浏览器的渗透测试工具。</p>
+<h3 id="8-Cuckoo-–-源自Cuckoo沙盒项目"><a href="#8-Cuckoo-–-源自Cuckoo沙盒项目" class="headerlink" title="8. Cuckoo – 源自Cuckoo沙盒项目 "></a><strong>8. Cuckoo – 源自Cuckoo沙盒项目 </strong></h3><p><a href="https://github.com/cuckoosandbox/cuckoo" target="_blank" rel="external"><strong>Cuckoo Sandbox</strong></a>是一个自动动态恶意软件分析系统。这意味着什么呢？简单来说就是，你可以将任何可疑文件丢给它，Cuckoo会在几秒内为你反馈一个详细结果，概括此类文件在在孤立环境中执行时的活动。</p>
+<h3 id="9-Scumblr-–-源自Netflix"><a href="#9-Scumblr-–-源自Netflix" class="headerlink" title="9. Scumblr – 源自Netflix "></a><strong>9. Scumblr – 源自Netflix </strong></h3><p><a href="https://github.com/Netflix/Scumblr" target="_blank" rel="external"><strong>Scumblr</strong></a>是一个Web应用程序，允许执行定期搜索和存/取识别结果的行为。</p>
+<h3 id="10-Moloch-–-源自AOL"><a href="#10-Moloch-–-源自AOL" class="headerlink" title="10. Moloch – 源自AOL "></a><strong>10. Moloch – 源自AOL </strong></h3><p><a href="https://github.com/aol/moloch" target="_blank" rel="external"><strong>Moloch</strong></a>是一个开源的，大规模的数据包捕获、索引和数据库系统。为PCAP浏览、搜索和导出提供了一个简单的Web接口。API接口都是公开的，允许直接下载PCAP数据和JSON格式的会话数据。通过使用HTTPS和HTTP摘要密码支持或通过使用前面的Apache实现安全。Moloch并不是为了取代IDS，而是与之合作，储存并索引标准PACP格式中的所有网络流量，提供快速访问。Moloch可以在多个系统部署，处理数万gigabits（G比特）/sec（秒）的流量。</p>
+<p><strong>以上就是当前GitHub上最受欢迎的开源安全项目。您可以定期查看<a href="https://github.com/showcases/security?s=stars" target="_blank" rel="external">Showcases板块</a>， 了解最流行的项目及分析各类项目的变化趋势。</strong></p>
+<p><strong>* 参考来源：<a href="http://news.softpedia.com/news/the-top-10-most-popular-security-projects-on-github-507934.shtml" target="_blank" rel="external">softpedia</a>，米雪儿编译，转载请注明来自FreeBuf.COM</strong></p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2016-09-09-github-e4-b8-8a10-e4-b8-aa-e6-9c-80-e5-8f-97-e6-ac-a2-e8-bf-8e-e7-9a-84-e5-ae-89-e5-85-a8-e9-a1-b9-e7-9b-ae.html" data-title="GitHub上10个最受欢迎的安全项目" data-url="http://www.linux52.com/2016-09-09-github-e4-b8-8a10-e4-b8-aa-e6-9c-80-e5-8f-97-e6-ac-a2-e8-bf-8e-e7-9a-84-e5-ae-89-e5-85-a8-e9-a1-b9-e7-9b-ae.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

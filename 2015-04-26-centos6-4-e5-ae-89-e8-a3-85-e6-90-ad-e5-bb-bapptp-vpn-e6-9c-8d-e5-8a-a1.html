@@ -1,0 +1,652 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>centos6.4安装搭建pptp vpn服务 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="&amp;nbsp;
+centos6.4安装搭建pptp vpn服务的大致步骤简介，下面会有详细的步骤(我不喜欢写大纲，决定麻烦，但是有人还是看不懂，所以勉为其难的写了个，实在不会的，我在文章的后面提供一些网上的centos pptp vpn 一键安装包，有人写了就不必再写一遍了，一键安装包要是有问题，也别">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="centos6.4安装搭建pptp vpn服务"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/centos/">centos</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>centos6.4安装搭建pptp vpn服务</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-04-26T13:14:03.000Z"><a href="/2015-04-26-centos6-4-e5-ae-89-e8-a3-85-e6-90-ad-e5-bb-bapptp-vpn-e6-9c-8d-e5-8a-a1.html">2015-04-26</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p>&nbsp;</p>
+<p>centos6.4安装搭建pptp vpn服务的<strong>大致步骤简介，下面会有详细的步骤</strong>(我不喜欢写大纲，决定麻烦，但是有人还是看不懂，所以勉为其难的写了个，实在不会的，我在文章的后面提供一些网上的centos pptp vpn 一键安装包，有人写了就不必再写一遍了，一键安装包要是有问题，也别找我，新手想享受自己亲手一步步具体搭建过程的乐趣，就接着看看吧)<strong>：</strong></p>
+<blockquote>
+<p>1.先检查vps是否满足配置pptp vpn的环境。因为有的openvz的vps被母鸡给禁用了。其实，你在配置前最好向vps的客服发TK，可能客服会帮你开通vpn或者客服那里会给你他们自己定制的vpn一键安装包也有可能。</p>
+<p>2.接着是安装配置pptp vpn的相关软件，<strong>安装ppp和iptables</strong>。</p>
+<p>配置安装好后的pptp软件，这个不像windows那样，安装的过程就是配置的过程。linux的要安装完之后，修改配置文件，才算是完成配置。</p>
+<p>3.启动pptp vpn 服务。此时，就是检验你能够vpn拨号成功，如果你拨号成功了，说明你的pptp vpn的安装配置就算真正的完成了。但是此时只能登录vpn，却不能用来上网。</p>
+<p>4.开启内核和iptables的转发功能。这个步骤是为了让你连上vpn之后，能够上网，上那些yourporn，youtube之类的。这步是最关键的，很多人能成功拨号，登录vpn，但是却不能上网就是因为这个步骤没做好。这步骤完成了，你就可以尽情去国外的网站访问了。</p>
+<p>#########################################手动搭建配置pptp vpn 详细方法如下########</p>
+</blockquote>
+<p><strong>第一步</strong>：检测是否符合pptp的搭建环境的要求</p>
+<div>服务器版本：CentOs 6.4 xen vps</div><br><div><br><div>如果检查结果没有这些支持的话，是不能安装pptp的。执行指令：</div><br>&gt; #modprobe ppp-compress-18 &amp;&amp; echo ok<br><div>这条执行执行后，显示“ok”则表明通过。不过接下来还需要做另一个检查，输入指令：</div><br>&gt; #cat /dev/net/tun<br><div>如果这条指令显示结果为下面的文本，则表明通过：</div><br><div>cat: /dev/net/tun: File descriptor in bad state</div><br><div>上述两条均通过，才能安装pptp。否则就只能考虑openvpn，或者请vps空间商的技术客服为你的VPS打开TUN/TAP/PPP功能了，貌似有部分vps控制面板上提供打开TUN/TAP/PPP功能的按钮。</div><br><div><br><div><strong>Cent os 6.4内核版本在2.6.15以上，都默认集成了MPPE和PPP，因此下面检查可以忽略：</strong></div><br><div><strong><a href="http://www.ksharpdabu.info/?p=2178" target="_blank" rel="external">http://www.ksharpdabu.info/?p=2178</a></strong></div><br>&gt; #rpm -q ppp //查询当前系统的ppp是否默认集成了，以及ppp的版本<br><div></div><br><div>检查PPP是否支持MPPE</div><br><div>用以下命令检查PPP是否支持MPPE：</div><br>&gt; #strings ‘/usr/sbin/pppd’ |grep -i mppe | wc –lines<br><div><strong><a href="http://www.ksharpdabu.info/?p=2178" target="_blank" rel="external">http://www.ksharpdabu.info/?p=2178</a></strong></div><br><div>如果以上命令输出为“0”则表示不支持；输出为“30”或更大的数字就表示支持，MPPE（Microsoft Point to Point Encryption，微软点对点加密）。</div><br></div><br></div><br><div></div><br><div><strong>第二步</strong>：</div><br><div><strong>1.安装ppp和iptables</strong></div><br><div></div><br><div>PPTPD要求Linux内核支持mppe，一般来说CentOS安装时已经包含了</div><br><div><strong><a href="http://www.ksharpdabu.info/?p=2178" target="_blank" rel="external">http://www.ksharpdabu.info/?p=2178</a></strong></div><br>&gt; <div>#yum install -y perl ppp iptables //centos默认安装了iptables和ppp</div><br>&gt;<br>&gt; <div></div><br><div></div><br><div></div><br><div><strong>2.安装pptpd</strong></div><br><div><br><br>刚才用了yum安装了ppp,但是这里有个问题，几乎大部分的人都会在这里遇到ppp和pptpd不兼容的错误。因为yum安装ppp，总是安装最新版本的ppp，而由于安装的ppp的版本不同，那么就需要安装对应版本的pptpd才行。(参考我的文章《<a href="http://www.ksharpdabu.info/ppp-2-4-4-is-needed-by-pptpd-1-3-4-2-rhel5-x86_64-solutions-and-reasons.html" target="_blank" rel="external">ppp = 2.4.4 is needed by pptpd-1.3.4-2.rhel5.x86_64的解决办法及原因</a>|<a href="http://www.ksharpdabu.info/" target="_blank" rel="external">大步’s blog</a>》)<br><br>我们要先查看已经安装的ppp的版本，在去找对应的pptpd版本。我手头刚好有两个vps，一个是前年装的pptp vpn，一个是一年后装的pptp vpn，所以，装的yum install ppp的版本不同。<br><br>使用下面的命令查看ppp的版本，前提你是yum安装的ppp。<br><br>旧的vps上的ppp版本显示：<br><br>#yum list installed ppp<br><br>显示：<br>&gt; ppp.i386                    <strong> 2.4.4-2.el5  </strong>                   installed<br>新的vps上的ppp版本显示；<br><br>#yum list installed ppp<br><br>显示：<br>&gt; ppp.i686                      <strong> 2.4.5-5.el6 </strong>                      @base<br>所以，要对根据ppp版本选择对应的pptpd版本。这里我主要列出常用的。<br>&gt; <strong>ppp 2.4.4——————&gt;pptpd 1.3.4</strong><br>&gt;<br>&gt;<br>&gt; <strong>ppp 2.5.0——————&gt;pptpd 1.4.0</strong><br>贴个ppp和pptpd各个版本的下载地址；<a href="http://poptop.sourceforge.net/yum/stable/packages/" target="_blank" rel="external"><strong>http://poptop.sourceforge.net/yum/stable/packages/</strong></a><br><br>大家下载的时候注意，分清楚你系统的版本是64位的还是32位的。<span style="text-decoration: underline;"><strong>我个人建议ppp用yum安装，pptpd用rpm的安装，因为如果全都rpm或者源码安装，依赖关系很是烦人。文件名含有数字64的就是64位版本，没有的就是32位版本。可以用下面的命令查看自己的系统是32位还是64位的。</strong></span><br>&gt; #getconf LONG_BIT<br>下面假设我这里的ppp是2.4.4版本，然后安装pptpd<br><br><strong>第一种</strong>安装pptpd的方法是直接用yum安装，让电脑自动选择对应的版本：<br><br>先<strong>加入yum源</strong>：<br>&gt; #rpm -Uvh <a href="http://poptop.sourceforge.net/yum/stable/rhel6/pptp-release-current.noarch.rpm" target="_blank" rel="external">http://poptop.sourceforge.net/yum/stable/rhel6/pptp-release-current.noarch.rpm</a><br>然后用yum安装pptpd：<br>&gt; #yum install pptpd<br><strong>这是最省时间和力气的。余下的和手动安装没什么区别了。</strong><br><br>&nbsp;<br><br><strong>第二种</strong>是手动安装pptpd包：<br>&gt; 对于32位CentOS，执行<br>&gt;<br>&gt;<br>&gt; wget <a href="http://acelnmp.googlecode.com/files/pptpd-1.3.4-1.rhel5.1.i386.rpm" target="_blank" rel="external">http://acelnmp.googlecode.com/files/pptpd-1.3.4-1.rhel5.1.i386.rpm</a><br>&gt;<br>&gt;<br>&gt; rpm -ivh pptpd-1.3.4-1.rhel5.1.i386.rpm<br>&gt;<br>&gt;<br>&gt; 对于64位CentOS，执行<br>&gt;<br>&gt;<br>&gt; wget <a href="http://acelnmp.googlecode.com/files/pptpd-1.3.4-1.rhel5.1.x86_64.rpm" target="_blank" rel="external">http://acelnmp.googlecode.com/files/pptpd-1.3.4-1.rhel5.1.x86_64.rpm</a><br>&gt;<br>&gt;<br>&gt; rpm -ivh pptpd-1.3.4-1.rhel5.1.x86_64.rpm<br>&gt;<br>&gt;<br>&gt; 这里贴上32位的pptpd的rpm的下载地址：<br>&gt;<br>&gt;<br>&gt; <a href="http://www.400gb.com/file/34722122" target="_blank" rel="external">http://www.400gb.com/file/34722122</a><br><br>### <a name="t1"></a>64位安装的时候如果出现：<a href="http://www.ksharpdabu.info/?p=2178" target="_blank" rel="external">http://www.ksharpdabu.info/?p=2178</a><br><br>&gt; warning: pptpd-1.3.4-2.rhel5.x86_64.rpm: Header V3 DSA/SHA1 Signature, key ID 862acc42: NOKEY<br>&gt;<br>&gt; error: Failed dependencies:<br>&gt;<br>&gt; <strong>ppp = 2.4.4 is needed by pptpd-1.3.4-2.rhel5.x86_64</strong><br>&gt;<br>&gt;<br>&gt; 原因是pptpd与PPP不兼容，那么，此时用#yum list installed ppp   命令查看ppp版本，极有可能ppp是2.4.5版本的。所以，我们要下载pptp  1.4.0版本才行，而且这里是64位的系统。下载pptpd-1.4.0-1.el6.x86_64.rpm安装即可。这就是我说的出现版本不兼容的问题，当ppp版本和pptpd版本不兼容时候，就会出现类似的错误。<br>&gt;<br>&gt;<br>&gt; 这里我分享下pptpd 下载地址；<br>&gt;<br>&gt;<br>&gt; 64位<strong>pptpd-1.4.0-1.el6.x86_64.rpm</strong>的下载地址：<a href="http://www.400gb.com/file/54124122" target="_blank" rel="external">http://www.pipipan.com/file/18457333</a><br>&gt;<br>&gt;<br>&gt; 32位<strong>pptpd-1.4.0-1.el6.i686.rpm</strong>版本下载地址：<a href="http://www.400gb.com/file/54124192" target="_blank" rel="external">http://www.400gb.com/file/54124192</a><br>&gt;<br>&gt;<br>&gt; 看到有人建议用–nodeps –force 这个参数，我个人不建议，这个参数可能以后会出现奇怪的问题，但是如果实在不行，你就用吧<br>&nbsp;<br><br><strong>第三步：修改配置文件</strong><br><br>1.<strong>配置文件/etc/ppp/options.pptpd</strong><br>&gt; #mv /etc/ppp/options.pptpd /etc/ppp/options.pptpd.bak<br>&gt;<br>&gt; #vi /etc/ppp/options.pptpd<br><strong>options.pptpd</strong>内容如下：<br>&gt; name pptpd<br>&gt;<br>&gt; refuse-pap<br>&gt;<br>&gt; refuse-chap<br>&gt;<br>&gt; refuse-mschap<br>&gt;<br>&gt; require-mschap-v2<br>&gt;<br>&gt; require-mppe-128<br>&gt;<br>&gt; proxyarp<br>&gt;<br>&gt; lock<br>&gt;<br>&gt; nobsdcomp<br>&gt;<br>&gt; novj<br>&gt;<br>&gt; novjccomp<br>&gt;<br>&gt; nologfd<br>&gt;<br>&gt; idle 2592000<br>&gt;<br>&gt; ms-dns 8.8.8.8<br>&gt;<br>&gt; ms-dns 8.8.4.4<br>解析：ms-dns 8.8.8.8， ms-dns 8.8.4.4是使用google的dns服务器。<br><br>2.<strong>配置文件/etc/ppp/chap-secrets</strong><br>&gt; #cp   /etc/ppp/chap-secrets /etc/ppp/chap-secrets.bak<br>&gt;<br>&gt; #vi  /etc/ppp/chap-secrets<br><strong>chap-secrets</strong>内容如下：<br>&gt; # Secrets for authentication using CHAP<br>&gt;<br>&gt; # client server secret IP addresses<br>&gt;<br>&gt; myusername      pptpd     mypassword     <em><br>&gt;<br>&gt;<br>&gt; //myusername是你的vpn帐号，mypassword是你的vpn的密码，</em>表示对任何ip，记得不要丢了这个星号。我这里根据这个格式，假设我的vpn的帐号是ksharpdabu，密码是 sky。那么，应该如下：<br>&gt;<br>&gt;<br>&gt; ksharpdabu pptpd sky <em><br>&nbsp;<br><br>3.<strong>配置文件/etc/pptpd.conf</strong><br><br>#cp   /etc/pptpd.conf /etc/pptpd.conf.bak<br>#vi /etc/pptpd.conf<br><br><strong>pptpd.conf</strong>内容如下：<br>&gt; <strong>option /etc/ppp/options.pptpd</strong><br>&gt;<br>&gt; logwtmp<br>&gt;<br>&gt; localip 192.168.9.1<br>&gt;<br>&gt; remoteip 192.168.9.11-30 //表示vpn客户端获得ip的范围<br>&nbsp;<br><br><strong>关键点：<strong>pptpd.conf这个配置文件必须保证最后是以空行结尾才行，否则会导致启动pptpd服务时，出现“Starting pptpd:”，一直卡着不动的问题，无法启动服务，切记呀！（相关文档可以查看：<a href="http://www.ksharpdabu.info/starting-pptpd-does-not-run-down-turn.html" title="Starting pptpd: 运行不下去的原因(转)" target="_blank" rel="external">Starting pptpd: 运行不下去的原因</a>）</strong></strong><br><br>ppp = 2.4.4 is needed by pptpd-1.3.4-2.rhel5.x86_64<br><br>&nbsp;<br><br>4.<strong>配置文件/etc/sysctl.conf</strong><br>&gt; #vi /etc/sysctl.conf //修改内核设置，使其支持转发<br>将net.ipv4.ip_forward = 0 改成 net.ipv4.ip_forward = 1<br><br>保存修改后的文件<br>&gt; #/sbin/sysctl -p<br>&nbsp;<br><br><strong>第四步：启动pptp vpn服务和iptables</strong><br>&gt; #/sbin/service pptpd start 或者 #service pptpd start<br>经过前面步骤，我们的VPN已经<strong>可以拨号登录</strong>了，但是还不能访问任何网页。最后一步就是添加iptables转发规则了，输入下面的指令：<br><br>启动iptables和nat转发功能，很关键的呀：<br><br>#/sbin/service iptables start //启动iptables<br><br>#/sbin/iptables -t nat -A POSTROUTING -o eth0 -s 192.168.9.0/24 -j MASQUERADE <strong>或者</strong>使用下面的一种：<br><br>#iptables -t nat -A POSTROUTING -o eth0 -s 192.168.9.0/24 -j SNAT –to-source207.210.83.140 //你需要将207.210.83.140替换成你的vps的公网ip地址，因为这里我写的是我的。还有就是有人说我这–to-source前只有一个横杠，其实是有两个横杠的。文章在编辑模式下显示是两个横杠，因为用的是英文输入法，所以，发表后就变成了一个横杆，而且在源码下复制粘贴也是一横，只有在编辑模式下才能看清楚是两横。但是可以明显看到to前面的那一横比source前的那横长一些，这些都是我操作记录下的命令，不会有错的。为了防止你们出错，我还是用不同的颜色标记吧。<br><br>这里我先前写的不是很详细，现在补上：
+
+</em>   需要注意的是，这个指令中的“192.168.9.0/24”是根据之前的配置文件中的“localip”网段来改变的(网上有的教程是192.168.0.0/24 )，比如你设置的 “10.0.0.1”网段，则应该改为“10.0.0.0/24”。此外还有一点需要注意的是eth0，如果你的外网网卡不是eth0，而是eth1（比 如SoftLayer的服务器就是这样的情况），那么请记得将eth0也更改为对应的网卡编号，不然是上不了网的！<br><em>   如果你的linux vps是ppp或者ADSL这种由DHCP动态分配获取ip的方式（当然vps的ip基本都是是固定的。如果你是XEN的vps，那么这个转发规则其实<strong>也是适用</strong>的，就是让vps自己判断自己的ip，省去了我们指定。），那么就需要用-j MASQUERADE这种写法，就是ip伪装。当然如果使用iptables -t nat -A POSTROUTING -o eth0 -s 192.168.9.0/24 -j SNAT –to-source XXX.XXX.XXX.XXX 这种转发规则其实也是可以的，这样亲自指定自己的vps的ip地址。以后你通过vpn访问网站，显示的就是这个ip了。<br>#/etc/init.d/iptables save //保存iptables的转发规则<br><br>#/sbin/service iptables restart //重新启动iptables<br><br>&nbsp;<br><br><strong>最后一步：重启pptp vpn</strong><br>&gt; #/sbin/service pptpd retart 或者 #service pptpd restart<br>#############################################3<br><br>客户端如何拨号登陆vpn，我就不写了，大家可以自行google，因为系统那么多，我不可能xp，win7，centos，mac之类的每个都写，何况网上一大堆，只要你pptp vpn服务器搭建好了，客户端登陆的选择就是简单的事。如果这个也不知道，那我就没法了，自己动手吧。<br><br>&nbsp;<br><br><strong>多余的步骤</strong>：设置pptp vpn 开机启动<br><br>有的人懒的重启后手动开启服务，所以下面我再补上开机自动启动pptp vpn 和 iptables的命令<br><br>#chkconfig pptpd on //开机启动pptp vpn服务<br><br>#chkconfig iptables on //开机启动iptables<br><br>&nbsp;<br><br>有问题请先看log，查google，百度，论坛，有的人连软件下载都不自己去搜索，对于这样的人，我也懒得理睬。<br><br>&nbsp;<br><br>##############################华丽分隔线############################3<br><br>下面贴出网上的别人写的pptp vpn 一键安装包使用方法：<br><br><strong>第一篇：</strong><br>&gt; 本教程仅仅适用于Xen或KVM VPS,不适用于Openvz VPS，安装之前请确定自己是否是符合标准！<br>&gt;<br>&gt;<br>&gt; 1. 下载vpn(CentOS6专用)一键安装包<br>&gt;<br>&gt; #wget <a href="http://www.hi-vps.com/shell/vpn_centos6.sh" target="_blank" rel="external">http://www.hi-vps.com/shell/vpn_centos6.sh</a><br>&gt;<br>&gt; #chmod a+x vpn_centos6.sh<br>&gt;<br>&gt; 2. 运行一键安装包<br>&gt;<br>&gt; #bash vpn_centos6.sh<br>&gt;<br>&gt;<br>&gt; 会有三个选择:<br>&gt;<br>&gt;<br>&gt; 1. 安装VPN服务<br>&gt;<br>&gt; 2. 修复VPN<br>&gt;<br>&gt; 3. 添加VPN用户首先输入1，回车,VPS开始安装VPN服务. VPN服务安装完毕后会默认生成一个用户名为vpn，密码为随机数的用户来。<br>&gt;<br>&gt;<br>&gt; 3. 添加VPN用户<br>&gt;<br>&gt; #bash vpn_centos6.sh选择3，然后输入用户名和密码,OK<br>&gt;<br>&gt;<br>&gt; 4. 修复VPN服务<br>&gt;<br>&gt; 如果VPN拨号发生错误,可以试着修复VPN,然后重启VPS<br>&gt;<br>&gt; #bash vpn_centos6.sh<br>&gt;<br>&gt; 选择2，然后reboot<br>&gt;<br>&gt;<br>&gt; 下面是具体的脚本：<br>&gt;<br>&gt; #!/bin/bash<br>&gt;<br>&gt;<br>&gt; function installVPN(){<br>&gt;<br>&gt; echo “begin to install VPN services”;<br>&gt;<br>&gt; #check wether vps suppot ppp and tun<br>&gt;<br>&gt;<br>&gt; yum remove -y pptpd ppp<br>&gt;<br>&gt; iptables –flush POSTROUTING –table nat<br>&gt;<br>&gt; iptables –flush FORWARD<br>&gt;<br>&gt; rm -rf /etc/pptpd.conf<br>&gt;<br>&gt; rm -rf /etc/ppp<br>&gt;<br>&gt;<br>&gt; arch=<code>uname -m</code><br>&gt;<br>&gt;<br>&gt; wget <a href="http://www.hi-vps.com/downloads/dkms-2.0.17.5-1.noarch.rpm" target="_blank" rel="external">http://www.hi-vps.com/downloads/dkms-2.0.17.5-1.noarch.rpm</a><br>&gt;<br>&gt; wget <a href="http://wty.name/linux/sources/kernel_ppp_mppe-1.0.2-3dkms.noarch.rpm" target="_blank" rel="external">http://wty.name/linux/sources/kernel_ppp_mppe-1.0.2-3dkms.noarch.rpm</a><br>&gt;<br>&gt; wget <a href="http://www.hi-vps.com/downloads/kernel_ppp_mppe-1.0.2-3dkms.noarch.rpm" target="_blank" rel="external">http://www.hi-vps.com/downloads/kernel_ppp_mppe-1.0.2-3dkms.noarch.rpm</a><br>&gt;<br>&gt; wget <a href="http://www.hi-vps.com/downloads/pptpd-1.3.4-2.el6.$arch.rpm" target="_blank" rel="external">http://www.hi-vps.com/downloads/pptpd-1.3.4-2.el6.$arch.rpm</a><br>&gt;<br>&gt; wget <a href="http://www.hi-vps.com/downloads/ppp-2.4.5-17.0.rhel6.$arch.rpm" target="_blank" rel="external">http://www.hi-vps.com/downloads/ppp-2.4.5-17.0.rhel6.$arch.rpm</a><br>&gt;<br>&gt;<br>&gt; yum -y install make libpcap iptables gcc-c++ logrotate tar cpio perl pam tcp_wrappers<br>&gt;<br>&gt; rpm -ivh dkms-2.0.17.5-1.noarch.rpm<br>&gt;<br>&gt; rpm -ivh kernel_ppp_mppe-1.0.2-3dkms.noarch.rpm<br>&gt;<br>&gt; rpm -qa kernel_ppp_mppe<br>&gt;<br>&gt; rpm -Uvh ppp-2.4.5-17.0.rhel6.$arch.rpm<br>&gt;<br>&gt; rpm -ivh pptpd-1.3.4-2.el6.$arch.rpm<br>&gt;<br>&gt;<br>&gt; mknod /dev/ppp c 108 0<br>&gt;<br>&gt; echo 1 &gt; /proc/sys/net/ipv4/ip_forward<br>&gt;<br>&gt; echo “mknod /dev/ppp c 108 0″ &gt;&gt; /etc/rc.local<br>&gt;<br>&gt; echo “echo 1 &gt; /proc/sys/net/ipv4/ip_forward” &gt;&gt; /etc/rc.local<br>&gt;<br>&gt; echo “localip 172.16.36.1″ &gt;&gt; /etc/pptpd.conf<br>&gt;<br>&gt; echo “remoteip 172.16.36.2-254″ &gt;&gt; /etc/pptpd.conf<br>&gt;<br>&gt; echo “ms-dns 8.8.8.8″ &gt;&gt; /etc/ppp/options.pptpd<br>&gt;<br>&gt; echo “ms-dns 8.8.4.4″ &gt;&gt; /etc/ppp/options.pptpd<br>&gt;<br>&gt;<br>&gt; pass=<code>openssl rand 6 -base64</code><br>&gt;<br>&gt; if [ “$1” != “” ]<br>&gt;<br>&gt; then pass=$1<br>&gt;<br>&gt; fi<br>&gt;<br>&gt;<br>&gt; echo “vpn pptpd ${pass} </em>” &gt;&gt; /etc/ppp/chap-secrets<br>&gt;<br>&gt;<br>&gt; iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -j SNAT –to-source <code>ifconfig | grep ‘inet addr:’| grep -v ’127.0.0.1′ | cut -d: -f2 | awk ‘NR==1 { print $1}’</code><br>&gt;<br>&gt; iptables -A FORWARD -p tcp –syn -s 172.16.36.0/24 -j TCPMSS –set-mss 1356<br>&gt;<br>&gt; service iptables save<br>&gt;<br>&gt;<br>&gt; chkconfig iptables on<br>&gt;<br>&gt; chkconfig pptpd on<br>&gt;<br>&gt;<br>&gt; service iptables start<br>&gt;<br>&gt; service pptpd start<br>&gt;<br>&gt;<br>&gt; echo “VPN service is installed, your VPN username is vpn, VPN password is ${pass}”<br>&gt;<br>&gt;<br>&gt; }<br>&gt;<br>&gt;<br>&gt; function repaireVPN(){<br>&gt;<br>&gt; echo “begin to repaire VPN”;<br>&gt;<br>&gt; mknod /dev/ppp c 108 0<br>&gt;<br>&gt; service iptables restart<br>&gt;<br>&gt; service pptpd start<br>&gt;<br>&gt; }<br>&gt;<br>&gt;<br>&gt; function addVPNuser(){<br>&gt;<br>&gt; echo “input user name:”<br>&gt;<br>&gt; read username<br>&gt;<br>&gt; echo “input password:”<br>&gt;<br>&gt; read userpassword<br>&gt;<br>&gt; echo “${username} pptpd ${userpassword} <em>” &gt;&gt; /etc/ppp/chap-secrets<br>&gt;<br>&gt; service iptables restart<br>&gt;<br>&gt; service pptpd start<br>&gt;<br>&gt; }<br>&gt;<br>&gt;<br>&gt; echo “which do you want to?input the number.”<br>&gt;<br>&gt; echo “1. install VPN service”<br>&gt;<br>&gt; echo “2. repaire VPN service”<br>&gt;<br>&gt; echo “3. add VPN user”<br>&gt;<br>&gt; read num<br>&gt;<br>&gt;<br>&gt; case “$num” in<br>&gt;<br>&gt; [1] ) (installVPN);;<br>&gt;<br>&gt; [2] ) (repaireVPN);;<br>&gt;<br>&gt; [3] ) (addVPNuser);;<br>&gt;<br>&gt; </em>) echo “nothing,exit”;;<br>&gt;<br>&gt; esac<br><strong>第二篇：</strong><br>&gt; ## <a name="t2"></a><a href="http://www.centoscn.com/image-text/2013/0413/307.html" target="_blank" rel="external">PPTP VPN 一键安装包（OpenVZ适用）</a><br>&gt;<br>&gt; ### <a name="t3"></a>1、检测<span class="entry">虚拟网卡支持</span><br>&gt;<br>&gt; OpenVZ的VPS客户需要检测<span class="entry">虚拟网卡ppp模块支持，</span><span class="entry">如果不支持即使安装成功也没用。（Xen等可跳过此步）</span><br>&gt;<br>&gt;<br>&gt; #### <a name="t4"></a>检测是否支持ppp模块<br>&gt;<br>&gt; 执行命令：<br>&gt;<br>&gt; <pre lang="bash">cat /dev/ppp</pre><br>&gt;<br>&gt; 如果返回信息为：cat: /dev/ppp: No such device or address 说明正常<br>&gt;<br>&gt;<br>&gt; ### <a name="t5"></a>2、使用管理员帐号密码登陆SSH，并输入以下指令<br>&gt;<br>&gt; wget <a href="http://soft.kwx.gd/vpn/pptpd.sh" target="_blank" rel="external">http://soft.kwx.gd/vpn/pptpd.sh</a> //下载centos pptp vpn一键安装包的脚本<br>&gt;<br>&gt;<br>&gt; ### <a name="t6"></a><span class="entry">3、以上操作是下载安装脚本，下载完毕后请直接执行：</span><br>&gt;<br>&gt; sh pptpd.sh<br>&gt;<br>&gt;<br>&gt; ### <a name="t7"></a>安装完成后，默认账户是vpn ，密码:vpn 如果要添加修改密码，参考我上面的教程<span class="entry">输入命令 vi /etc/ppp/chap-secrets 编辑文件，按照相同格式添加用户名和密码即可。</span><span class="entry">：</span><br>&gt;<br>&gt; <strong>chap-secrets</strong>内容如下：<br>&gt;<br>&gt;<br>&gt; # Secrets for authentication using CHAP<br>&gt;<br>&gt; # client server secret IP addresses<br>&gt;<br>&gt; myusername pptpd mypassword <em><br>&gt;<br>&gt;<br>&gt; //myusername是你的vpn帐号，mypassword是你的vpn的密码，</em>表示对任何ip，记得不要丢了这个星号。我这里根据这个格式，假设我的vpn的帐号是ksharpdabu，密码是 sky。那么，应该如下：<br>&gt;<br>&gt;<br>&gt; ksharpdabu pptpd sky <em><br></em></div><br><div></div><br><div>############################完#############################</div><br><div>如果一件安装包都不知道用，那就真的没法子了</div><br><div><br><br><em>*FAQ：</em><br><br>1.报错：重启时候提示<br><br># service pptpd restart<br>Shutting down pptpd: [失败]<br>Starting pptpd: [失败]<br>Warning: a pptpd restart does not terminate existing<br>connections, so new connections may be assigned the same IP<br>address and cause unexpected results. Use restart-kill to<br>destroy existing connections during a restart.<br><br>解决办法：根据提示，可能是你重启pptpd服务的时候，没有切断已经存在的连接，所以新的连接会被分配为相同的ip地址，导致一些不可预料的问题。所以你重启 pptpd服务前，先用下面的命令断开当前存在的连接：#service pptpd restart-kill，然后再#service pptpd start<br><br>2.有的vps不支持加密连接，导致不能拨号成功登陆vpn。<br><br>解决办法：是<span class="entry">编辑/etc/ppp/options.pptpd（vim /etc/ppp/options.pptpd），在require-mppe-128前面加个#（# require-mppe-128）；</span><br><br><span class="entry">在windows的VPN连接属性里，加密方式选择为可选加密，并允许未加密的密码。</span><br><br>&nbsp;<br><br>3.能够直接用域名作为vpn的拨号地址，而不用vps的ip。因为ip不方便记忆，我自己也记不住自己的服务器的ip。<br><br>解决办法：去dns里面设置，将域名设置为A记录，这样就可以直接用域名作为vpn的服务器的地址了。<br><br>4.有的链接 pptp vpn时候失败，提示619.<br><br>解决办法：执行下面的命令：<br><br># rm -r /dev/ppp<br><br># mknod /dev/ppp c 108 0 然后重启VPS即可。<br><br>也可以参考这片文章《<a href="http://www.hkcdn.net/23.html" target="_blank" rel="external">VPN连接时提示619错误处理办法及vpn连接成功后无法上网解决办法</a>》<br><br></div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-04-26-centos6-4-e5-ae-89-e8-a3-85-e6-90-ad-e5-bb-bapptp-vpn-e6-9c-8d-e5-8a-a1.html" data-title="centos6.4安装搭建pptp vpn服务" data-url="http://www.linux52.com/2015-04-26-centos6-4-e5-ae-89-e8-a3-85-e6-90-ad-e5-bb-bapptp-vpn-e6-9c-8d-e5-8a-a1.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

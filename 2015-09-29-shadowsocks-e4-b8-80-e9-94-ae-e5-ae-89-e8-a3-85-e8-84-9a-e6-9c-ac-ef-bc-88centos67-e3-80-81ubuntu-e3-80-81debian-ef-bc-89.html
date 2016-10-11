@@ -1,0 +1,752 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>Shadowsocks一键安装脚本（CentOS6,7、Ubuntu、Debian） | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="简单理解的话，Shadowsocks是将以前通过SSH创建的Socks5协议拆开成Server端和client端，下面这个原理图能简单介绍其翻墙原理，基本上和利用SSH tunnel大致类似：
+
+
+
+PC客户端（即你的电脑）发出请求基于Socks5协议跟SS-Local端进行通讯，由于这个SS-Lo">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="Shadowsocks一键安装脚本（CentOS6,7、Ubuntu、Debian）"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/便宜vps/">便宜vps</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>Shadowsocks一键安装脚本（CentOS6,7、Ubuntu、Debian）</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-09-29T15:30:40.000Z"><a href="/2015-09-29-shadowsocks-e4-b8-80-e9-94-ae-e5-ae-89-e8-a3-85-e8-84-9a-e6-9c-ac-ef-bc-88centos67-e3-80-81ubuntu-e3-80-81debian-ef-bc-89.html">2015-09-29</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#安装使用说明"><span class="section table-of-contents-text">安装使用说明</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#Shadowsocks安装"><span class="section table-of-contents-text">Shadowsocks安装</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#Shadowsocks添加用户"><span class="section table-of-contents-text">Shadowsocks添加用户</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#本地客户端"><span class="section table-of-contents-text">本地客户端</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#OS-X-下设置使用方法"><span class="section table-of-contents-text">OS X 下设置使用方法</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#Windows-下设置使用方法"><span class="section table-of-contents-text">Windows 下设置使用方法</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#Android-以及-iOS-客户端"><span class="section table-of-contents-text">Android 以及 iOS 客户端</span></a></li></ol></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p>简单理解的话，Shadowsocks是将以前通过SSH创建的Socks5协议拆开成Server端和client端，下面这个原理图能简单介绍其翻墙原理，基本上和利用SSH tunnel大致类似：</p>
+<div align="center"><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/what-is-shadowsocks.png" alt=""></div>
+
+<ol>
+<li>PC客户端（即你的电脑）发出请求基于Socks5协议跟SS-Local端进行通讯，由于这个SS-Local一般是本机或路由器等局域网的其他机器，不经过GFW，所以解决GFW通过特征分析进行干扰的问题。</li>
+<li>SS-Local和SS-Server两端通过多种可选的加密方法进行通讯，经过GFW的时候因为是常规的TCP包，没有明显特征码GFW也无法对通讯数据进行解密，因此通讯放行。</li>
+<li>SS-Server将收到的加密数据进行解密，还原初始请求，再发送到用户需要访问的服务网站，获取响应原路再返回SS-04，返回途中依然使用了加密，使得流量是普通TCP包，并成功穿过GFW防火墙。<br>因此，Shadowsocks的优点在于它解决了GFW通过分析流量特征从而干扰的问题，这是它优于SSH和VPN翻墙的地方。</li>
+</ol>
+<h3 id="安装使用说明"><a href="#安装使用说明" class="headerlink" title="安装使用说明"></a>安装使用说明</h3><p>Shadowsocks服务端有<span class="wp_keywordlink"><a href="https://blog.linuxeye.com/category/Python" title="Python" target="_blank" rel="external">Python</a></span>、libev、go版本，从系统占用资源和多用户配置方面来考虑，我选择使用Python来作为Shadowsocks的服务端，网上已经有很多比较好的一键安装脚本，如teddysun，但对多用户配置还需要手工更改配置文件（iptables、/etc<br>/shadowsocks.json）。于是，自己写一个，包含安装、添加用户和卸载功能，并整合到《<a href="http://oneinstack.com/" target="_blank" rel="external">OneinStack</a>》和《<a href="https://blog.linuxeye.com/31.html" target="_blank" rel="external">lnmp一键安装包</a>》中。</p>
+<p>7月8号之前一键安装包，怎么使用该脚本？</p>
+<pre class="prettyprint linenums">cd lnmp #如果使用oneinstack（cd oneinstack)
+wget http://mirrors.linuxeye.com/lnmp/shadowsocks.sh
+chmod +x shadowsocks.sh
+./shadowsocks.sh install #安装、添加用户、卸载和后面一样
+</pre>
+
+<h4 id="Shadowsocks安装"><a href="#Shadowsocks安装" class="headerlink" title="Shadowsocks安装"></a>Shadowsocks安装</h4><pre class="prettyprint linenums">wget http://mirrors.linuxeye.com/oneinstack.tar.gz
+tar xzf oneinstack.tar.gz
+cd oneinstack
+./shadowsocks.sh install
+</pre>
+<div align="center">![](https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks_install.jpg)</div>
+出现如下即安装成功：
+<pre class="prettyprint linenums">Your Server IP: You_Server_IP
+Your Server Port: 9001
+Your Password: oneinstack
+Your Local IP: 127.0.0.1
+Your Local Port: 1080
+Your Encryption Method: aes-256-cfb
+</pre>
+
+<h4 id="Shadowsocks添加用户"><a href="#Shadowsocks添加用户" class="headerlink" title="Shadowsocks添加用户"></a>Shadowsocks添加用户</h4><pre class="prettyprint linenums">./shadowsocks.sh adduser</pre>
+<div align="center">![](https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks_adduser.jpg)</div>
+
+#### Shadowsocks卸载
+
+<pre class="prettyprint lang-bsh">./shadowsocks.sh uninstall</pre>
+<div align="center">![](https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks_uninstall.jpg)</div>
+
+#### Shadowsocks服务管理
+
+<pre class="prettyprint lang-bsh">
+service shadowsocks start   #启动
+service shadowsocks stop      #关闭
+service shadowsocks restart  #重启
+service shadowsocks status   #状态</pre>
+
+<h3 id="本地客户端"><a href="#本地客户端" class="headerlink" title="本地客户端"></a>本地客户端</h3><p>Windows 和 OS X 下的 GUI 客户端可以下载shadowsocks-gui，下载地址</p>
+<p><a href="http://sourceforge.net/projects/shadowsocksgui/files/dist" target="_blank" rel="external">http://sourceforge.net/projects/shadowsocksgui/files/dist</a></p>
+<p>目前最新版本为<a href="http://sourceforge.net/projects/shadowsocksgui/files/dist/Shadowsocks-win-2.3.1.zip/download" target="_blank" rel="external">Shadowsocks-win-2.3.1.zip</a>和<a href="http://sourceforge.net/projects/shadowsocksgui/files/dist/ShadowsocksX-2.6.3.dmg/download" target="_blank" rel="external">ShadowsocksX-2.6.3.dmg</a></p>
+<p>如果无法打开，请使用备份地址</p>
+<p><strong>Win：</strong></p>
+<p>.NET Framework 3.5 版本，适合 Windows 7 用户，链接：<a href="http://pan.baidu.com/s/1kTKjIxp" target="_blank" rel="external">http://pan.baidu.com/s/1kTKjIxp</a> 密码：j3xd</p>
+<p>.NET Framework 4.0 版本，适合 Windows 8.1 用户，链接：<a href="http://pan.baidu.com/s/1jUnFK" target="_blank" rel="external">http://pan.baidu.com/s/1jUnFK</a> 密码：8220</p>
+<p><strong>OS X：</strong></p>
+<p>链接：<a href="http://pan.baidu.com/s/1mglBIBY" target="_blank" rel="external">http://pan.baidu.com/s/1mglBIBY</a> 密码：2cqe</p>
+<p>针对两个系统，OS X 和 Windows，以及手机 iOS 和 Android 客户端。</p>
+<h4 id="OS-X-下设置使用方法"><a href="#OS-X-下设置使用方法" class="headerlink" title="OS X 下设置使用方法"></a>OS X 下设置使用方法</h4><p>Mac 下使用极其方便，因为 GUI 已经集成了系统 Pac，所以无需设置任何科学上网的姿势，直接运行ShadowsocksX，然后输入服务商提供给你的账号信息，保存运行后，即可在所有浏览器里直接科学上网，如图：</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks-GUI-Mac-Menu.png" alt=""></p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks-GUI-Mac-Screenshot.png" alt=""></p>
+<h4 id="Windows-下设置使用方法"><a href="#Windows-下设置使用方法" class="headerlink" title="Windows 下设置使用方法"></a>Windows 下设置使用方法</h4><p>解压Shadowsocks-win-2.3.1.zip，打开shadowsocks.exe</p>
+<p>然后输入服务商提供给你的账号信息，如图：</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks-win-Menu.png" alt=""></p>
+<p>点击OK保存，成功后会在桌面右下方显示 Shadowsocks logo 的图标，然后右键点击 Enable 运行</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks-win-Screenshot.png" alt=""></p>
+<p>由于 Windows 系统的复杂性，我们需要单独对浏览器进行设置，本文只介绍 Chrome 和 Firefox 这两款优秀的浏览器，至于其他的浏览器，如 IE 等，本文不会介绍。</p>
+<p><strong>① Chrome 下的 Proxy SwitchySharp 插件</strong></p>
+<p><a href="https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm?hl=zh-CN" target="_blank" rel="external">https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm?hl=zh-CN</a></p>
+<p>如果您无法访问，也可以下载这个 .crx 文件</p>
+<p>链接：<a href="http://pan.baidu.com/s/1jGmvMPg" target="_blank" rel="external">http://pan.baidu.com/s/1jGmvMPg</a> 密码：if2e</p>
+<p>下载完成后在设置&gt;&gt;扩展，直接把该 .crx 文件拖入窗口然后安装即可</p>
+<p>然后打开 Proxy SwitchySharp 的设置，新建一个情景，命名为 Shadowsocks，并设置好端口，模式为 socks5 如图：</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/SwitchySharps-Option.jpg" alt=""></p>
+<p>再点切换规则，由于可能大概无法访问 Google，我们就启用切换规则，然后在 URL 模式里输入 <em>google</em> 统配好 Google 的所有域名，选择好模式匹配为通配符，情景模式为 Shadowsocks</p>
+<p>然后把在线规则列表打钩，输入URL为：<a href="https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt" target="_blank" rel="external">https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt</a></p>
+<p>勾选AutoProxy 兼容列表，然后点立即更新，更新完成后保存即可，如图：</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/SwitchySharps-Choose-Rules.jpg" alt=""></p>
+<p>如果不想用插件，直接全局代理，就把桌面的快捷方式 chrome.exe 右键 属性 &gt;&gt; 修改 Chrome.exe 运行参数，在目标那一栏，最后的引号后面加上</p>
+<p><pre class="prettyprint lang-bsh"><span class="pun">–</span><span class="pln">proxy</span><span class="pun">-</span><span class="pln">server</span><span class="pun">=</span><span class="str">“socks5://127.0.0.1:1080”</span> <span class="pun">–</span><span class="pln">host</span><span class="pun">-</span><span class="pln">resolver</span><span class="pun">-</span><span class="pln">rules</span><span class="pun">=</span><span class="str">“MAP * 0.0.0.0 , EXCLUDE localhost”</span></pre><br>就是说修改为类似（1080 为你设置的本地端口，如果设置了不同的端口请自行修改）</p>
+<p><pre class="prettyprint lang-bsh"><span class="str">“C:\Program Files (x86)\Google\Chrome\Application\chrome.exe”</span><span class="pun">–</span><span class="pln">proxy</span><span class="pun">-</span><span class="pln">server</span><span class="pun">=</span><span class="str">“socks5://127.0.0.1:1080”</span> <span class="pun">–</span><span class="pln">host</span><span class="pun">-</span><span class="pln">resolver</span><span class="pun">-</span><span class="pln">rules</span><span class="pun">=</span><span class="str">“MAP * 0.0.0.0 , EXCLUDE localhost”</span></pre><br>然后运行 Chrome 即可</p>
+<p><strong>② Firefox 下的 AutoProxy 20131215 修复版</strong></p>
+<p>由于 AutoProxy 的作者没有更新，新的版本无法在 Firefox 27.0 以后进行代理规则设置，所以我们用 xthunder 作者 的修复版，下载链接：<a href="http://xthunder.googlecode.com/files/autoproxy20131215.xpi" target="_blank" rel="external">http://xthunder.googlecode.com/files/autoproxy20131215.xpi</a></p>
+<p>如果您无法访问，也可以访问此链接：<a href="http://pan.baidu.com/s/1c0rrGDq" target="_blank" rel="external">http://pan.baidu.com/s/1c0rrGDq</a> 密码：9abj</p>
+<p>下载好这个 .xpi 文件后，直接拖入任何 Firefox 窗口，然后安装重启浏览器即可。之后点击右上方新出现的小地球图标，进行设置</p>
+<p>点击首选项</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/AutoProxy-Menu.jpg" alt=""></p>
+<p>依次点击代理服务器&gt;&gt;编辑代理服务器</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/AutoProxy-Choose-Proxy-Server.jpg" alt=""></p>
+<p>新增加一个名称为Shadowsocks设置好本地的端口，类型为socks5</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/AutoProxy-Edit-Proxy-Server.jpg" alt=""></p>
+<p>然后点击代理规则&gt;&gt;增加代理规则</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/AutoProxy-Add-List.jpg" alt=""></p>
+<p>订阅 GFW List</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/AutoProxy-Add-List-2.jpg" alt=""></p>
+<p>然后保存，可以设置全局代理，也可以设置自动代理，推荐使用自动代理，只针对某一批网站走代理，然后右上方的小地球图标会变成蓝色（自动模式）或绿色（全局模式）</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/AutoProxy-Works.jpg" alt=""> <img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/AutoProxy-Works-2.jpg" alt=""></p>
+<h4 id="Android-以及-iOS-客户端"><a href="#Android-以及-iOS-客户端" class="headerlink" title="Android 以及 iOS 客户端"></a>Android 以及 iOS 客户端</h4><p>如果需要局部科学上网，那么你的 Android 需要 root，如果木有 root，那么就只能全局上网</p>
+<p>Android 客户端下载地址请摸我：</p>
+<p><a href="https://play.google.com/store/apps/details?id=com.github.shadowsocks" target="_blank" rel="external">https://play.google.com/store/apps/details?id=com.github.shadowsocks</a></p>
+<p>如果您无法访问，也可以摸摸这个：</p>
+<p><a href="http://apps.evozi.com/apk-downloader/?id=com.github.shadowsocks" target="_blank" rel="external">http://apps.evozi.com/apk-downloader/?id=com.github.shadowsocks</a></p>
+<p>设置账号信息和电脑上基本一致：</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks-Android.jpg" alt=""></p>
+<p>iOS 非越狱的话，可以直接安装 Shadowsocks 的 app，下载地址请访问：</p>
+<p><a href="https://itunes.apple.com/us/app/shadowsocks/id665729974?ls=1&amp;mt=8" target="_blank" rel="external">https://itunes.apple.com/us/app/shadowsocks/id665729974?ls=1&amp;mt=8</a></p>
+<p>这是个自带 SS 的浏览器，设置账号信息等大同小异，点击右上方的+号，然后设置你的账号：</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks-iOS.png" alt=""></p>
+<p>iOS 越狱了的话，直接在 Cydia 里搜索 Shadowsocks ，然后安装</p>
+<p><img src="https://blog.linuxeye.com/wp-content/uploads/2015/07/Shadowsocks-iOS-Jail.jpg" alt=""></p>
+<p>客户端信息参考：<a href="http://ttt.tt/150/" target="_blank" rel="external">http://ttt.tt/150/</a></p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-09-29-shadowsocks-e4-b8-80-e9-94-ae-e5-ae-89-e8-a3-85-e8-84-9a-e6-9c-ac-ef-bc-88centos67-e3-80-81ubuntu-e3-80-81debian-ef-bc-89.html" data-title="Shadowsocks一键安装脚本（CentOS6,7、Ubuntu、Debian）" data-url="http://www.linux52.com/2015-09-29-shadowsocks-e4-b8-80-e9-94-ae-e5-ae-89-e8-a3-85-e8-84-9a-e6-9c-ac-ef-bc-88centos67-e3-80-81ubuntu-e3-80-81debian-ef-bc-89.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

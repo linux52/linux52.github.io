@@ -1,0 +1,674 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>Ubuntu安装和配置strongSwan | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="记录在Ubuntu 14.04上安装和配置strongSwan的过程。
+装完之后才发现只能在墙内翻腾，一番调查后发现客户端的IKE_AUTH包根本无法到达墙外的服务端，改端口也没用。不过好歹也折腾了一番，姑且记下来。
+编译安装strongSwanUbuntu 14.04仓库里的strongSwan是">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="Ubuntu安装和配置strongSwan"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/记录/">记录</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>Ubuntu安装和配置strongSwan</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2016-06-15T14:58:28.000Z"><a href="/2016-06-15-ubuntu-e5-ae-89-e8-a3-85-e5-92-8c-e9-85-8d-e7-bd-aestrongswan.html">2016-06-15</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#编译安装strongSwan"><span class="section table-of-contents-text">编译安装strongSwan</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#服务端密钥和证书"><span class="section table-of-contents-text">服务端密钥和证书</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#客户端密钥和证书"><span class="section table-of-contents-text">客户端密钥和证书</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#设置密钥和证书权限"><span class="section table-of-contents-text">设置密钥和证书权限</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#配置strongSwan"><span class="section table-of-contents-text">配置strongSwan</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#ipsec-conf"><span class="section table-of-contents-text">ipsec.conf</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#strongswan-conf"><span class="section table-of-contents-text">strongswan.conf</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#charon-logging-conf"><span class="section table-of-contents-text">charon-logging.conf</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#系统配置"><span class="section table-of-contents-text">系统配置</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#ip转发"><span class="section table-of-contents-text">ip转发</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#iptables配置"><span class="section table-of-contents-text">iptables配置</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#启动strongSwan服务"><span class="section table-of-contents-text">启动strongSwan服务</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#客户端配置"><span class="section table-of-contents-text">客户端配置</span></a></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p>记录在Ubuntu 14.04上安装和配置strongSwan的过程。</p>
+<p>装完之后才发现只能在墙内翻腾，一番调查后发现客户端的IKE_AUTH包根本无法到达墙外的服务端，改端口也没用。不过好歹也折腾了一番，姑且记下来。</p>
+<h2 id="编译安装strongSwan"><a href="#编译安装strongSwan" class="headerlink" title="编译安装strongSwan"></a>编译安装strongSwan</h2><p>Ubuntu 14.04仓库里的strongSwan是5.1.2版本的，稍微有点老，这里从官方网站下载最新的5.3.0版本。</p>
+<div class="codehilite"><br><pre>cd /tmp<br>wget <a href="http://download.strongswan.org/strongswan-5.3.0.tar.bz2" target="_blank" rel="external">http://download.strongswan.org/strongswan-5.3.0.tar.bz2</a><br>tar xvf strongswan-5.3.0.tar.bz2<br>cd strongswan-5.3.0<br></pre><br></div><br>在编译strongSwan之前先安装一下依赖库:<br><div class="codehilite"><br><pre>sudo apt-get install libpam0g-dev libssl-dev build-essential<br></pre><br></div><br>参考网上的一篇<a href="https://hjc.im/shi-yong-strongswanda-jian-ipsecikev2-vpn/" target="_blank" rel="external">教程</a>，使用如下参数编译strongSwan。另外，如果你的VPS是OpenVZ服务器<sup id="fnref:1"><a href="http://blog.atime.me/note/strongSwan-setup-and-config-on-ubuntu-server.html#fn:1" target="_blank" rel="external">1</a></sup>，据说还应该再加上一个<code>--enable-kernel-libipsec</code>参数。<br><div class="codehilite"><br><pre>./configure  –enable-eap-identity –enable-eap-md5 \<br>–enable-eap-mschapv2 –enable-eap-tls –enable-eap-ttls –enable-eap-peap  \<br>–enable-eap-tnc –enable-eap-dynamic –enable-eap-radius –enable-xauth-eap  \<br>–enable-xauth-pam  –enable-dhcp  –enable-openssl  –enable-addrblock –enable-unity  \<br>–enable-certexpire –enable-radattr –enable-openssl –disable-gmp<br></pre><br></div><br>最后编译并安装<br><div class="codehilite"><br><pre>make<br>sudo make install<br></pre><br></div><br>如果在configure的时候没有配置<code>--prefix</code>参数，那么strongSwan默认被安装到<code>/usr/local</code>目录下，配置文件安装在<code>/usr/local/etc</code>目录下。<br><br>## 创建密钥和证书<br><br>这里可参考这篇<a href="https://www.zeitgeist.se/2013/11/22/strongswan-howto-create-your-own-vpn/" target="_blank" rel="external">文章</a>和官方wiki上的一篇<a href="https://wiki.strongswan.org/projects/strongswan/wiki/SimpleCA" target="_blank" rel="external">教程</a>。<br><br>为方便，下面的命令不再加sudo，可以直接su。<br><br>### 自签署根证书<br><br>首先创建一个根证书的RSA密钥:<br><div class="codehilite"><br><pre>cd /usr/local/etc/ipsec.d<br><br>ipsec pki –gen –type rsa \<br>–size 4096 –outform pem \<br>&gt; private/strongSwanCAKey.pem<br></pre><br></div><br>然后使用这个密钥自签署一个根证书(公钥):<br><div class="codehilite"><br><pre>ipsec pki –self –ca –lifetime 3650 \<br>–in private/strongSwanCAKey.pem –type rsa \<br>–dn “C=CH, O=strongSwan, CN=strongSwan Root CA” \<br>–outform pem &gt; cacerts/strongSwanCACert.pem<br></pre><br></div>
+
+<h3 id="服务端密钥和证书"><a href="#服务端密钥和证书" class="headerlink" title="服务端密钥和证书"></a>服务端密钥和证书</h3><p>接下来，创建服务端使用的密钥和证书，<strong>记得</strong>把<code>--dn</code>和<code>--san</code>参数的<code>myvpn.domain</code>改成自己VPS的域名或IP<sup id="fnref:2"><a href="http://blog.atime.me/note/strongSwan-setup-and-config-on-ubuntu-server.html#fn:2" target="_blank" rel="external">2</a></sup><sup id="fnref:3"><a href="http://blog.atime.me/note/strongSwan-setup-and-config-on-ubuntu-server.html#fn:3" target="_blank" rel="external">3</a></sup>。</p>
+<div class="codehilite"><br><pre>ipsec pki –gen –type rsa –size 2048 \<br>–outform pem &gt; private/strongSwanServerKey.pem<br><br>ipsec pki –pub –in private/strongSwanServerKey.pem –type rsa | \<br>ipsec pki –issue –lifetime 730 \<br>–cacert cacerts/strongSwanCACert.pem \<br>–cakey private/strongSwanCAKey.pem \<br>–dn “C=CH, O=strongSwan, CN=myvpn.domain” \<br>–san myvpn.domain \<br>–flag serverAuth –flag ikeIntermediate \<br>–outform pem &gt; certs/strongSwanServerCert.pem<br></pre><br></div>
+
+<h3 id="客户端密钥和证书"><a href="#客户端密钥和证书" class="headerlink" title="客户端密钥和证书"></a>客户端密钥和证书</h3><p>然后生成客户端的密钥和证书，生成证书时<strong>记得</strong>把<code>--dn</code>和<code>--san</code>参数的邮件地址<code>aabb@myvpn.domain</code>改成自己的。</p>
+<div class="codehilite"><br><pre>ipsec pki –gen –type rsa –size 2048 \<br>–outform pem &gt; private/clientAABBKey.pem<br><br>ipsec pki –pub –in private/clientAABBKey.pem –type rsa | \<br>ipsec pki –issue –lifetime 730 \<br>–cacert cacerts/strongSwanCACert.pem \<br>–cakey private/strongSwanCAKey.pem \<br>–dn “C=CH, O=strongSwan, CN=aabb@myvpn.domain” \<br>–san aabb@myvpn.domain \<br>–outform pem &gt; certs/clientAABBCert.pem<br></pre><br></div><br>为了方便在Win7和IOS客户端上使用，我们把根证书和客户端的密钥+证书打包成一个<a href="http://en.wikipedia.org/wiki/PKCS_12" target="_blank" rel="external">PKCS #12</a>文件。这一步会提示输入密码，也可以留空。<br><div class="codehilite"><br><pre>openssl pkcs12 -export -inkey private/clientAABBKey.pem \<br>-in certs/clientAABBCert.pem -name “AABB’s Client Certificate” \<br>-certfile cacerts/strongSwanCACert.pem \<br>-caname “strongSwan Root CA” \<br>-out private/clientAABB.p12<br></pre><br></div>
+
+<h3 id="设置密钥和证书权限"><a href="#设置密钥和证书权限" class="headerlink" title="设置密钥和证书权限"></a>设置密钥和证书权限</h3><p><strong>记得</strong>设置一下证书目录和文件的权限:</p>
+<div class="codehilite"><br><pre>chmod 700 cacerts certs private crls<br>chmod 600 cacerts/<em> certs/</em> private/<em><br></em></pre><br></div><br>最后，罗列一下刚刚创建的密钥和证书:<br><div class="codehilite"><br><pre>cacerts/:<br>    strongSwanCACert.pem        –   根证书，用于签署服务端和客户端的证书<br><br>certs/:<br>    clientAABBCert.pem          –  <em> 客户端aabb的证书<br>    strongSwanServerCert.pem    –  服务端的证书<br><br>private/:<br>    strongSwanCAKey.pem         –  根证书的密钥<br>    clientAABBKey.pem           –  </em> 客户端aabb的密钥<br>    clientAABB.p12              –  <em> 根证书+客户端密钥+客户端证书<br>    strongSwanServerKey.pem     –  服务端的密钥<br></em></pre><br></div><br>上面加()号的都是需要下载到客户端安装的文件。<br><br>### 吊销客户端证书<br><br>有时候可能想吊销AABB客户端的证书，可以使用如下命令:<br><div class="codehilite"><br><pre>ipsec pki –signcrl –reason key-compromise \<br>–cacert cacerts/strongSwanCACert.pem \<br>–cakey private/strongSwanCAKey.pem \<br>–cert certs/clientAABBCert.pem \<br>–outform pem &gt; crls/crl.pem<br></pre><br></div><br>如果还想吊销一个客户端证书，参考这篇<a href="https://www.zeitgeist.se/2013/11/22/strongswan-howto-create-your-own-vpn/" target="_blank" rel="external">教程</a>，需要先将老的crl.pem文件保存到一个临时文件里:<br><div class="codehilite"><br><pre>cp crls/crl.pem crl.pem.tmp<br><br>ipsec pki –signcrl –reason key-compromise \<br>–cacert cacerts/strongSwanCACert.pem \<br>–cakey private/strongSwanCAKey.pem \<br>–cert certs/StolenClientCert.pem \<br>–lastcrl crl.pem.tmp \<br>–outform pem &gt; crls/crl.pem<br><br>rm crl.pem.tmp<br></pre><br></div>
+
+<h2 id="配置strongSwan"><a href="#配置strongSwan" class="headerlink" title="配置strongSwan"></a>配置strongSwan</h2><h3 id="ipsec-conf"><a href="#ipsec-conf" class="headerlink" title="ipsec.conf"></a>ipsec.conf</h3><p>ipsec.conf的详细参数说明可参考官方的<a href="https://wiki.strongswan.org/projects/strongswan/wiki/IpsecConf" target="_blank" rel="external">wiki</a>。</p>
+<div class="codehilite"><br><pre>sudo cat &gt; /usr/local/etc/ipsec.conf &lt;&lt; EOF<br>config setup<br>    uniqueids=never<br><br>conn ubuntu-networkmanager-strongswan<br>    keyexchange=ikev2<br>    left=%defaultroute<br>    leftauth=pubkey<br>    leftsubnet=0.0.0.0/0<br>    leftcert=strongSwanServerCert.pem<br>    right=%any<br>    rightauth=pubkey<br>    rightsourceip=10.31.2.0/24<br>    rightcert=clientAABBCert.pem<br>    auto=add<br>EOF<br></pre><br></div><br>注意rightsourceip这里配置的ip段，稍后要添加iptables规则。<br><br>### ipsec.secrets<br><br>这里保存服务器证书的密钥和登录密码等内容，如果密钥有密码，也要在后面加上，详细说明见<a href="https://wiki.strongswan.org/projects/strongswan/wiki/IpsecSecrets" target="_blank" rel="external">官方文档</a>。<br><div class="codehilite"><br><pre>sudo cat &gt; /usr/local/etc/ipsec.secrets &lt;&lt; EOF<br>: RSA strongSwanServerKey.pem<br>: PSK “A quick bRown FOX jumps”<br>: XAUTH “0ver a Lazy 0ld Dog”<br>aabb %any : EAP “BBAA”<br>EOF<br></pre><br></div>
+
+<h3 id="strongswan-conf"><a href="#strongswan-conf" class="headerlink" title="strongswan.conf"></a>strongswan.conf</h3><p>配置strongswan，官方文档见<a href="https://wiki.strongswan.org/projects/1/wiki/StrongswanConf" target="_blank" rel="external">这里</a>。</p>
+<div class="codehilite"><br><pre>sudo cat &gt; /usr/local/etc/strongswan.conf &lt;&lt; EOF<br>charon {<br>    load_modular = yes<br>    duplicheck.enable = no<br>    compress = yes<br>    plugins {<br>        include strongswan.d/charon/<em>.conf<br>    }<br>    dns1 = 8.8.8.8<br>    dns2 = 8.8.4.4<br>    nbns1 = 8.8.8.8<br>    nbns2 = 8.8.4.4<br>}<br>include strongswan.d/</em>.conf<br>EOF<br></pre><br></div>
+
+<h3 id="charon-logging-conf"><a href="#charon-logging-conf" class="headerlink" title="charon-logging.conf"></a>charon-logging.conf</h3><p>strongswan的默认配置会把日志写到系统日志里，可以参考<a href="https://wiki.strongswan.org/projects/strongswan/wiki/LoggerConfiguration" target="_blank" rel="external">官方文档</a>将日志写入一个单独的文件。</p>
+<div class="codehilite"><br><pre>sudo cat &gt; /usr/local/etc/strongswan.d/charon-logging.conf &lt;&lt; EOF<br>charon {<br>    filelog {<br>        /var/log/strongswan.log {<br>            append = yes<br>            default = 1<br>            flush_line = yes<br>            ike_name = yes<br>            time_format = %b %e %T<br>        }<br>    }<br>}<br>EOF<br></pre><br></div>
+
+<h2 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h2><h3 id="ip转发"><a href="#ip转发" class="headerlink" title="ip转发"></a>ip转发</h3><p>修改<code>/etc/sysctl.conf</code>，启用ip转发，取消注释。</p>
+<div class="codehilite"><br><pre>net.ipv4.ip_forward = 1<br></pre><br></div><br>然后导入配置<br><div class="codehilite"><br><pre>sudo sysctl -p<br></pre><br></div>
+
+<h3 id="iptables配置"><a href="#iptables配置" class="headerlink" title="iptables配置"></a>iptables配置</h3><p>先备份下当前的配置:</p>
+<div class="codehilite"><br><pre>sudo iptables-store &gt; ~/iptables.rules<br></pre><br></div><br>用下面的命令确认下网络接口，如果不是eth0，注意替换成实际的接口。<br><div class="codehilite"><br><pre>ip route show | grep ‘^default’ | sed -e ‘s/.<em> dev ([^ ]</em>).*/\1/‘<br></pre><br></div><br>添加如下规则:<br><div class="codehilite"><br><pre>iptables -A FORWARD -m state –state RELATED,ESTABLISHED -j ACCEPT<br>iptables -A FORWARD -s 10.31.2.0/24  -j ACCEPT<br>iptables -A INPUT -i eth0 -p esp -j ACCEPT<br>iptables -A INPUT -i eth0 -p udp –dport 500 -j ACCEPT<br>iptables -A INPUT -i eth0 -p tcp –dport 500 -j ACCEPT<br>iptables -A INPUT -i eth0 -p udp –dport 4500 -j ACCEPT<br>iptables -A FORWARD -j REJECT<br>iptables -t nat -A POSTROUTING -s 10.31.2.0/24 -o eth0 -j MASQUERADE<br><br># 解决有的网站无法访问的问题<br>iptables -t mangle -A FORWARD -o eth0 -p tcp -m tcp \<br>–tcp-flags SYN,RST SYN -m tcpmss –mss 1361:1536 \<br>-j TCPMSS –set-mss 1360<br></pre><br></div>
+
+<h2 id="启动strongSwan服务"><a href="#启动strongSwan服务" class="headerlink" title="启动strongSwan服务"></a>启动strongSwan服务</h2><p>启动和停止服务</p>
+<div class="codehilite"><br><pre>sudo ipsec start<br>sudo ipsec stop<br></pre><br></div><br>也可以下载一个init脚本:<br><div class="codehilite"><br><pre>sudo wget -O /etc/init.d/strongswan \<br><a href="https://raw.githubusercontent.com/strongswan/strongswan/master/packages/strongswan/debian/strongswan-starter.ipsec.init" target="_blank" rel="external">https://raw.githubusercontent.com/strongswan/strongswan/master/packages/strongswan/debian/strongswan-starter.ipsec.init</a><br><br># 改一下ipsec的路径并添加执行权限<br>sudo sed -i ‘s|DAEMON=/usr/sbin|DAEMON=/usr/local/sbin|’ /etc/init.d/strongswan<br>sudo chmod +x /etc/init.d/strongswan<br></pre><br></div><br>以后就可以用service命令启动了<br><div class="codehilite"><br><pre>sudo service strongswan start<br>sudo service strongswan stop<br>sudo service strongswan restart<br></pre><br></div>
+
+<h2 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h2><p>以Ubuntu 14.04为例，安装以下软件包:</p>
+<div class="codehilite"><br><pre>sudo apt-get install network-manager-strongswan<br></pre><br></div><br>然后会自动安装相应的依赖包。注意strongswan和openswan不兼容，如果之前安装过openswan则会自动被卸载，相应的，l2tp vpn也会无法再使用。<br><br>可参考官方的NetworkManager<a href="https://wiki.strongswan.org/projects/strongswan/wiki/NetworkManager" target="_blank" rel="external">配置说明</a>。<br><br>## 常见问题<br><br>### Necessary secrets not provided<br><br>使用ubuntu的NetworkManager创建的strongSwan vpn连接(pubkey)报错:<br><div class="codehilite"><br><pre>Necessary secrets for the VPN connection were not provided.<br></pre><br></div><br>问题应该是NetworkManager没法从gnome-keyring获取密钥的密码引起的，安装完network-manager-strongswan包后重启下客户端操作系统(或者直接重启gnome-keyring-daemon服务)。<br><br>### 有的网站无法访问<br><br>问题表现为有的网站能正常访问，而有的网站死活刷不出来，在服务器端使用tcpdump可以捕获到如下错误:<br><div class="codehilite"><br><pre> ICMP xxx.xxx.xxx.xxx unreachable - need to frag (mtu 1422), length 556<br></pre><br></div><br>应该就是所谓的<a href="https://www.zeitgeist.se/2013/11/26/mtu-woes-in-ipsec-tunnels-how-to-fix/" target="_blank" rel="external">mtu问题</a>。<br><br>解决方法参考上面的文章，添加一条iptables规则:<br><div class="codehilite"><br><pre>iptables -t mangle -A FORWARD -o eth0 -p tcp -m tcp \<br>–tcp-flags SYN,RST SYN -m tcpmss –mss 1361:1536 \<br>-j TCPMSS –set-mss 1360<br></pre><br></div><br>注意，接口<code>-o eth0</code>一定要设置对，俺就在这里被坑了很久。<br><br>### 无法访问外部网站或IP<br><br>首先考虑配置（证书）是否正确，从命令行启动，看是否有什么异常输出。<br><div class="codehilite"><br><pre>sudo ipsec start<br># conn1 是/usr/local/etc/ipsec.conf里conn的名字<br>sudo ipsec up conn1<br></pre><br></div><br>其次，检查服务端的iptables是否正确配置，特别是接口是否配置正确，比如eth1写成了eth0。<br><br>## 参考资料<a href="http://blog.atime.me/note/strongSwan-setup-and-config-on-ubuntu-server.html#35808e" target="_blank" rel="external">¶</a><br><br><em>   <a href="https://hjc.im/shi-yong-strongswanda-jian-ipsecikev2-vpn/" target="_blank" rel="external">使用Strongswan搭建IPSec/IKEv2 VPN</a>
+</em>   <a href="https://www.zeitgeist.se/2013/11/22/strongswan-howto-create-your-own-vpn/" target="_blank" rel="external">strongSwan 5: How to create your own private VPN</a><br>*   <a href="https://wiki.strongswan.org/projects/strongswan/wiki/SimpleCA" target="_blank" rel="external">Setting-up a Simple CA Using the strongSwan PKI Tool</a><br><br>## 脚注<a href="http://blog.atime.me/note/strongSwan-setup-and-config-on-ubuntu-server.html#content-references" target="_blank" rel="external">¶</a><br><br><div class="footnote"><br><br>1.  可以安装<code>virt-what</code>包来查看VPS使用的虚拟化技术。<br>2.  <a href="https://wiki.strongswan.org/projects/strongswan/wiki/Win7CertReq" target="_blank" rel="external">strongSwan Wiki#Requirements for certificates used with Windows 7</a>. 2015.04.08<br>3.  <a href="https://wiki.strongswan.org/projects/strongswan/wiki/IOS_%28Apple%29#Certificate-requirements-for-iOS-interoperability" target="_blank" rel="external">strongSwan Wiki#Certificate requirements for iOS interoperability</a>. 2015.04.08<br></div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2016-06-15-ubuntu-e5-ae-89-e8-a3-85-e5-92-8c-e9-85-8d-e7-bd-aestrongswan.html" data-title="Ubuntu安装和配置strongSwan" data-url="http://www.linux52.com/2016-06-15-ubuntu-e5-ae-89-e8-a3-85-e5-92-8c-e9-85-8d-e7-bd-aestrongswan.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

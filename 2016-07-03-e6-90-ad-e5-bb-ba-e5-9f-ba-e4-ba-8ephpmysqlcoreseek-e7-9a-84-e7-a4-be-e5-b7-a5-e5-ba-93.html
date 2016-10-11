@@ -1,0 +1,694 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>搭建基于PHP+Mysql+Coreseek的社工库 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="引用至 博客
+之前下载过一些裤子，但是没怎么用过……一来是维护自己的社工库费时费力，二来在线的社工库也基本够用了。
+后来导了一个10多G的裤子进 Mysql ，单表，数据有近2亿条，即使加了索引查起来也慢的不行，有时候还没有用暴力搜索文本内容的小工具查的快。于是查了下资料，试了试用 Coreseek">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="搭建基于PHP+Mysql+Coreseek的社工库"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/数据库应用/">数据库应用</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>搭建基于PHP+Mysql+Coreseek的社工库</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2016-07-02T18:26:02.000Z"><a href="/2016-07-03-e6-90-ad-e5-bb-ba-e5-9f-ba-e4-ba-8ephpmysqlcoreseek-e7-9a-84-e7-a4-be-e5-b7-a5-e5-ba-93.html">2016-07-03</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p>引用至 <a href="https://0x0d.im/archives/build-social-engineer-database-based-on-php-mysql-coreseek.html" target="_blank" rel="external">博客</a></p>
+<p>之前下载过一些裤子，但是没怎么用过……一来是维护自己的社工库费时费力，二来在线的社工库也基本够用了。</p>
+<p>后来导了一个10多G的裤子进 Mysql ，单表，数据有近2亿条，即使加了索引查起来也慢的不行，有时候还没有用暴力搜索文本内容的小工具查的快。于是查了下资料，试了试用 Coreseek 做全文索引，速度不错（毫秒级）。</p>
+<p>从<a href="http://www.coreseek.cn/" target="_blank" rel="external">官网</a>下载最新版（4.1）的 Coreseek ，解压到某个目录，打开 etc 目录，里面有个 <code>csft_mysql.conf</code> 配置示例文件，贴一下我的配置文件（命名为 sed.conf ）：</p>
+<p><pre class="prettyprint linenums">#源定义<br>source sed<br>{<br>    type                    = mysql<br>    sql_host                = localhost<br>    sql_user                = test<br>    sql_pass                = test<br>    sql_db                    = sed<br>    sql_port                = 3306<br>    sql_query_pre            = SET NAMES utf8<br>    sql_query                = SELECT <code>id</code>, <code>username</code>, <code>password</code>, <code>email</code>, <code>salt</code>, <code>order</code> FROM md5_sgk    #sql_query第一列id需为整数，username、password、email等作为字符串/文本字段，被全文索引<br>    sql_attr_uint            = id           #从SQL读取到的值必须为整数</pre></p>
+<pre><code>#sql_field_string    = username
+#sql_field_string    = password
+#sql_field_string    = email
+#sql_attr_timestamp        = date_added  #从SQL读取到的值必须为整数，作为时间属性
+sql_query_info_pre      = SET NAMES utf8                                        #命令行查询时，设置正确的字符集
+sql_query_info            = SELECT `id`, `username`, `password`, `email`, `salt`, `order` FROM md5_sgk WHERE id=$id #命令行查询时，从数据库读取原始数据信息
+</code></pre><p>}</p>
+<p>#index定义<br>index sed<br>{<br>    source            = sed           #对应的source名称<br>    path            = E:/SQL_DATA/coreseek/var/data/sed #请修改为实际使用的绝对路径，例如：/usr/local/coreseek/var/…<br>    docinfo            = extern<br>    mlock            = 0<br>    morphology        = none<br>    min_word_len        = 1<br>    ondisk_dict     = 1   #索引不载入内存而是保存在硬盘上<br>    html_strip                = 0</p>
+<pre><code>#中文分词配置，详情请查看：http://www.coreseek.cn/products-install/coreseek_mmseg/
+#charset_dictpath = /usr/local/mmseg3/etc/ #BSD、Linux环境下设置，/符号结尾
+charset_dictpath = E:/SQL_DATA/coreseek/etc/ #Windows环境下设置，/符号结尾，最好给出绝对路径，例如：C:/usr/local/coreseek/etc/...
+charset_type        = zh_cn.utf-8
+</code></pre><p>}</p>
+<p>#全局index定义<br>indexer<br>{<br>    mem_limit            = 1024M<br>}</p>
+<p>#searchd服务定义<br>searchd<br>{<br>    listen                  =   9312<br>    read_timeout        = 5<br>    max_children        = 30<br>    max_matches            = 1000<br>    seamless_rotate        = 0<br>    preopen_indexes        = 0<br>    unlink_old            = 1<br>    pid_file = E:/SQL_DATA/coreseek/var/log/searchd_mysql.pid  #请修改为实际使用的绝对路径，例如：/usr/local/coreseek/var/…<br>    log = E:/SQL_DATA/coreseek/var/log/searchd_mysql.log        #请修改为实际使用的绝对路径，例如：/usr/local/coreseek/var/…<br>    query_log = E:/SQL_DATA/coreseek/var/log/query_mysql.log #请修改为实际使用的绝对路径，例如：/usr/local/coreseek/var/…<br>    binlog_path =                                #关闭binlog日志<br>}<br><br>具体的配置信息可以看看<a href="http://www.coreseek.cn/docs/coreseek_4.1-sphinx_2.0.1-beta.html" target="_blank" rel="external">官方手册</a>。</p>
+<p>有些资料里使用了 <strong>sql_field_string</strong>，但是据测试很可能出现 <a href="http://sphinxsearch.com/bugs/view.php?id=1131" target="_blank" rel="external">too many string attributes (current index format allows up to 4 GB)</a> 这个错误，不知是不是因为是32位程序的原因，所以最好不要用，或者可以试试64位的 <strong><a href="http://sphinxsearch.com/downloads/release/" target="_blank" rel="external">Sphinx</a></strong>。</p>
+<p>然后把 <strong>searchd</strong> 注册成服务 <code>searchd --install --config ..\etc\sed.conf</code>，以免每次使用都要在命令行窗口打开。</p>
+<p>接着用 <code>indexer -c ..\etc\sed.conf --all --rotate</code> 建立全文索引。<br>如果有增量索引的还要合并索引（我测试的时候并没有做增量索引，可以参考<a href="http://blog.csdn.net/e421083458/article/details/21529969" target="_blank" rel="external">这篇文章</a>。）</p>
+<p>索引建立完后试试能否正常搜索： <code>search -c ..\etc\sed.conf adwin</code> ，如果出现 search error: failed to open xxx.sph: No such file or directory 这个错误，可能原因有：</p>
+<blockquote>
+<p>It seems that</p>
+<p>a) the lock files were lost somehow, and</p>
+<p>b) you ran indexer without –rotate switch.</p>
+<p>Normally, searchd would create .spl lock files on startup (and kill them on shutdown),</p>
+<p>and indexer would then refuse to reindex without –rotate switch.</p>
+<p>indexers sends SIGHUP to searchd when completed (and it should print that out). searchd</p>
+<p>then does the following:</p>
+<ol>
+<li>waits for all children to exit</li>
+<li>renames current index files to .old</li>
+<li>renames .new index files to current</li>
+<li>tries to load current index files</li>
+<li>if something failed, it rollbacks current files from .old and new to .new</li>
+</ol>
+<p>In your case I would start with double checking directory access rights, users which both</p>
+<p>indexer and searchd run under, etc.<br>据我的经验一般把 data 目录下的文件名里多出来的<code>.new</code>去掉就好。</p>
+</blockquote>
+<p>最后调用自带的 <strong>sphinxapi.php</strong> 即可，我直接用的 Ph4nt0m 的源码（界面用 Bootstrap 重写了下）：</p>
+<p><pre class="prettyprint linenums"><br>&lt;?php<br>// 引用sphinxapi类<br>require “sphinxapi.php”;<br>//关闭错误提示<br>error_reporting(E_ALL &amp; ~E_NOTICE);<br>$num = 0;<br>if (!empty($_GET) &amp;&amp; !empty($_GET[‘q’])) {<br>    $Keywords = strip_tags(trim($_GET[‘q’]));<br>    if (!empty($_GET[‘m’]) &amp;&amp; 1 == $_GET[‘m’]) {<br>        $Keywords = substr(md5($Keywords), 8, 16);<br>    }<br>    if (!empty($_GET[‘m’]) &amp;&amp; 2 == $_GET[‘m’]) {<br>        $Keywords = md5($Keywords);<br>    }<br>    $cl = new SphinxClient();<br>    // 返回结果设置<br>    $cl-&gt;SetServer(‘127.0.0.1’, 9312);<br>    $cl-&gt;SetConnectTimeout(3);<br>    $cl-&gt;SetArrayResult(true);<br>    // 设置是否全文匹配<br>    if (!empty($_GET) &amp;&amp; !empty($_GET[‘f’])) {<br>        $cl-&gt;SetMatchMode(SPH_MATCH_ALL);<br>    } else {<br>        $cl-&gt;SetMatchMode(SPH_MATCH_ANY);<br>    }<br>    if (!empty($_GET) &amp;&amp; !empty($_GET[‘p’])) {<br>        $p = !intval(trim($_GET[‘p’])) == 0 ? intval(trim($_GET[‘p’])) - 1 : 0;<br>        $p = $p <em> 20;<br>        // 我在sed.conf 设置了最大返回结果数1000。但是我在生成页码的时候最多生成20页，我想能满足大部分搜索需求了。<br>        // 以下语句表示从P参数偏移开始每次返回20条。<br>        $cl-&gt;setLimits($p, 20);<br>    } else {<br>        $cl-&gt;setLimits(0, 20);<br>    }<br>    $res = $cl-&gt;Query(“.$Keywords.”, “</em>“);<br>    @mysql_connect(“localhost”, “test”, “test”); //数据库账号密码<br>    mysql_select_db(“sed”); //数据库库名名<br>    if (is_array($res[“matches”])) {<br>        foreach ($res[“matches”] as $docinfo) {<br>            $ids = $ids . $docinfo[id] . ‘,’;<br>        }<br>        $ids = rtrim($ids, ‘,’);<br>        $sql = “select * from md5_sgk where id in($ids)”; //注意修改表名<br>        mysql_query(“set names utf8”);<br>        $ret = mysql_query($sql);<br>        $num = mysql_num_rows($ret);<br>    }<br>}<br>?&gt;<br>&lt;!DOCTYPE html&gt;</pre></p>
+<html><br><head><br>   <title>The Web of Answers</title><br>   <meta charset="UTF-8"><br>   <meta name="viewport" content="width=device-with,initial-scal=1"><br>   <link href="css/bootstrap.min.css" rel="stylesheet"><br>   <script src="js/jquery.js"></script><br>   <script src="js/bootstrap.min.js"></script><br>   <script><br>    function check(form){<br>        if(form.q.value==””){<br>          alert(“Not null !”);<br>          form.q.focus();<br>          return false;<br>        }<br>    }<br>    </script><br>   <style><br>        h1 {<br>            font-family: Times New Roman, Lucida Handwriting;<br>        }<br>        body {<br>            background-image: url(img/bg.jpg);<br>        }<br>   </style><br></head><br><body><br>    <div class="container" id="container"><br>        <div id="page-header"><br><br>#  The Web of Answers<br><br>        </div><br>        <div class="row"><br>        <form action="" method="get" class="form-horizontal" role="form"><br>            <div id="checkbox" class="col-md-6 col-md-offset-3"><br>                <label class="checkbox-inline"><br>                    <input type="checkbox" id="full" name="f" value="1">   完整匹配<br>                </label><br>                <label class="checkbox-inline"><br>                      <input type="checkbox" id="md5_16" name="m" value="1"><br>                       MD5匹配（16位）<br>                </label><br>                <label class="checkbox-inline"><br>                      <input type="checkbox" id="md5_32" name="m" value="2"><br>                       MD5匹配（32位）<br>                </label><br>            </div><br>            <div class="input-group col-md-6 col-md-offset-3"><br>                <input type="text" class="form-control" name="q" placeholder="请输入" value="<?php echo strip_tags(trim($_GET['q']));?>"><br>                    <div class="input-group-btn"><br>                        <button type="submit" class="btn btn-primary" onclick="check(form)">Search</button><br>                    </div><br>             </div><br>        </form><br>    </div><br><br>&lt;?php<br>if (0 == !$num) {<br>    echo “<div class="\"row\""><br>    <div class="\"alert" alert-success="" alert-dismissible="" col-md-10="" col-md-offset-1\"="" role="\"alert\""><br>    <button type="\"button\"" class="\"close\"" data-dismiss="\"alert\""><span aria-hidden="\"true\"">&times;</span><span class="\"sr-only\"">Close</span></button><br>    找到与<strong>&amp;nbsp{$Keywords}&amp;nbsp</strong>相关的结果 {$res[total_found]} 个。用时 {$res[time]} 秒。</div>“;<br>    echo “<div class="\"table-responsive" col-md-10="" col-md-offset-1\"=""><br>        <table class="\"table" table-striped="" table-hover\"=""><br>          <tr><br>          <th>Username</th><br>          <th>Email</th><br>          <th>Password</th><br>          <th>Salt</th><br>          <th>From</th><br>          </tr>“;<br>    while ($row = mysql_fetch_assoc($ret)) {<br>        echo “<tr><td>“ . $row[‘username’] . “</td>“;<br>        echo “<td>“ . $row[‘email’] . “</td>“;<br>        echo “<td>“ . $row[‘password’] . “</td>“;<br>        echo “<td>“ . $row[‘salt’] . “</td>“;<br>        echo “<td>“ . $row[‘order’] . “</td></tr>“;<br>    }<br>    echo “</table></div></div>“;<br>} else {<br>    if (!empty($_GET) &amp;&amp; !empty($_GET[‘q’])) {<br>        echo “<div class="\"alert" alert-warning="" alert-dismissible="" col-md-10="" col-md-offset-1\"="" role="\"alert\""><br>        <button type="\"button\"" class="\"close\"" data-dismiss="\"alert\""><span aria-hidden="\"true\"">&times;</span><span class="\"sr-only\"">Close</span></button><br>        找不到与<strong>&amp;nbsp{$Keywords}&amp;nbsp</strong>相关的结果。请更换其他关键词试试。</div></div>“;<br>    }<br>}<br>?&gt;<br>    <div id="pages"><br>    <center><br>        <nav><br><br>&lt;?php<br>if (0 == !$num) {<br>    $pagecount = (int) ($res[total_found] / 20);<br>    if (!($res[total_found] % 20) == 0) {<br>        $pagecount = $pagecount + 1;<br>    }<br>    if ($pagecount &gt; 20) {<br>        $pagecount = 20;<br>    }<br>    $highlightid = !intval(trim($_GET[‘p’])) == 0 ? intval(trim($_GET[‘p’])) : 1;<br>    for ($i = 1; $i &lt;= $pagecount; $i++) {<br>        if ($highlightid == $i) {<br>            echo “<em>   <a href="\">{$i}<span class="\"sr-only\"">(current)</span></a><br>“;<br>        } else {<br>            echo “</em>   <a href="\">{$i}</a><br>        </nav><br>    </center><br>    </div><br>    <div id="footer"><br><br>            The Web of Answers &copy;2010-2015 | Powered by b0rg<br><br>    </div><br>    <br></body><br></html>
+
+<p><br><strong>效果：</strong><br><a href="http://dg2016.duapp.com/wp-content/uploads/2016/07/2016070317045815.png" target="_blank" rel="external"><img src="http://dg2016.duapp.com/wp-content/uploads/2016/07/2016070317045815.png" alt="2340039264"></a></p>
+<p><strong>参考资料：</strong></p>
+<blockquote>
+<p><a href="http://zone.wooyun.org/content/9377" target="_blank" rel="external">MySQL+Sphinx+CoreSeek数据库查询脚本</a></p>
+<p><a href="http://www.freebuf.com/articles/database/53139.html" target="_blank" rel="external">经验分享：社会工程学数据库搭建TIPS</a></p>
+<p><a href="http://blog.csdn.net/e421083458/article/details/21529969" target="_blank" rel="external">搭建coreseek(sphinx+mmseg3)详细安装配置+php之sphinx扩展安装+php调用示例</a></p>
+<p><a href="http://www.coreseek.cn/docs/coreseek_4.1-sphinx_2.0.1-beta.html" target="_blank" rel="external">Coreseek 4.1 参考手册</a></p>
+</blockquote>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2016-07-03-e6-90-ad-e5-bb-ba-e5-9f-ba-e4-ba-8ephpmysqlcoreseek-e7-9a-84-e7-a4-be-e5-b7-a5-e5-ba-93.html" data-title="搭建基于PHP+Mysql+Coreseek的社工库" data-url="http://www.linux52.com/2016-07-03-e6-90-ad-e5-bb-ba-e5-9f-ba-e4-ba-8ephpmysqlcoreseek-e7-9a-84-e7-a4-be-e5-b7-a5-e5-ba-93.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

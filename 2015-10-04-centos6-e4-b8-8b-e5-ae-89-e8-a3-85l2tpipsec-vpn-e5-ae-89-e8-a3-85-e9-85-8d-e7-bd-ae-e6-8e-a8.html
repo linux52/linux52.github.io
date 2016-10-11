@@ -1,0 +1,1077 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>CentOS6下安装L2TP/IPSec VPN安装配置(推) | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="上次把VPS重新初始化后，一直没空重新部署VPN，ipad无法翻墙，真心的不爽。正好之前用的是PPTP，这次想要尝试下L2TP。两者有什么区别呢？对比如下：
+VPN数据传输协议：PPTP、L2TPPPTP                                         L2TP基于I">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="CentOS6下安装L2TP/IPSec VPN安装配置(推)"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/centos/">centos</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>CentOS6下安装L2TP/IPSec VPN安装配置(推)</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-10-04T07:08:29.000Z"><a href="/2015-10-04-centos6-e4-b8-8b-e5-ae-89-e8-a3-85l2tpipsec-vpn-e5-ae-89-e8-a3-85-e9-85-8d-e7-bd-ae-e6-8e-a8.html">2015-10-04</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#安装IPSec"><span class="section table-of-contents-text">安装IPSec</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#vi-etc-ipsec-secrets"><span class="section table-of-contents-text">vi /etc/ipsec.secrets</span></a>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p>上次把VPS重新初始化后，一直没空重新部署VPN，ipad无法翻墙，真心的不爽。正好之前用的是PPTP，这次想要尝试下L2TP。<br>两者有什么区别呢？对比如下：</p>
+<p>VPN数据传输协议：PPTP、L2TP<br>PPTP                                         L2TP<br>基于IP的互联网                       基于多种广域网络连接,介质入帧中继，IPX.25<br>没有报头压缩                         报头压缩<br>没有隧道身份验证                    隧道身份验证<br>采用PPP加密                         使用IPSec加密</p>
+<h5 id="安装IPSec"><a href="#安装IPSec" class="headerlink" title="安装IPSec"></a>安装IPSec</h5><p>IPSec会对IP数据包进行加密和验证，这意味着你的电脑/移动设备与服务器之间传输的数据无法被解密、也不能被伪造。推荐使用openswan这个后台软件来跑IPSec。</p>
+<p>wget <a href="http://download.openswan.org/openswan/old/openswan-2.6.38.tar.gz" target="_blank" rel="external">http://download.openswan.org/openswan/old/openswan-2.6.38.tar.gz</a><br>tar zxvf openswan-2.6.38.tar.gz<br>cd openswan-2.6.38<br>make programs install</p>
+<p>经验教训：个别版本的openswan和xl2tpd配合使用，存在问题，会造成无法正常使用，绝对是血的教训，为了这个问题，折腾了一个下午，最后一尝试2.6.38就可以了。<br>截至2012-12-25，CentOS 6.3源里自带的openswan版本无法正常使用<br>修改/etc/ipsec.conf</p>
+<p>添加以下内容：</p>
+<p><div id="crayon-5610cfe20b361003259181" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-5">5</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-6">6</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-7">7</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-8">8</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-9">9</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-10">10</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-11">11</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-12">12</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-13">13</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-14">14</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-15">15</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-16">16</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-17">17</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-18">18</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-19">19</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-20">20</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-21">21</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-22">22</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-23">23</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-24">24</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-25">25</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-26">26</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-27">27</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-28">28</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-29">29</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-30">30</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-31">31</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-32">32</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-33">33</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-34">34</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-35">35</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-36">36</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-37">37</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-38">38</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-39">39</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-40">40</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-41">41</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-42">42</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-43">43</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-44">44</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-45">45</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-46">46</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-47">47</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-48">48</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-49">49</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-50">50</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-51">51</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-52">52</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-53">53</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-54">54</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-55">55</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-56">56</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-57">57</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-58">58</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-59">59</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-60">60</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-61">61</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b361003259181-62">62</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b361003259181-63">63</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b361003259181-1" class="crayon-line"><span class="crayon-v">vi</span> <span class="crayon-o">/</span><span class="crayon-v">etc</span><span class="crayon-o">/</span><span class="crayon-v">ipsec</span><span class="crayon-sy">.</span><span class="crayon-v">conf</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-2" class="crayon-line crayon-striped-line"></div></p>
+<p><div id="crayon-5610cfe20b361003259181-3" class="crayon-line"><span class="crayon-p"># /etc/ipsec.conf - Openswan IPsec configuration file</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-4" class="crayon-line crayon-striped-line"><span class="crayon-p"># RCSID $Id: ipsec.conf.in,v 1.16 2005/07/26 12:29:45 ken Exp $</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-5" class="crayon-line"><span class="crayon-p"># This file:  /usr/local/share/doc/openswan/ipsec.conf-sample</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-6" class="crayon-line crayon-striped-line"><span class="crayon-p">#</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-7" class="crayon-line"><span class="crayon-p"># Manual:     ipsec.conf.5</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-8" class="crayon-line crayon-striped-line"><span class="crayon-i">version</span> <span class="crayon-cn">2.0</span><span class="crayon-h">     </span><span class="crayon-p"># conforms to second version of ipsec.conf specification</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-9" class="crayon-line"><span class="crayon-p"># basic configuration</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-10" class="crayon-line crayon-striped-line"><span class="crayon-e">config </span><span class="crayon-v">setup</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-11" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-p"># Do not set debug options to debug configuration issues!</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-12" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p"># plutodebug / klipsdebug = “all”, “none” or a combation from below:</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-13" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-p"># “raw crypt parsing emitting control klips pfkey natt x509 dpd private”</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-14" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p"># eg:</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-15" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-p"># plutodebug=”control parsing”</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-16" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p">#</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-17" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-p"># enable to get logs per-peer</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-18" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p"># plutoopts=”–perpeerlog”</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-19" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-p">#</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-20" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p"># Again: only enable plutodebug or klipsdebug when asked by a developer</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-21" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-p">#</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-22" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p"># NAT-TRAVERSAL support, see README.NAT-Traversal</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-23" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-v">nat_traversal</span><span class="crayon-o">=</span><span class="crayon-v">yes</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-24" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p"># exclude networks used on server side by adding %v4:!a.b.c.0/24</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-25" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-v">virtual_private</span><span class="crayon-o">=</span><span class="crayon-o">%</span><span class="crayon-v">v4</span><span class="crayon-o">:</span><span class="crayon-cn">10.0.0.0</span><span class="crayon-o">/</span><span class="crayon-cn">8</span><span class="crayon-sy">,</span><span class="crayon-o">%</span><span class="crayon-v">v4</span><span class="crayon-o">:</span><span class="crayon-cn">192.168.0.0</span><span class="crayon-o">/</span><span class="crayon-cn">16</span><span class="crayon-sy">,</span><span class="crayon-o">%</span><span class="crayon-v">v4</span><span class="crayon-o">:</span><span class="crayon-cn">172.16.0.0</span><span class="crayon-o">/</span><span class="crayon-cn">12</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-26" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p"># OE is now off by default. Uncomment and change to on, to enable.</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-27" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-v">oe</span><span class="crayon-o">=</span><span class="crayon-v">off</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-28" class="crayon-line crayon-striped-line"><span class="crayon-h">        </span><span class="crayon-p"># which IPsec stack to use. netkey,klips,mast,auto or none</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-29" class="crayon-line"><span class="crayon-h">        </span><span class="crayon-v">protostack</span><span class="crayon-o">=</span><span class="crayon-v">netkey</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-30" class="crayon-line crayon-striped-line"></div></p>
+<p><div id="crayon-5610cfe20b361003259181-31" class="crayon-line"><span class="crayon-p"># Add connections here</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-32" class="crayon-line crayon-striped-line"></div></p>
+<p><div id="crayon-5610cfe20b361003259181-33" class="crayon-line"><span class="crayon-p"># sample VPN connection</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-34" class="crayon-line crayon-striped-line"><span class="crayon-p"># for more examples, see /etc/ipsec.d/examples/</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-35" class="crayon-line"><span class="crayon-p">#conn sample</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-36" class="crayon-line crayon-striped-line"><span class="crayon-p">#               # Left security gateway, subnet behind it, nexthop toward right.</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-37" class="crayon-line"><span class="crayon-p">#               left=10.0.0.1</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-38" class="crayon-line crayon-striped-line"><span class="crayon-p">#               leftsubnet=172.16.0.0/24</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-39" class="crayon-line"><span class="crayon-p">#               leftnexthop=10.22.33.44</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-40" class="crayon-line crayon-striped-line"><span class="crayon-p">#               # Right security gateway, subnet behind it, nexthop toward left.</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-41" class="crayon-line"><span class="crayon-p">#               right=10.12.12.1</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-42" class="crayon-line crayon-striped-line"><span class="crayon-p">#               rightsubnet=192.168.0.0/24</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-43" class="crayon-line"><span class="crayon-p">#               rightnexthop=10.101.102.103</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-44" class="crayon-line crayon-striped-line"><span class="crayon-p">#               # To authorize this connection, but not actually start it,</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-45" class="crayon-line"><span class="crayon-p">#               # at startup, uncomment this.</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-46" class="crayon-line crayon-striped-line"><span class="crayon-p">#               #auto=start</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-47" class="crayon-line"></div></p>
+<p><div id="crayon-5610cfe20b361003259181-48" class="crayon-line crayon-striped-line"><span class="crayon-e">conn </span><span class="crayon-v">L2TP</span><span class="crayon-o">-</span><span class="crayon-v">PSK</span><span class="crayon-o">-</span><span class="crayon-e">NAT</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-49" class="crayon-line"><span class="crayon-e">    </span><span class="crayon-v">rightsubnet</span><span class="crayon-o">=</span><span class="crayon-v">vhost</span><span class="crayon-o">:</span><span class="crayon-o">%</span><span class="crayon-e">priv</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-50" class="crayon-line crayon-striped-line"><span class="crayon-e">    </span><span class="crayon-v">also</span><span class="crayon-o">=</span><span class="crayon-v">L2TP</span><span class="crayon-o">-</span><span class="crayon-v">PSK</span><span class="crayon-o">-</span><span class="crayon-e">noNAT</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-51" class="crayon-line"></div></p>
+<p><div id="crayon-5610cfe20b361003259181-52" class="crayon-line crayon-striped-line"><span class="crayon-e">conn </span><span class="crayon-v">L2TP</span><span class="crayon-o">-</span><span class="crayon-v">PSK</span><span class="crayon-o">-</span><span class="crayon-e">noNAT</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-53" class="crayon-line"><span class="crayon-e">    </span><span class="crayon-v">authby</span><span class="crayon-o">=</span><span class="crayon-e">secret</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-54" class="crayon-line crayon-striped-line"><span class="crayon-e">    </span><span class="crayon-v">pfs</span><span class="crayon-o">=</span><span class="crayon-e">no</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-55" class="crayon-line"><span class="crayon-e">    </span><span class="crayon-v">auto</span><span class="crayon-o">=</span><span class="crayon-e">add</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-56" class="crayon-line crayon-striped-line"><span class="crayon-e">    </span><span class="crayon-v">keyingtries</span><span class="crayon-o">=</span><span class="crayon-cn">3</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-57" class="crayon-line"><span class="crayon-h">    </span><span class="crayon-v">rekey</span><span class="crayon-o">=</span><span class="crayon-e">no</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-58" class="crayon-line crayon-striped-line"><span class="crayon-e">    </span><span class="crayon-v">ikelifetime</span><span class="crayon-o">=</span><span class="crayon-cn">8h</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-59" class="crayon-line"><span class="crayon-h">    </span><span class="crayon-v">keylife</span><span class="crayon-o">=</span><span class="crayon-cn">1h</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-60" class="crayon-line crayon-striped-line"><span class="crayon-h">    </span><span class="crayon-v">type</span><span class="crayon-o">=</span><span class="crayon-e">transport</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-61" class="crayon-line"><span class="crayon-e">    </span><span class="crayon-v">left</span><span class="crayon-o">=</span><span class="crayon-cn">106.187.35.56</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-62" class="crayon-line crayon-striped-line"><span class="crayon-h">    </span><span class="crayon-v">leftprotoport</span><span class="crayon-o">=</span><span class="crayon-cn">17</span><span class="crayon-o">/</span><span class="crayon-cn">1701</span></div></p>
+<p><div id="crayon-5610cfe20b361003259181-63" class="crayon-line"><span class="crayon-h">    </span><span class="crayon-v">right</span><span class="crayon-o">=</span><span class="crayon-o">%</span><span class="crayon-v">any</span></div><br><br><br><br><br><br></p>
+<h1 id="vi-etc-ipsec-secrets"><a href="#vi-etc-ipsec-secrets" class="headerlink" title="vi /etc/ipsec.secrets"></a>vi /etc/ipsec.secrets</h1><p>改成：106.187.35.56 %any: PSK “hello”<br>106.187.35.56这部分换成你的服务器IP地址，hello随便换成一个字符串，比如你喜欢的任何一句话</p>
+<p>修改包转发设置</p>
+<p><div id="crayon-5610cfe20b373124502237" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b373124502237-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b373124502237-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b373124502237-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b373124502237-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b373124502237-5">5</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b373124502237-1" class="crayon-line"><span class="crayon-st">for</span> <span class="crayon-st">each</span> <span class="crayon-st">in</span> <span class="crayon-o">/</span><span class="crayon-v">proc</span><span class="crayon-o">/</span><span class="crayon-v">sys</span><span class="crayon-o">/</span><span class="crayon-v">net</span><span class="crayon-o">/</span><span class="crayon-v">ipv4</span><span class="crayon-o">/</span><span class="crayon-v">conf</span><span class="crayon-o">/</span><span class="crayon-o">*</span></div></p>
+<p><div id="crayon-5610cfe20b373124502237-2" class="crayon-line crayon-striped-line"><span class="crayon-st">do</span></div></p>
+<p><div id="crayon-5610cfe20b373124502237-3" class="crayon-line"><span class="crayon-i">echo</span> <span class="crayon-cn">0</span> <span class="crayon-o">&gt;</span> <span class="crayon-sy">$</span><span class="crayon-st">each</span><span class="crayon-o">/</span><span class="crayon-e">accept_redirects</span></div></p>
+<p><div id="crayon-5610cfe20b373124502237-4" class="crayon-line crayon-striped-line"><span class="crayon-i">echo</span> <span class="crayon-cn">0</span> <span class="crayon-o">&gt;</span> <span class="crayon-sy">$</span><span class="crayon-st">each</span><span class="crayon-o">/</span><span class="crayon-e">send_redirects</span></div></p>
+<p><div id="crayon-5610cfe20b373124502237-5" class="crayon-line"><span class="crayon-v">done</span></div><br><br><br><br><br><br><br>可能存在的问题：<br>Two or more interfaces found, checking IP forwarding [FAILED]<br>vi /etc/sysctl.conf<br>修改 net.ipv4.ip_forward = 1<br>net.ipv4.conf.default.rp_filter =0<br>sysctl -p</p>
+<p>SAref kernel support [N/A]<br>这样的话， /etc/xl2tpd/xl2tpd.conf这个文件里<br>[global]<br>ipsec saref = no</p>
+<p>重启ipsec，并测试运行效果<br>service ipsec restart<br>ipsec verify<br>如下即为正常工作：</p>
+<p><div id="crayon-5610cfe20b37b717325811" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b37b717325811-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b37b717325811-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-5">5</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b37b717325811-6">6</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-7">7</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b37b717325811-8">8</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-9">9</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b37b717325811-10">10</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-11">11</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b37b717325811-12">12</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-13">13</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b37b717325811-14">14</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-15">15</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b37b717325811-16">16</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b37b717325811-17">17</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-1" class="crayon-line"><span class="crayon-p"># ipsec verify</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-2" class="crayon-line crayon-striped-line"><span class="crayon-e">Checking </span><span class="crayon-e">your </span><span class="crayon-e">system </span><span class="crayon-st">to</span> <span class="crayon-e">see </span><span class="crayon-st">if</span> <span class="crayon-e">IPsec </span><span class="crayon-e">got </span><span class="crayon-e">installed </span><span class="crayon-st">and</span> <span class="crayon-e">started </span><span class="crayon-v">correctly</span><span class="crayon-o">:</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-3" class="crayon-line"><span class="crayon-e">Version </span><span class="crayon-e">check </span><span class="crayon-st">and</span> <span class="crayon-e">ipsec </span><span class="crayon-v">on</span><span class="crayon-o">-</span><span class="crayon-i">path</span><span class="crayon-h">                                 </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-4" class="crayon-line crayon-striped-line"><span class="crayon-e">Linux </span><span class="crayon-e">Openswan </span><span class="crayon-v">U2</span><span class="crayon-sy">.</span><span class="crayon-cn">6.32</span><span class="crayon-o">/</span><span class="crayon-v">K3</span><span class="crayon-sy">.</span><span class="crayon-cn">6.5</span><span class="crayon-o">-</span><span class="crayon-e">linode47</span> <span class="crayon-sy">(</span><span class="crayon-v">netkey</span><span class="crayon-sy">)</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-5" class="crayon-line"><span class="crayon-e">Checking </span><span class="crayon-st">for</span> <span class="crayon-e">IPsec </span><span class="crayon-e">support </span><span class="crayon-st">in</span> <span class="crayon-i">kernel</span><span class="crayon-h">                            </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-6" class="crayon-line crayon-striped-line"><span class="crayon-e">SAref </span><span class="crayon-e">kernel </span><span class="crayon-i">support</span><span class="crayon-h">                                           </span><span class="crayon-sy">[</span><span class="crayon-v">N</span><span class="crayon-o">/</span><span class="crayon-v">A</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-7" class="crayon-line"><span class="crayon-v">NETKEY</span><span class="crayon-o">:</span><span class="crayon-h">  </span><span class="crayon-e">Testing </span><span class="crayon-st">for</span> <span class="crayon-e">disabled </span><span class="crayon-e">ICMP </span><span class="crayon-v">send</span><span class="crayon-sy">_</span>redirects<span class="crayon-h">              </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-8" class="crayon-line crayon-striped-line"><span class="crayon-e">NETKEY </span><span class="crayon-v">detected</span><span class="crayon-sy">,</span> <span class="crayon-e">testing </span><span class="crayon-st">for</span> <span class="crayon-e">disabled </span><span class="crayon-e">ICMP </span><span class="crayon-v">accept</span><span class="crayon-sy">_</span>redirects<span class="crayon-h">     </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-9" class="crayon-line"><span class="crayon-e">Checking </span><span class="crayon-e">that </span><span class="crayon-e">pluto </span><span class="crayon-st">is</span> <span class="crayon-i">running</span><span class="crayon-h">                                  </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-10" class="crayon-line crayon-striped-line"><span class="crayon-e">Pluto </span><span class="crayon-e">listening </span><span class="crayon-st">for</span> <span class="crayon-e">IKE </span><span class="crayon-e">on </span><span class="crayon-i">udp</span> <span class="crayon-cn">500</span><span class="crayon-h">                             </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-11" class="crayon-line"><span class="crayon-e">Pluto </span><span class="crayon-e">listening </span><span class="crayon-st">for</span> <span class="crayon-v">NAT</span><span class="crayon-o">-</span><span class="crayon-i">T</span> <span class="crayon-e">on </span><span class="crayon-i">udp</span> <span class="crayon-cn">4500</span><span class="crayon-h">                          </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-12" class="crayon-line crayon-striped-line"><span class="crayon-e">Two </span><span class="crayon-st">or</span> <span class="crayon-e">more </span><span class="crayon-e">interfaces </span><span class="crayon-v">found</span><span class="crayon-sy">,</span> <span class="crayon-e">checking </span><span class="crayon-e">IP </span><span class="crayon-i">forwarding</span><span class="crayon-h">            </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-13" class="crayon-line"><span class="crayon-e">Checking </span><span class="crayon-e">NAT </span><span class="crayon-st">and</span> <span class="crayon-i">MASQUERADEing</span><span class="crayon-h">                                  </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-14" class="crayon-line crayon-striped-line"><span class="crayon-e">Checking </span><span class="crayon-st">for</span> <span class="crayon-s">‘ip’</span> <span class="crayon-i">command</span><span class="crayon-h">                                       </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-15" class="crayon-line"><span class="crayon-v">Checking</span> <span class="crayon-o">/</span><span class="crayon-v">bin</span><span class="crayon-o">/</span><span class="crayon-e">sh </span><span class="crayon-st">is</span> <span class="crayon-st">not</span> <span class="crayon-o">/</span><span class="crayon-v">bin</span><span class="crayon-o">/</span><span class="crayon-i">dash</span><span class="crayon-h">                               </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-16" class="crayon-line crayon-striped-line"><span class="crayon-e">Checking </span><span class="crayon-st">for</span> <span class="crayon-s">‘iptables’</span> <span class="crayon-i">command</span><span class="crayon-h">                                 </span><span class="crayon-sy">[</span><span class="crayon-v">OK</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b37b717325811-17" class="crayon-line"><span class="crayon-e">Opportunistic </span><span class="crayon-e">Encryption </span><span class="crayon-i">Support</span><span class="crayon-h">                                </span><span class="crayon-sy">[</span><span class="crayon-v">DISABLED</span><span class="crayon-sy">]</span></div><br><br><br><br><br><br><br>安装x2ltpd</p>
+<p><div id="crayon-5610cfe20b383717007724" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b383717007724-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b383717007724-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b383717007724-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b383717007724-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b383717007724-5">5</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b383717007724-6">6</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b383717007724-1" class="crayon-line"><span class="crayon-p"># yum install libpcap-devel</span></div></p>
+<p><div id="crayon-5610cfe20b383717007724-2" class="crayon-line crayon-striped-line"><span class="crayon-p"># yum install ppp</span></div></p>
+<p><div id="crayon-5610cfe20b383717007724-3" class="crayon-line">因为<span class="crayon-i">xl2tpd</span>在官方的源里没有，需要</div></p>
+<p><div id="crayon-5610cfe20b383717007724-4" class="crayon-line crayon-striped-line"><span class="crayon-e">wget </span><span class="crayon-v">http</span><span class="crayon-o">:</span><span class="crayon-c">//mirrors.ustc.edu.cn/fedora/epel/6/i386/epel-release-6-8.noarch.rpm</span></div></p>
+<p><div id="crayon-5610cfe20b383717007724-5" class="crayon-line"><span class="crayon-p"># rpm -Uvh epel-release-6-8.noarch.rpm</span></div></p>
+<p><div id="crayon-5610cfe20b383717007724-6" class="crayon-line crayon-striped-line"><span class="crayon-p"># yum install xl2tpd</span></div><br><br><br><br><br><br></p>
+<p><div id="crayon-5610cfe20b389002519202" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-5">5</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-6">6</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-7">7</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-8">8</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-9">9</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-10">10</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-11">11</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-12">12</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-13">13</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-14">14</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-15">15</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-16">16</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-17">17</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-18">18</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-19">19</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-20">20</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-21">21</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-22">22</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-23">23</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-24">24</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-25">25</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-26">26</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-27">27</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-28">28</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-29">29</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-30">30</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-31">31</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-32">32</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-33">33</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-34">34</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-35">35</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-36">36</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-37">37</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-38">38</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-39">39</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-40">40</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-41">41</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-42">42</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-43">43</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b389002519202-44">44</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b389002519202-45">45</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b389002519202-1" class="crayon-line"><span class="crayon-p"># vi /etc/xl2tpd/xl2tpd.conf </span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-2" class="crayon-line crayon-striped-line"></div></p>
+<p><div id="crayon-5610cfe20b389002519202-3" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-r">This</span> <span class="crayon-st">is</span> <span class="crayon-i">a</span> <span class="crayon-e">minimal </span><span class="crayon-e">sample </span><span class="crayon-e">xl2tpd </span><span class="crayon-e">configuration </span><span class="crayon-e">file </span><span class="crayon-st">for</span> <span class="crayon-st">use</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-4" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-e">with </span><span class="crayon-e">L2TP </span><span class="crayon-e">over </span><span class="crayon-v">IPsec</span><span class="crayon-sy">.</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-5" class="crayon-line"><span class="crayon-sy">;</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-6" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-e">The </span><span class="crayon-e">idea </span><span class="crayon-st">is</span> <span class="crayon-st">to</span> <span class="crayon-e">provide </span><span class="crayon-e">an </span><span class="crayon-e">L2TP </span><span class="crayon-e">daemon </span><span class="crayon-st">to</span> <span class="crayon-e">which </span><span class="crayon-e">remote </span><span class="crayon-e">Windows </span><span class="crayon-v">L2TP</span><span class="crayon-o">/</span><span class="crayon-i">IPsec</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-7" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">clients </span><span class="crayon-v">connect</span><span class="crayon-sy">.</span> <span class="crayon-st">In</span> <span class="crayon-r">this</span> <span class="crayon-v">example</span><span class="crayon-sy">,</span> <span class="crayon-e">the </span><span class="crayon-e">internal</span> <span class="crayon-sy">(</span><span class="crayon-m">protected</span><span class="crayon-sy">)</span> <span class="crayon-i">network</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-8" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-st">is</span> <span class="crayon-cn">192.168.1.0</span><span class="crayon-o">/</span><span class="crayon-cn">24.</span><span class="crayon-h">  </span><span class="crayon-i">A</span> <span class="crayon-e">special </span><span class="crayon-e">IP </span><span class="crayon-e">range </span><span class="crayon-e">within </span><span class="crayon-r">this</span> <span class="crayon-e">network </span><span class="crayon-st">is</span> <span class="crayon-i">reserved</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-9" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-st">for</span> <span class="crayon-e">the </span><span class="crayon-e">remote </span><span class="crayon-v">clients</span><span class="crayon-o">:</span> <span class="crayon-cn">192.168.1.128</span><span class="crayon-o">/</span><span class="crayon-cn">25</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-10" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-sy">(</span><span class="crayon-v">i</span><span class="crayon-sy">.</span><span class="crayon-v">e</span><span class="crayon-sy">.</span> <span class="crayon-cn">192.168.1.128</span> <span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span> <span class="crayon-cn">192.168.1.254</span><span class="crayon-sy">)</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-11" class="crayon-line"><span class="crayon-sy">;</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-12" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-e">The </span><span class="crayon-v">listen</span><span class="crayon-o">-</span><span class="crayon-e">addr </span><span class="crayon-e">parameter </span><span class="crayon-e">can </span><span class="crayon-e">be </span><span class="crayon-e">used </span><span class="crayon-st">if</span> <span class="crayon-e">you </span><span class="crayon-e">want </span><span class="crayon-st">to</span> <span class="crayon-e">bind </span><span class="crayon-e">the </span><span class="crayon-e">L2TP </span><span class="crayon-i">daemon</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-13" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-st">to</span> <span class="crayon-i">a</span> <span class="crayon-e">specific </span><span class="crayon-e">IP </span><span class="crayon-e">address </span><span class="crayon-e">instead </span><span class="crayon-e">of </span><span class="crayon-st">to</span> <span class="crayon-e">all </span><span class="crayon-v">interfaces</span><span class="crayon-sy">.</span> <span class="crayon-st">For</span> <span class="crayon-v">instance</span><span class="crayon-sy">,</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-14" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-e">you </span><span class="crayon-e">could </span><span class="crayon-e">bind </span><span class="crayon-e">it </span><span class="crayon-st">to</span> <span class="crayon-e">the </span><span class="crayon-t">interface</span> <span class="crayon-e">of </span><span class="crayon-e">the </span><span class="crayon-e">internal </span><span class="crayon-e">LAN</span> <span class="crayon-sy">(</span><span class="crayon-v">e</span><span class="crayon-sy">.</span><span class="crayon-v">g</span><span class="crayon-sy">.</span> <span class="crayon-cn">192.168.1.98</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-15" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-st">in</span> <span class="crayon-e">the </span><span class="crayon-e">example </span><span class="crayon-v">below</span><span class="crayon-sy">)</span><span class="crayon-sy">.</span> <span class="crayon-e">Yet </span><span class="crayon-e">another </span><span class="crayon-e">IP </span><span class="crayon-e">address</span> <span class="crayon-sy">(</span><span class="crayon-e">local </span><span class="crayon-v">ip</span><span class="crayon-sy">,</span> <span class="crayon-v">e</span><span class="crayon-sy">.</span><span class="crayon-v">g</span><span class="crayon-sy">.</span> <span class="crayon-cn">192.168.1.99</span><span class="crayon-sy">)</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-16" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-e">will </span><span class="crayon-e">be </span><span class="crayon-e">used </span><span class="crayon-e">by </span><span class="crayon-e">xl2tpd </span><span class="crayon-st">as</span> <span class="crayon-e">its </span><span class="crayon-e">address </span><span class="crayon-e">on </span><span class="crayon-e">pppX </span><span class="crayon-v">interfaces</span><span class="crayon-sy">.</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-17" class="crayon-line"></div></p>
+<p><div id="crayon-5610cfe20b389002519202-18" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-v">IMPORTANT</span><span class="crayon-o">:</span> <span class="crayon-e">always </span><span class="crayon-e">set </span><span class="crayon-v">listen</span><span class="crayon-o">-</span><span class="crayon-e">addr </span><span class="crayon-st">to</span> <span class="crayon-i">a</span> <span class="crayon-e">specific </span><span class="crayon-v">address</span><span class="crayon-sy">,</span> <span class="crayon-st">to</span> <span class="crayon-e">work </span><span class="crayon-i">around</span> <span class="crayon-i">a</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-19" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">udpfromto </span><span class="crayon-v">bug</span><span class="crayon-o">!</span><span class="crayon-o">!</span><span class="crayon-o">!</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-20" class="crayon-line crayon-striped-line"></div></p>
+<p><div id="crayon-5610cfe20b389002519202-21" class="crayon-line"><span class="crayon-sy">[</span><span class="crayon-m">global</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-22" class="crayon-line crayon-striped-line"><span class="crayon-v">listen</span><span class="crayon-o">-</span><span class="crayon-v">addr</span> <span class="crayon-o">=</span><span class="crayon-v">vydbs</span><span class="crayon-sy">.</span><span class="crayon-i">com</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-23" class="crayon-line"><span class="crayon-sy">;</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-24" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-e">requires </span><span class="crayon-v">openswan</span><span class="crayon-o">-</span><span class="crayon-cn">2.5.18</span> <span class="crayon-st">or</span> <span class="crayon-v">higher</span> <span class="crayon-o">-</span> <span class="crayon-e">Also </span><span class="crayon-e">does </span><span class="crayon-st">not</span> <span class="crayon-e">yet </span><span class="crayon-e">work </span><span class="crayon-st">in</span> <span class="crayon-i">combination</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-25" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">with </span><span class="crayon-e">kernel </span><span class="crayon-e">mode </span><span class="crayon-e">l2tp </span><span class="crayon-st">as</span> <span class="crayon-e">present </span><span class="crayon-st">in</span> <span class="crayon-i">linux</span> <span class="crayon-cn">2.6.23</span><span class="crayon-o">+</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-26" class="crayon-line crayon-striped-line"><span class="crayon-e">ipsec </span><span class="crayon-v">saref</span> <span class="crayon-o">=</span> <span class="crayon-i">yes</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-27" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-st">Use</span> <span class="crayon-e">refinfo </span><span class="crayon-i">of</span> <span class="crayon-cn">22</span> <span class="crayon-st">if</span> <span class="crayon-e">using </span><span class="crayon-e">an </span><span class="crayon-e">SAref </span><span class="crayon-e">kernel </span><span class="crayon-e">patch </span><span class="crayon-e">based </span><span class="crayon-e">on </span><span class="crayon-i">openswan</span> <span class="crayon-cn">2.6.35</span> <span class="crayon-st">or</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-28" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span><span class="crayon-h">  </span><span class="crayon-e">when </span><span class="crayon-e">using </span><span class="crayon-e">any </span><span class="crayon-e">of </span><span class="crayon-e">the </span><span class="crayon-e">SAref </span><span class="crayon-e">kernel </span><span class="crayon-e">patches </span><span class="crayon-st">for</span> <span class="crayon-e">kernels </span><span class="crayon-e">up </span><span class="crayon-st">to</span> <span class="crayon-cn">2.6.35.</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-29" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">ipsec </span><span class="crayon-v">refinfo</span> <span class="crayon-o">=</span> <span class="crayon-cn">30</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-30" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-31" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">force </span><span class="crayon-v">userspace</span> <span class="crayon-o">=</span> <span class="crayon-i">yes</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-32" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-33" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">debug </span><span class="crayon-v">tunnel</span> <span class="crayon-o">=</span> <span class="crayon-i">yes</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-34" class="crayon-line crayon-striped-line"></div></p>
+<p><div id="crayon-5610cfe20b389002519202-35" class="crayon-line"><span class="crayon-sy">[</span><span class="crayon-e">lns </span><span class="crayon-st">default</span><span class="crayon-sy">]</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-36" class="crayon-line crayon-striped-line"><span class="crayon-e">ip </span><span class="crayon-v">range</span> <span class="crayon-o">=</span> <span class="crayon-cn">192.168.1.128</span><span class="crayon-o">-</span><span class="crayon-cn">192.168.1.254</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-37" class="crayon-line"><span class="crayon-e">local </span><span class="crayon-v">ip</span> <span class="crayon-o">=</span> <span class="crayon-cn">192.168.1.99</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-38" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-e">leave </span><span class="crayon-e">chap </span><span class="crayon-e">unspecified </span><span class="crayon-st">for</span> <span class="crayon-e">maximum </span><span class="crayon-e">compatibility </span><span class="crayon-e">with </span><span class="crayon-v">windows</span><span class="crayon-sy">,</span> <span class="crayon-v">iOS</span><span class="crayon-sy">,</span> <span class="crayon-i">etc</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-39" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">require </span><span class="crayon-v">chap</span> <span class="crayon-o">=</span> <span class="crayon-e">yes</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-40" class="crayon-line crayon-striped-line"><span class="crayon-e">refuse </span><span class="crayon-v">pap</span> <span class="crayon-o">=</span> <span class="crayon-e">yes</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-41" class="crayon-line"><span class="crayon-e">require </span><span class="crayon-v">authentication</span> <span class="crayon-o">=</span> <span class="crayon-e">yes</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-42" class="crayon-line crayon-striped-line"><span class="crayon-v">name</span> <span class="crayon-o">=</span> <span class="crayon-e">LinuxVPNserver</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-43" class="crayon-line"><span class="crayon-e">ppp </span><span class="crayon-v">debug</span> <span class="crayon-o">=</span> <span class="crayon-e">yes</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-44" class="crayon-line crayon-striped-line"><span class="crayon-v">pppoptfile</span> <span class="crayon-o">=</span> <span class="crayon-o">/</span><span class="crayon-v">etc</span><span class="crayon-o">/</span><span class="crayon-v">ppp</span><span class="crayon-o">/</span><span class="crayon-v">options</span><span class="crayon-sy">.</span><span class="crayon-e">xl2tpd</span></div></p>
+<p><div id="crayon-5610cfe20b389002519202-45" class="crayon-line"><span class="crayon-e">length </span><span class="crayon-v">bit</span> <span class="crayon-o">=</span> <span class="crayon-v">yes</span></div><br><br><br><br><br><br><br>修改/etc/ppp/options.xl2tpd</p>
+<p><div id="crayon-5610cfe20b391513182426" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b391513182426-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b391513182426-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-5">5</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b391513182426-6">6</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-7">7</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b391513182426-8">8</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-9">9</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b391513182426-10">10</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-11">11</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b391513182426-12">12</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-13">13</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b391513182426-14">14</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-15">15</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b391513182426-16">16</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b391513182426-17">17</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b391513182426-1" class="crayon-line"><span class="crayon-p"># vi /etc/ppp/options.xl2tpd</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-2" class="crayon-line crayon-striped-line"><span class="crayon-v">require</span><span class="crayon-o">-</span><span class="crayon-v">mschap</span><span class="crayon-o">-</span><span class="crayon-e">v2</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-3" class="crayon-line"><span class="crayon-v">ipcp</span><span class="crayon-o">-</span><span class="crayon-v">accept</span><span class="crayon-o">-</span><span class="crayon-e">local</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-4" class="crayon-line crayon-striped-line"><span class="crayon-v">ipcp</span><span class="crayon-o">-</span><span class="crayon-v">accept</span><span class="crayon-o">-</span><span class="crayon-e">remote</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-5" class="crayon-line"><span class="crayon-v">ms</span><span class="crayon-o">-</span><span class="crayon-i">dns</span> <span class="crayon-cn">8.8.4.4</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-6" class="crayon-line crayon-striped-line"><span class="crayon-v">ms</span><span class="crayon-o">-</span><span class="crayon-i">dns</span> <span class="crayon-cn">8.8.8.8</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-7" class="crayon-line"><span class="crayon-e">noccp</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-8" class="crayon-line crayon-striped-line"><span class="crayon-e">auth</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-9" class="crayon-line"><span class="crayon-e">crtscts</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-10" class="crayon-line crayon-striped-line"><span class="crayon-i">idle</span> <span class="crayon-cn">1800</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-11" class="crayon-line"><span class="crayon-i">mtu</span> <span class="crayon-cn">1410</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-12" class="crayon-line crayon-striped-line"><span class="crayon-i">mru</span> <span class="crayon-cn">1410</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-13" class="crayon-line"><span class="crayon-e">nodefaultroute</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-14" class="crayon-line crayon-striped-line"><span class="crayon-e">debug</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-15" class="crayon-line"><span class="crayon-e">lock</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-16" class="crayon-line crayon-striped-line"><span class="crayon-e">proxyarp</span></div></p>
+<p><div id="crayon-5610cfe20b391513182426-17" class="crayon-line"><span class="crayon-v">connect</span><span class="crayon-o">-</span><span class="crayon-i">delay</span> <span class="crayon-cn">5000</span></div><br><br><br><br><br><br><br>iptables配置</p>
+<p><div id="crayon-5610cfe20b397612733175" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b397612733175-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b397612733175-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b397612733175-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b397612733175-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b397612733175-5">5</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b397612733175-1" class="crayon-line"><span class="crayon-v">iptables</span> <span class="crayon-o">-</span><span class="crayon-i">t</span> <span class="crayon-v">nat</span> <span class="crayon-o">-</span><span class="crayon-i">A</span> <span class="crayon-v">POSTROUTING</span> <span class="crayon-o">-</span><span class="crayon-i">s</span> <span class="crayon-cn">192.168.1.0</span><span class="crayon-o">/</span><span class="crayon-cn">24</span> <span class="crayon-o">-</span><span class="crayon-i">o</span> <span class="crayon-v">eth0</span> <span class="crayon-o">-</span><span class="crayon-i">j</span> <span class="crayon-e">MASQUERADE</span></div></p>
+<p><div id="crayon-5610cfe20b397612733175-2" class="crayon-line crayon-striped-line"><span class="crayon-v">iptables</span> <span class="crayon-o">-</span><span class="crayon-i">I</span> <span class="crayon-v">FORWARD</span> <span class="crayon-o">-</span><span class="crayon-i">s</span> <span class="crayon-cn">192.168.1.0</span><span class="crayon-o">/</span><span class="crayon-cn">24</span> <span class="crayon-o">-</span><span class="crayon-i">j</span> <span class="crayon-e">ACCEPT</span></div></p>
+<p><div id="crayon-5610cfe20b397612733175-3" class="crayon-line"><span class="crayon-v">iptables</span> <span class="crayon-o">-</span><span class="crayon-i">I</span> <span class="crayon-v">FORWARD</span> <span class="crayon-o">-</span><span class="crayon-i">d</span> <span class="crayon-cn">192.168.1.0</span><span class="crayon-o">/</span><span class="crayon-cn">24</span> <span class="crayon-o">-</span><span class="crayon-i">j</span> <span class="crayon-e">ACCEPT</span></div></p>
+<p><div id="crayon-5610cfe20b397612733175-4" class="crayon-line crayon-striped-line"><span class="crayon-v">iptables</span><span class="crayon-o">-</span><span class="crayon-e">save</span></div></p>
+<p><div id="crayon-5610cfe20b397612733175-5" class="crayon-line"><span class="crayon-e">service </span><span class="crayon-e">iptables </span><span class="crayon-v">restart</span></div><br><br><br><br><br><br><br>最后</p>
+<p><div id="crayon-5610cfe20b3a6192680207" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b3a6192680207-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b3a6192680207-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b3a6192680207-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b3a6192680207-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b3a6192680207-5">5</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b3a6192680207-1" class="crayon-line"><span class="crayon-e">service </span><span class="crayon-e">xl2tpd </span><span class="crayon-e">restart</span></div></p>
+<p><div id="crayon-5610cfe20b3a6192680207-2" class="crayon-line crayon-striped-line"><span class="crayon-e">service </span><span class="crayon-e">iptables </span><span class="crayon-e">restart</span></div></p>
+<p><div id="crayon-5610cfe20b3a6192680207-3" class="crayon-line"><span class="crayon-e">chkconfig </span><span class="crayon-e">xl2tpd </span><span class="crayon-e">on</span></div></p>
+<p><div id="crayon-5610cfe20b3a6192680207-4" class="crayon-line crayon-striped-line"><span class="crayon-e">chkconfig </span><span class="crayon-e">iptables </span><span class="crayon-e">on</span></div></p>
+<p><div id="crayon-5610cfe20b3a6192680207-5" class="crayon-line"><span class="crayon-e">chkconfig </span><span class="crayon-e">ipsec </span><span class="crayon-v">on</span></div><br><br><br><br><br><br><br>用户配置：</p>
+<p><div id="crayon-5610cfe20b3af752229548" class="crayon-syntax crayon-theme-github crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover"></div></p>
+<p><div class="crayon-plain-wrap"></div></p>
+<p><div class="crayon-main"></div></p>
+<p><table class="crayon-table"></table></p>
+<p><tbody></tbody></p>
+<p><tr class="crayon-row"></tr></p>
+<p><td class="crayon-nums " data-settings="show"></td></p>
+<p><div class="crayon-nums-content"></div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b3af752229548-1">1</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b3af752229548-2">2</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b3af752229548-3">3</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b3af752229548-4">4</div></p>
+<p><div class="crayon-num" data-line="crayon-5610cfe20b3af752229548-5">5</div></p>
+<p><div class="crayon-num crayon-striped-num" data-line="crayon-5610cfe20b3af752229548-6">6</div><br></p>
+<p><td class="crayon-code"></td></p>
+<p><div class="crayon-pre"></div></p>
+<p><div id="crayon-5610cfe20b3af752229548-1" class="crayon-line"><span class="crayon-p"># vi /etc/ppp/chap-secrets</span></div></p>
+<p><div id="crayon-5610cfe20b3af752229548-2" class="crayon-line crayon-striped-line"></div></p>
+<p><div id="crayon-5610cfe20b3af752229548-3" class="crayon-line"><span class="crayon-p"># Secrets for authentication using CHAP</span></div></p>
+<p><div id="crayon-5610cfe20b3af752229548-4" class="crayon-line crayon-striped-line"><span class="crayon-p"># client        server  secret                  IP addresses</span></div></p>
+<p><div id="crayon-5610cfe20b3af752229548-5" class="crayon-line"></div></p>
+<p><div id="crayon-5610cfe20b3af752229548-6" class="crayon-line crayon-striped-line">用户<span class="crayon-h">       </span><span class="crayon-o"><em></em></span><span class="crayon-h">       </span>密码<span class="crayon-h">        </span><span class="crayon-o"></span></div><br><br><br><br><br><br><br>参考：<br>在CentOS 6下配置 L2TP IPsec VPN服务器的六步<br><a href="http://yp.oss.org.cn/blog/show_resource.php?resource_id=1586" target="_blank" rel="external">http://yp.oss.org.cn/blog/show_resource.php?resource_id=1586</a><br>CentOS安装L2TP VPN笔记<br><a href="http://xfeng.me/centos-install-l2tp-vpn-note/" target="_blank" rel="external">http://xfeng.me/centos-install-l2tp-vpn-note/</a><br>CentOS安装配置L2TP并结合freeradius验证<br><a href="http://www.xj123.info/3180.html" target="_blank" rel="external">http://www.xj123.info/3180.html</a></p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-10-04-centos6-e4-b8-8b-e5-ae-89-e8-a3-85l2tpipsec-vpn-e5-ae-89-e8-a3-85-e9-85-8d-e7-bd-ae-e6-8e-a8.html" data-title="CentOS6下安装L2TP/IPSec VPN安装配置(推)" data-url="http://www.linux52.com/2015-10-04-centos6-e4-b8-8b-e5-ae-89-e8-a3-85l2tpipsec-vpn-e5-ae-89-e8-a3-85-e9-85-8d-e7-bd-ae-e6-8e-a8.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

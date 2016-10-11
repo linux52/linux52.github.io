@@ -1,0 +1,865 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>在Ubuntu上部署L2TP服务 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="现在，lesca向您提供OpenVPN、L2TP和PPTP的快速部署工具OVM，请读者转至《OVM：在Ubuntu上快速部署OpenVPN, L2TP, PPTP服务》。如果想手动安装L2TP，请继续阅读本文：
+一、简介目前流行的L2TP服务都是通过IPSec加密的，正式的叫法应该是L2TP ove">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="在Ubuntu上部署L2TP服务"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/记录/">记录</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>在Ubuntu上部署L2TP服务</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-09-30T04:54:06.000Z"><a href="/2015-09-30-e5-9c-a8ubuntu-e4-b8-8a-e9-83-a8-e7-bd-b2l2tp-e6-9c-8d-e5-8a-a1.html">2015-09-30</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#一、简介"><span class="section table-of-contents-text">一、简介</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#二、安装软件包"><span class="section table-of-contents-text">二、安装软件包</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#1-搭建环境"><span class="section table-of-contents-text">1.搭建环境</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-通过添加软件库安装openswan"><span class="section table-of-contents-text">2.通过添加软件库安装openswan</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#三、开始配置"><span class="section table-of-contents-text">三、开始配置</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#1-IPSec配置"><span class="section table-of-contents-text">1.IPSec配置</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-L2TP配置"><span class="section table-of-contents-text">2.L2TP配置</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#3-PPP配置"><span class="section table-of-contents-text">3.PPP配置</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#5-启用转发"><span class="section table-of-contents-text">5.启用转发</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#错误2：NETKEY-Testing-XFRM-related-proc-values-FAILED"><span class="section table-of-contents-text">错误2：NETKEY: Testing XFRM related proc values [FAILED]</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#错误3：Pluto-listening-for-IKE-on-udp-500-FAILED"><span class="section table-of-contents-text">错误3：Pluto listening for IKE on udp 500 [FAILED]</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#五、测试与调试"><span class="section table-of-contents-text">五、测试与调试</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#1-启用测试用户"><span class="section table-of-contents-text">1.启用测试用户</span></a></li></ol></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-1"><a class="section table-of-contents-link" href="#client-server-secret-IP-addresses"><span class="section table-of-contents-text">client        server  secret                  IP addresses</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#2-连接"><span class="section table-of-contents-text">2.连接</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#3-查看日志"><span class="section table-of-contents-text">3.查看日志</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#References"><span class="section table-of-contents-text">References:</span></a></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p>现在，lesca向您提供OpenVPN、L2TP和PPTP的快速部署工具<strong>OVM</strong>，请读者转至《<a href="http://lesca.me/archives/quickly-deploy-vpn-on-ubuntu-with-ovm.html" target="_blank" rel="external">OVM：在Ubuntu上快速部署OpenVPN, L2TP, PPTP服务</a>》。如果想手动安装L2TP，请继续阅读本文：</p>
+<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>目前流行的L2TP服务都是通过IPSec加密的，正式的叫法应该是L2TP over IPSec。因此，要获得通用性较强的L2TP服务，就需要有IPSec支持。<br>IPSec提供加密、验证服务，客户端连接服务器后首先请求IPSec验证，这通常是用PSK进行验证，验证通过后，交由L2TP处理。<br>L2TP负责对数据进行封包，并启动pppd建立通讯链路。pppd负责用户名、密码的验证。<br>以上就是建立一个L2TP连接的大致过程，但是其中会用到多种相关的协议或者端口：<span id="more-1003"></span></p>
+<ul>
+<li>协议：UDP，端口500，Internet Key Exchange (IKE)</li>
+<li>协议：UDP，端口4500，IPsec NAT-T</li>
+<li>协议：UDP，端口1701，L2TP监听</li>
+<li>协议：ESP，协议号50，Encapsulated Security Payload</li>
+<li>协议：AH，协议号51，Authentication Header<br>ESP和AH协议用于提供验证、数据完整性以及加密通信等特性。它们可以加密整个数据包，也可以仅加密上层协议头，这取决于IPSec所启用的模式。<br>IPSec工作在隧道模式（tunnel）时，加密整个数据报；传输模式（transport）时，仅加密IP数据报的头部。<br>我们配置的IPSec仅向L2TP提供支持，因此工作在传输模式。</li>
+</ul>
+<h2 id="二、安装软件包"><a href="#二、安装软件包" class="headerlink" title="二、安装软件包"></a>二、安装软件包</h2><p>现在流行的ipsec来自openswan，l2tp来自xl2tpd。本文将以这两个软件包进行讲解如何配置。当提及openswan的时候就是指ipsec，当说到xl2tpd的时候就是指l2tp。希望读者能够明白。</p>
+<h3 id="1-搭建环境"><a href="#1-搭建环境" class="headerlink" title="1.搭建环境"></a>1.搭建环境</h3><ul>
+<li>Ubuntu 10.04</li>
+<li>Kernel 2.6.32</li>
+<li>Openswan 2.6.37</li>
+<li>xl2tpd-1.2.5<br><strong>/!\重要：</strong>笔者一开始在Ubuntu 11.04上进行实验，Kernel 3.0，IPSec版本2.6.23。这里有几个严重问题：</li>
+</ul>
+<ol>
+<li>openswan尚未对3.0内核提供良好支持，某些情况下用iPhone或者win7客户端连接会导致内核奔溃！</li>
+<li>2.6.23版本的openswan尚有诸多BUG，即使在Kernel 2.6的环境下，也无法保证100%连接成功。<br>因此，请至少使用openswan 2.6.37的版本，当前最新版本是2.6.38。源代码可在这里下载：<a href="http://download.openswan.org/openswan/" target="_blank" rel="external">http://download.openswan.org/openswan/</a>，之后需要通过编译完成安装。对于openswan的安装我们将会提供两种不同的方法。</li>
+</ol>
+<h3 id="2-通过添加软件库安装openswan"><a href="#2-通过添加软件库安装openswan" class="headerlink" title="2.通过添加软件库安装openswan"></a>2.通过添加软件库安装openswan</h3><pre>apt-get install python-software-properties
+add-apt-repository ppa:openswan/ppa
+apt-get update
+apt-get install openswan
+</pre>
+如果出现**Do you want to create a RSA public/private keypair for this host?**。我们选择**No**，这种模式的IPSec通过证书进行验证，而非PSK。
+
+### 3.通过编译源代码包安装openswan
+
+获取最新软件包：
+<pre>wget http://download.openswan.org/openswan/openswan-2.6.38.tar.gz
+tar -xzf openswan-2.6.38.tar.gz
+</pre>
+编译不同的版本可能会依赖不同的库文件，因此如果你正在编译更高版本的openswan，请务必先阅读README文件。这里我们安装如下库文件：
+<pre>apt-get install libgmp3-dev flex bison
+</pre>
+安装这些库会占用大量空间，而且在服务器上编译二进制文件通常不是明智之举！但是有时候服务器架构会与你的测试机完全不同，因此可能你仍然需要在服务器上做这些工作。接下来我们开始编译：
+<pre>make programs install
+</pre>
+如果一切顺利，编译工作完成后配置文件及服务会自动安装到合适的地方，也就是和通过apt-get安装没什么两样了。
+
+### 4.安装xl2tpd
+
+Ubuntu中xl2tpd的版本目前没有发现严重问题。因此安装起来也比较方便：
+<pre>apt-get install xl2tpd
+</pre>
+
+<h2 id="三、开始配置"><a href="#三、开始配置" class="headerlink" title="三、开始配置"></a>三、开始配置</h2><p>配置工作分为三部分：IPSec配置、L2TP配置、PPP配置</p>
+<h3 id="1-IPSec配置"><a href="#1-IPSec配置" class="headerlink" title="1.IPSec配置"></a>1.IPSec配置</h3><pre># /etc/ipsec.conf
+
+config setup
+    nat_traversal=yes
+    virtual_private=%v4:10.0.0.0/8,%v4:192.168.0.0/16,%v4:172.16.0.0/12,%v4:25.0.0.0/8,%v6:fd00::/8,%v6:fe80::/10
+    oe=off
+    protostack=netkey
+
+conn L2TP-PSK-NAT
+        rightsubnet=vhost:%priv
+        also=L2TP-PSK-noNAT
+
+conn L2TP-PSK-noNAT
+        authby=secret
+        pfs=no
+        auto=add
+        keyingtries=3
+        # we cannot rekey for %any, let client rekey
+        rekey=no
+        # Apple iOS doesn't send delete notify so we need dead peer detection
+        # to detect vanishing clients
+        dpddelay=10
+        dpdtimeout=90
+        dpdaction=clear
+        # Set ikelifetime and keylife to same defaults windows has
+        ikelifetime=8h
+        keylife=1h
+        # l2tp-over-ipsec is transport mode
+        type=transport
+        #
+        left=**$IP**
+        #
+        # For updated Windows 2000/XP clients,
+        # to support old clients as well, use leftprotoport=17/%any
+        leftprotoport=17/1701
+        #
+        # The remote user.
+        #
+        right=%any
+        # Using the magic port of "%any" means "any one single port". This is
+        # a work around required for Apple OSX clients that use a randomly
+        # high port.
+        rightprotoport=17/%any
+
+conn passthrough-for-non-l2tp
+        type=passthrough
+        left=**$IP**
+        leftnexthop=**$GATEWAY**
+        right=0.0.0.0
+        rightsubnet=0.0.0.0/0
+        auto=route
+</pre>
+其中，$IP改成你主机以太网卡的IP，$GATEWAY改成该IP所在网段的网关地址，下同。对于下面的密钥文件，你需要将密钥引在引号中。
+<pre># /etc/ipsec.secrets
+$IP %any: PSK "Your Preshared Key Here"
+</pre>
+最后我们需要修改某些网络策略，让ipsec正常运行：
+<pre>for each in /proc/sys/net/ipv4/conf/*
+do
+    echo 0 &gt; $each/accept_redirects
+    echo 0 &gt; $each/send_redirects
+done
+</pre>
+
+<h3 id="2-L2TP配置"><a href="#2-L2TP配置" class="headerlink" title="2.L2TP配置"></a>2.L2TP配置</h3><pre># /etc/xl2tpd/xl2tpd.conf
+
+[global]
+ipsec saref = yes
+
+[lns default]
+ip range = 10.10.20.100-10.10.20.254
+local ip = 10.10.20.1
+require chap = yes
+refuse pap = yes
+require authentication = yes
+ppp debug = yes
+pppoptfile = /etc/ppp/options.xl2tpd
+length bit = yes
+</pre>
+
+<h3 id="3-PPP配置"><a href="#3-PPP配置" class="headerlink" title="3.PPP配置"></a>3.PPP配置</h3><pre># /etc/ppp/options.xl2tpd
+
+refuse-mschap-v2
+refuse-mschap
+ms-dns 8.8.8.8
+ms-dns 8.8.4.4
+asyncmap 0
+auth
+lock
+hide-password
+local
+#debug
+name l2tpd
+proxyarp
+lcp-echo-interval 30
+lcp-echo-failure 4
+mtu 1404
+mru 1404
+</pre>
+
+<h3 id="5-启用转发"><a href="#5-启用转发" class="headerlink" title="5.启用转发"></a>5.启用转发</h3><pre>echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+</pre>
+对于OpenVZ的主机，可能不支持MASQUERADE，此时需要使用SNAT：
+<pre>iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $IP
+</pre>
+其中$IP就是你主机的eth0接口的IP地址。
+
+## 四、检查ipsec是否工作正常
+
+我们通过执行`ipsec verify`命令进行验证ipsec服务是否工作正常：
+
+### 错误1：pluto is running [FAILED]
+
+<pre>Checking your system to see if IPsec got installed and started correctly:
+Version check and ipsec on-path                                 [OK]
+Linux Openswan U2.6.38/K(no kernel code presently loaded)
+**Checking for IPsec support in kernel                            [FAILED]**
+ SAref kernel support                                           [N/A]
+**Checking that pluto is running                                  [FAILED]**
+  whack: Pluto is not running (no "/var/run/pluto/pluto.ctl")
+Checking for 'ip' command                                       [OK]
+Checking /bin/sh is not /bin/dash                               [WARNING]
+Checking for 'iptables' command                                 [OK]
+Opportunistic Encryption Support                                [DISABLED]
+</pre>
+这是因为你还没有启动ipsec服务！
+<pre>/etc/init.d/ipsec start
+</pre>
+
+<h3 id="错误2：NETKEY-Testing-XFRM-related-proc-values-FAILED"><a href="#错误2：NETKEY-Testing-XFRM-related-proc-values-FAILED" class="headerlink" title="错误2：NETKEY: Testing XFRM related proc values [FAILED]"></a>错误2：NETKEY: Testing XFRM related proc values [FAILED]</h3><pre>Checking your system to see if IPsec got installed and started correctly:
+Version check and ipsec on-path                                 [OK]
+Linux Openswan U2.6.38/K2.6.32-38-generic-pae (netkey)
+Checking for IPsec support in kernel                            [OK]
+ SAref kernel support                                           [N/A]
+** NETKEY:  Testing XFRM related proc values                      [FAILED]**
+
+  Please disable /proc/sys/net/ipv4/conf/*/send_redirects
+  or NETKEY will cause the sending of bogus ICMP redirects!
+
+        [FAILED]
+
+  Please disable /proc/sys/net/ipv4/conf/*/accept_redirects
+  or NETKEY will accept bogus ICMP redirects!
+
+        [OK]
+Checking that pluto is running                                  [OK]
+ Pluto listening for IKE on udp 500                             [OK]
+ Pluto listening for NAT-T on udp 4500                          [OK]
+Checking for 'ip' command                                       [OK]
+Checking /bin/sh is not /bin/dash                               [WARNING]
+Checking for 'iptables' command                                 [OK]
+Opportunistic Encryption Support                                [DISABLED]
+</pre>
+你可能忘记修改网络策略：
+<pre>for each in /proc/sys/net/ipv4/conf/*
+do
+    echo 0 &gt; $each/accept_redirects
+    echo 0 &gt; $each/send_redirects
+done
+</pre>
+
+<h3 id="错误3：Pluto-listening-for-IKE-on-udp-500-FAILED"><a href="#错误3：Pluto-listening-for-IKE-on-udp-500-FAILED" class="headerlink" title="错误3：Pluto listening for IKE on udp 500 [FAILED]"></a>错误3：Pluto listening for IKE on udp 500 [FAILED]</h3><pre>**Pluto listening for IKE on udp 500                              [FAILED]**
+  Cannot execute command "lsof -i UDP:500": No such file or directory
+**Pluto listening for NAT-T on udp 4500                           [FAILED]**
+  Cannot execute command "lsof -i UDP:4500": No such file or directory
+</pre>
+那么你需要安装lsof：
+<pre>apt-get install lsof
+</pre>
+
+<h2 id="五、测试与调试"><a href="#五、测试与调试" class="headerlink" title="五、测试与调试"></a>五、测试与调试</h2><h3 id="1-启用测试用户"><a href="#1-启用测试用户" class="headerlink" title="1.启用测试用户"></a>1.启用测试用户</h3><p>编辑/etc/ppp/chap-secrets文件，加入如下行：</p>
+<p><pre># Secrets for authentication using CHAP</pre></p>
+<h1 id="client-server-secret-IP-addresses"><a href="#client-server-secret-IP-addresses" class="headerlink" title="client        server  secret                  IP addresses"></a>client        server  secret                  IP addresses</h1><p>guest           l2tpd   password                <em><br><br>该行创建一个用户，用户名为guest，密码为password（明文）<br>server字段与options.xl2tpd配置文件中的name属性对应。还可以星号（</em>）代替，表示不限调用服务。<br>IP address表示来源IP，这里星号（*）表示接受所有连接。<br>对来源IP的过滤应该由iptables防火墙来完成。读者可以查阅本博客关于iptables的相关文章进行设置。</p>
+<h3 id="2-连接"><a href="#2-连接" class="headerlink" title="2.连接"></a>2.连接</h3><p>现在就可以尝试连接，如果连接失败，需要通过查看日志信息排错。</p>
+<h3 id="3-查看日志"><a href="#3-查看日志" class="headerlink" title="3.查看日志"></a>3.查看日志</h3><p>ipsec日志记录在/var/log/auth中，如果发现该行：</p>
+<p><pre>STATE_MAIN_R3: sent MR3, ISAKMP SA established<br></pre><br>则表示IPSec认证或连接没有问题，可以检查其他日志。但是有时候即使出现established，也会在稍后的行中出现错误信息，这是需要用户留意的地方。<br>xl2tpd和pppd的日志记录在/var/log/syslog中。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References:"></a>References:</h2><p>[1] <a href="http://www.ipsec-howto.org/" target="_blank" rel="external">The official IPsec Howto for Linux</a><br>[2] <a href="http://blog.riobard.com/2010/04/30/l2tp-over-ipsec-ubuntu" target="_blank" rel="external">Configure L2TP/IPSec VPN on Ubuntu</a><br>[3] <a href="http://bailey.st/blog/2011/07/06/secure-ipsecl2tp-vpn-for-on-the-road-android-devices/" target="_blank" rel="external">Secure IPsec/L2TP VPN for on the road android devices</a><br>[4] <a href="http://rootmanager.com/ubuntu-ipsec-l2tp-windows-domain-auth/setting-up-openswan-xl2tpd-with-native-windows-clients-lucid.html" target="_blank" rel="external">Setting Up an IPSec L2TP VPN server on Ubuntu for Windows clients</a><br>[5] <a href="http://www.linuxjournal.com/article/9916" target="_blank" rel="external">Creating VPNs with IPsec and SSL/TLS</a><br>[6] <a href="http://www.cnblogs.com/klobohyz/archive/2012/02/04/2337775.html" target="_blank" rel="external">ipsec安装好后运行ipsec verify命令发现错误的解决方案</a><br>[7] <a href="http://dipplum.com/2010/08/30/ubuntu-install-l2tp-server/" target="_blank" rel="external">在Ubuntu上安装L2TP/IPsec VPN服务器</a><br>[8] <a href="http://www.cnblogs.com/jjkv3/archive/2008/04/10/1147490.html" target="_blank" rel="external">VPN相关端口和协议</a></p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-09-30-e5-9c-a8ubuntu-e4-b8-8a-e9-83-a8-e7-bd-b2l2tp-e6-9c-8d-e5-8a-a1.html" data-title="在Ubuntu上部署L2TP服务" data-url="http://www.linux52.com/2015-09-30-e5-9c-a8ubuntu-e4-b8-8a-e9-83-a8-e7-bd-b2l2tp-e6-9c-8d-e5-8a-a1.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

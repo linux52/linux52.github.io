@@ -1,0 +1,701 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>Linux netfilter OOB root提权漏洞分析 | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="* 本文原创作者：肥肥草，本文属FreeBuf原创奖励计划，未经许可禁止转载
+
+著名的ExploitDatabase网站（www.exploit-db.com）最近贴出了一个netfilter模块的提权POC，作者是Vitaly Nikolenko。OOB！Netfilter！顿感好奇，决定分析一下">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="Linux netfilter OOB root提权漏洞分析"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/freebuf/">freebuf</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>Linux netfilter OOB root提权漏洞分析</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2016-09-09T03:31:38.000Z"><a href="/2016-09-09-linux-netfilter-oob-root-e6-8f-90-e6-9d-83-e6-bc-8f-e6-b4-9e-e5-88-86-e6-9e-90.html">2016-09-09</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#0×0-依葫芦画瓢提权成功"><span class="section table-of-contents-text">0×0 依葫芦画瓢提权成功</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#0×01-漏洞初识"><span class="section table-of-contents-text">0×01 漏洞初识</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#0×02-定位修改ptmx-fops关键指令"><span class="section table-of-contents-text">0×02 定位修改ptmx_fops关键指令</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#0×03-漏洞成因分析"><span class="section table-of-contents-text">0×03 漏洞成因分析</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#0×4漏洞总结"><span class="section table-of-contents-text">0×4漏洞总结</span></a></li></ol>
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p><strong>* 本文原创作者：肥肥草，本文属FreeBuf原创奖励计划，未经许可禁止转载
+</strong></p>
+<p><strong>著名的ExploitDatabase网站（<a href="http://www.exploit-db.com/" target="_blank" rel="external">www.exploit-db.com</a>）最近贴出了一个netfilter模块的提权POC，作者是Vitaly Nikolenko。OOB！Netfilter！顿感好奇，决定分析一下，现将分析过程和成果分享如下。</strong></p>
+<h2 id="0×0-依葫芦画瓢提权成功"><a href="#0×0-依葫芦画瓢提权成功" class="headerlink" title="0×0 依葫芦画瓢提权成功"></a>0×0 依葫芦画瓢提权成功</h2><p>参照文章的提示，下载Ubuntu16.04并成功安装，uname -a确认版本号为4.4.0-21-generic。</p>
+<p><a href="http://image.3001.net/images/20160826/14721806097863.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721806097863.png!small" alt=""></a></p>
+<p>下载POC，编译，按照提示关闭SMEP，加载ip_tables.ko，运行decr，等到出现“Done!Nowrun.pwn”后运行pwn，成功获得root shell。</p>
+<p><a href="http://image.3001.net/images/20160826/14721806553492.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721806553492.png!small" alt=""></a></p>
+<p><a href="http://image.3001.net/images/20160826/14721806638786.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721806638786.png!small" alt=""></a></p>
+<h2 id="0×01-漏洞初识"><a href="#0×01-漏洞初识" class="headerlink" title="0×01 漏洞初识"></a>0×01 漏洞初识</h2><p>查看pwn.c的代码，可以看出POC采用了常见的通过ptmx提权方法：</p>
+<p><a href="http://image.3001.net/images/20160826/14721806734085.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721806734085.png!small" alt=""></a></p>
+<p>猜测decr中修改了ptmx_fops的release指针，并根据代码可推断出修改后该指针的值为0xff814e30b0。然后pwn中调用close(fd)调用ptmx_fops-&gt;release函数，从而提权。</p>
+<p>事实是否如此呢？</p>
+<p>通过cat/proc/kallsyms查看ptmx_fops的地址为0xffffffff821de3e0，则release指针所在地址为0xffffffff821de3e0 + 13*8 = 0xffffffff821de448。</p>
+<p>通过kgdb进行调试，查看在decr运行之前，0xffffffff821de448的值0xffffffff814e30b0，如下图所示：</p>
+<p><a href="http://image.3001.net/images/20160826/14721806934221.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721806934221.png!small" alt=""></a></p>
+<p>运行decr之后，0xffffffff821de448地址的值，为0x ff814e30b0，如下图所示：</p>
+<p><a href="http://image.3001.net/images/20160826/14721806982781.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721806982781.png!small" alt=""></a></p>
+<p>也就是说，decr运行之后，0xffffffff821de448地址的值由0xffffffff814e30b0被修改为0xff814e30b0，而0xff814e30b0地址是应用层地址，是可控的，在pwn代码中向0xff814e30b0地址写入了提权ShellCode。</p>
+<p>下面的问题就是decr是如何做到的，内核漏洞在哪？</p>
+<h2 id="0×02-定位修改ptmx-fops关键指令"><a href="#0×02-定位修改ptmx-fops关键指令" class="headerlink" title="0×02 定位修改ptmx_fops关键指令"></a>0×02 定位修改ptmx_fops关键指令</h2><p>仔细分析decr.c，无非是设置了ipt_replace、ipt_entry等数据结构，然后调用setsockopt函数设置内核，看完之后仍然毫无头绪，还得从内核着手，看看应用层在调用完setsockopt函数之后内核到底做了那些事。</p>
+<p>一种思路是重新编译内核，这样可以实现源码级的内核调试，但是重新编译之后一些内核参数（如ptmx_fops）地址发生改变，POC可能会运行失败，这样不利于定位修改ptmx_fops的漏洞代码。</p>
+<p>所以还是针对Ubuntu16.04原生的内核进行调试，采用源码分析+动态调试的方法定位修改ptmx_fops的关键指令。本次采用的动态调试方法为vmware双虚拟机kgdb调试方法，具体方法可以通过百度获得，文中不再复述。</p>
+<p>查看ip_tables.c源码，首先找到模块初始化函数ip_tables_init：</p>
+<p><a href="http://image.3001.net/images/20160826/14721807126257.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807126257.png!small" alt=""></a></p>
+<p>在ip_tables_init中，调用nf_register_sockopt注册处理函数，注册参数如下所示。</p>
+<p><a href="http://image.3001.net/images/20160826/14721807201963.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807201963.png!small" alt=""></a></p>
+<p>set函数有两个，do_ipt_set_ctl和compat_do_ipt_set_ctl，内核会调用哪一个函数呢？</p>
+<p>通过kgdb双虚拟机调试，分别设置两个函数为断点，发现当应用层调用setsockopt时，内核调用的是compat_do_ipt_set_ctl，如下图所示。</p>
+<p><a href="http://image.3001.net/images/20160826/14721807368122.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807368122.png!small" alt=""></a></p>
+<p>继续分析，获得如下函数执行路径：</p>
+<pre><code>compat_&lt;span class=&quot;hljs-keyword&quot;&gt;do&lt;/span&gt;_ipt_&lt;span class=&quot;hljs-built_in&quot;&gt;set&lt;/span&gt;_ctl--&amp;gt; compat_&lt;span class=&quot;hljs-keyword&quot;&gt;do&lt;/span&gt;_replace --&amp;gt; translate_compat_table --&amp;gt; check_compat_entry_size_and_hooks
+</code></pre><p>POC代码中提示check_compat_entry_size_and_hooks/check_entry有问题，那么重点分析check_compat_entry_size_and_hooks函数，看是在那一步去修改了ptmx_fops，最好的办法是动态调试。</p>
+<p>经过痛苦的、纯体力活的kgdb汇编代码调试，最终定位到是在compat_release_entry函数中修改了ptmx_fops，并且修改了两次，进一步跟踪定位到是该函数中的两个module_put函数修改了ptmx_fops。</p>
+<p><a href="http://image.3001.net/images/20160826/14721807427692.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807427692.png!small" alt=""></a></p>
+<p>同时通过打印$rdi（module_put的第一个参数）的值，发现该值为0xffffffff821de10d，如下所示：</p>
+<p><a href="http://image.3001.net/images/20160826/14721807541402.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807541402.png!small" alt=""></a></p>
+<p>而该值正是decr.c中设置的magicnumber，如下图所示：</p>
+<p><a href="http://image.3001.net/images/20160826/14721807629599.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807629599.png!small" alt=""></a></p>
+<p>再看module_put函数：</p>
+<p><a href="http://image.3001.net/images/20160826/14721807696298.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807696298.png!small" alt=""></a></p>
+<p>其中最关键的就是对modue-&gt;refcnt减一。</p>
+<p>refcnt在structmodule结构中的偏移为0×340，因此&amp;module-&gt;refcnt的值为 0xffffffff821de10d + 0×340 = 0xffffffff821de44d， 而ptmx_fops-&gt;tty_release的地址为0xffffffff821de448，因此当执行减一操作后，会将0xffffffff821de44d开始的0xff 0xff 0xff逐步减为0，最终ptmx_fops-&gt;tty_release的值变为0xff814e30b0。</p>
+<p><a href="http://image.3001.net/images/20160826/14721807796432.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807796432.png!small" alt=""></a></p>
+<p>到此，总算搞明白了，应用层通过构造特殊的ipt_replace、ipt_entry、xt_entry_match、xt_standard_target结构，将一个值为magic number的地址传到内核，并让内核中对该地址的内容执行多次-1操作，从而达到修改ptmx_fops的目的。</p>
+<h2 id="0×03-漏洞成因分析"><a href="#0×03-漏洞成因分析" class="headerlink" title="0×03 漏洞成因分析"></a>0×03 漏洞成因分析</h2><p>通过上节分析知道，该漏洞可以在内核中修改应用层指定的地址，执行递减1的修改操作。那么内核代码中的漏洞到底在哪呢？</p>
+<p>继续分析内核源代码ip_tables.c，既然问题出在ematch-&gt;u.kernel.match-&gt;me和t-&gt;u.kernel.target-&gt;me上，那么转到与之相关的代码处，即compat_copy_entry_from_user函数内部的代码，重点分析以下代码：</p>
+<p><a href="http://image.3001.net/images/20160826/14721807991799.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721807991799.png!small" alt=""></a></p>
+<p>将xt_ematch_foreach函数展开，如下：</p>
+<p><a href="http://image.3001.net/images/20160826/14721808081529.png" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721808081529.png!small" alt=""></a></p>
+<p>entry-&gt;elems指向的是紧跟在ipt_entry后的xt_entry_match（见如下示意图），即entry-&gt;elems= entry + sizeof(ipt_entry)，而sizeof(ipt_entry) = 112字节。</p>
+<p><a href="http://image.3001.net/images/20160826/14721808182831.gif" target="_blank" rel="external"><img src="http://image.3001.net/images/20160826/14721808182831.gif!small" alt=""></a></p>
+<p>由于应用层设置的target_offset为74，导致判断语句</p>
+<p>(pos)&lt; (struct xt_entry_match <em>)(<span class="hljs-function"><span class="hljs-params">(char </span></span></em>)(entry) + \</p>
+<p><span class="hljs-function"><span class="hljs-params">(entry)</span>-&gt;</span>target_offset); \</p>
+<p>返回的结果为<strong>false</strong>，因此整个循环一次未能执行，也即compat_find_calc_match函数未能执行，本应在compat_find_calc_match函数中设置ematch-&gt;u.kernel.match-&gt;me的指令也未能执行。</p>
+<p>与ematch错误处理情况类似，这段代码中，由于应用层设置的target_offset为74，导致t = compat_ipt_get_target()函数获取的target是错误的，后面尽管通过t-&gt;u.kernel.target= target;设置了target，但设置到了错误的地址，未改变真正的t-&gt;u.kernel.target值。</p>
+<h2 id="0×4漏洞总结"><a href="#0×4漏洞总结" class="headerlink" title="0×4漏洞总结"></a>0×4漏洞总结</h2><p><strong>综上所属，该漏洞是内核netfilter处理setsockopt相关代码（check_compat_entry_size_and_hooks和check_entry函数）在处理应用层传下来的数据时审查不严格，处理逻辑也存在缺陷，使内核在调用module_put函数时操作了应用层传下来的地址，导致内核直接对应用层输入的地址执行减一操作，相当于是内核任意地址写漏洞。</strong></p>
+<p>该漏洞要利用内核模块的module_put函数，而Android系统一般不打开内核模块动态加载功能，因此本文介绍的漏洞利用方法无法在Android系统上成功执行。</p>
+<p>最近爆出和netfilters/getsockopt相关的漏洞不少，如CVE-2016-3134，后期将继续分析其他漏洞。</p>
+<p>欢迎技术交流。本人QQ:16588753，root技术交流群:437812386。</p>
+<p><strong>* 本文原创作者：肥肥草，本文属FreeBuf原创奖励计划，未经许可禁止转载 </strong></p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2016-09-09-linux-netfilter-oob-root-e6-8f-90-e6-9d-83-e6-bc-8f-e6-b4-9e-e5-88-86-e6-9e-90.html" data-title="Linux netfilter OOB root提权漏洞分析" data-url="http://www.linux52.com/2016-09-09-linux-netfilter-oob-root-e6-8f-90-e6-9d-83-e6-bc-8f-e6-b4-9e-e5-88-86-e6-9e-90.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>

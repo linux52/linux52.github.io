@@ -1,0 +1,1296 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>在CentOS 6下配置 L2TP IPsec VPN服务器的六步(转) | 个人博客网站--记录生活所得</title>
+    <meta name="author" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰">
+    
+    <meta name="description" content="原文章http://blog.jobbole.com/24004/
+1. 先安装Openswan
+
+
+
+
+
+
+1
+2
+3
+4
+5
+
+
+yum ``install -y ppp iptables ``make gcc gmp-devel xmlto bison flex xmlto libpcap-d">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="在CentOS 6下配置 L2TP IPsec VPN服务器的六步(转)"/>
+    <meta property="og:site_name" content="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="ζั͡ޓ̯̯̯͡͡طىއއއ๓冰" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="indigo">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav indigo darken-1" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="http://ww2.sinaimg.cn/small/74990035jw1f1rjkd681bj20rs0rsdhg.jpg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">ζั͡ޓ̯̯̯͡͡طىއއއ๓冰</p>
+                        <p class="desc">Web前端/技术宅</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav indigo darken-1" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/freebuf/">
+                    freebuf <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/便宜vps/">
+                    便宜vps <span class="right">6 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/随笔记录/">
+                    随笔记录 <span class="right">12 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/centos/">
+                    centos <span class="right">7 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/记录/">
+                    记录 <span class="right">26 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/ubuntu/">
+                    ubuntu <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/debian/">
+                    debian <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/数据库应用/">
+                    数据库应用 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/metasploit/">
+                    metasploit <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/apache/">
+                    apache <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/kali-linux/">
+                    kali-linux <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/隧道技术/">
+                    隧道技术 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/linux-mint/">
+                    linux-mint <span class="right">4 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper indigo">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/centos/">centos</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>在CentOS 6下配置 L2TP IPsec VPN服务器的六步(转)</h1>
+    
+
+
+            </div>
+            <time class="indigo-link-context" datetime="2015-10-04T07:05:54.000Z"><a href="/2015-10-04-e5-9c-a8centos-6-e4-b8-8b-e9-85-8d-e7-bd-ae-l2tp-ipsec-vpn-e6-9c-8d-e5-8a-a1-e5-99-a8-e7-9a-84-e5-85-ad-e6-ad-a5-e8-bd-ac.html">2015-10-04</a></time>
+
+            
+
+            <div class="toc indigo-link-context hide-on-med-and-down">
+    
+</div>
+
+
+            <div class="entry indigo-link-context">
+                <p>原文章<a href="http://blog.jobbole.com/24004/" target="_blank" rel="external">http://blog.jobbole.com/24004/</a></p>
+<p><strong>1. 先安装Openswan</strong></p>
+<p><div></div></p>
+<p><div id="highlighter_362113" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>yum ``install</code> <code>-y ppp iptables ``make</code> <code>gcc gmp-devel xmlto bison flex xmlto libpcap-devel ``lsof</code></div></p>
+<p><div class="line number2 index1 alt1"><code>wget http:``//download``.openswan.org``/openswan/openswan-2``.6.38.``tar``.gz</code></div></p>
+<p><div class="line number3 index2 alt2"><code>tar</code> <code>zxvf openswan-2.6.38.``tar``.gz</code></div></p>
+<p><div class="line number4 index3 alt1"><code>cd</code> <code>openswan-2.6.38</code></div></p>
+<p><div class="line number5 index4 alt2"><code>make</code> <code>programs ``install</code></div><br><br><br><br><br><br><br><a href="http://b.gkp.cc/2010/06/19/setup-ipsec-l2tp-on-centos-55/" target="_blank" rel="external">gkp说</a> “安装 Openswan，记得别用2.6.26，宁可用2.6.24。它和 xL2TPD 存在严重兼容性bug”</p>
+<p>&nbsp;</p>
+<p><strong>2. 安装xL2TPD</strong></p>
+<p>在CentOS 6官方的yum源中，没有这个软件包。需要安装fedora的epel源。</p>
+<p><div></div></p>
+<p><div id="highlighter_863663" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>rpm -Uvh http:``//mirrors``.ustc.edu.cn``/fedora/epel/6/x86_64/epel-release-6-7``.noarch.rpm</code></div></p>
+<p><div class="line number2 index1 alt1"><code>#CentOS 5用这个地址：  rpm -Uvh http://mirrors.ustc.edu.cn/fedora/epel/5/i386/epel-release-5-4.noarch.rpm</code></div></p>
+<p><div class="line number3 index2 alt2"><code>yum ``install</code> <code>xl2tpd -y</code></div><br><br><br><br><br><br><br>如果上面这个安装地址如果不对了。参照这个fedora epel 的<a href="https://fedoraproject.org/wiki/EPEL/FAQ/zh-cn#How_can_I_install_the_packages_from_the_EPEL_software_repository.3F" target="_blank" rel="external"> faq页</a>。安装其他一些 Linux 软件源，<a href="http://www.esojourn.org/blog/post/repo-sources.php" target="_blank" rel="external">参照这页</a>。</p>
+<p>编辑 /etc/ipsec.conf 注意$esojourn.org 替换成你机器的 IP。这个 IP 应该是你的公网 IP，不是本机内网IP。</p>
+<p><div></div></p>
+<p><div id="highlighter_938456" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><div class="line number6 index5 alt1">6</div></p>
+<p><div class="line number7 index6 alt2">7</div></p>
+<p><div class="line number8 index7 alt1">8</div></p>
+<p><div class="line number9 index8 alt2">9</div></p>
+<p><div class="line number10 index9 alt1">10</div></p>
+<p><div class="line number11 index10 alt2">11</div></p>
+<p><div class="line number12 index11 alt1">12</div></p>
+<p><div class="line number13 index12 alt2">13</div></p>
+<p><div class="line number14 index13 alt1">14</div></p>
+<p><div class="line number15 index14 alt2">15</div></p>
+<p><div class="line number16 index15 alt1">16</div></p>
+<p><div class="line number17 index16 alt2">17</div></p>
+<p><div class="line number18 index17 alt1">18</div></p>
+<p><div class="line number19 index18 alt2">19</div></p>
+<p><div class="line number20 index19 alt1">20</div></p>
+<p><div class="line number21 index20 alt2">21</div></p>
+<p><div class="line number22 index21 alt1">22</div></p>
+<p><div class="line number23 index22 alt2">23</div></p>
+<p><div class="line number24 index23 alt1">24</div></p>
+<p><div class="line number25 index24 alt2">25</div></p>
+<p><div class="line number26 index25 alt1">26</div></p>
+<p><div class="line number27 index26 alt2">27</div></p>
+<p><div class="line number28 index27 alt1">28</div></p>
+<p><div class="line number29 index28 alt2">29</div></p>
+<p><div class="line number30 index29 alt1">30</div></p>
+<p><div class="line number31 index30 alt2">31</div></p>
+<p><div class="line number32 index31 alt1">32</div></p>
+<p><div class="line number33 index32 alt2">33</div></p>
+<p><div class="line number34 index33 alt1">34</div></p>
+<p><div class="line number35 index34 alt2">35</div></p>
+<p><div class="line number36 index35 alt1">36</div></p>
+<p><div class="line number37 index36 alt2">37</div></p>
+<p><div class="line number38 index37 alt1">38</div></p>
+<p><div class="line number39 index38 alt2">39</div></p>
+<p><div class="line number40 index39 alt1">40</div></p>
+<p><div class="line number41 index40 alt2">41</div></p>
+<p><div class="line number42 index41 alt1">42</div></p>
+<p><div class="line number43 index42 alt2">43</div></p>
+<p><div class="line number44 index43 alt1">44</div></p>
+<p><div class="line number45 index44 alt2">45</div></p>
+<p><div class="line number46 index45 alt1">46</div></p>
+<p><div class="line number47 index46 alt2">47</div></p>
+<p><div class="line number48 index47 alt1">48</div></p>
+<p><div class="line number49 index48 alt2">49</div></p>
+<p><div class="line number50 index49 alt1">50</div></p>
+<p><div class="line number51 index50 alt2">51</div></p>
+<p><div class="line number52 index51 alt1">52</div></p>
+<p><div class="line number53 index52 alt2">53</div></p>
+<p><div class="line number54 index53 alt1">54</div></p>
+<p><div class="line number55 index54 alt2">55</div></p>
+<p><div class="line number56 index55 alt1">56</div></p>
+<p><div class="line number57 index56 alt2">57</div></p>
+<p><div class="line number58 index57 alt1">58</div></p>
+<p><div class="line number59 index58 alt2">59</div></p>
+<p><div class="line number60 index59 alt1">60</div></p>
+<p><div class="line number61 index60 alt2">61</div></p>
+<p><div class="line number62 index61 alt1">62</div></p>
+<p><div class="line number63 index62 alt2">63</div></p>
+<p><div class="line number64 index63 alt1">64</div></p>
+<p><div class="line number65 index64 alt2">65</div></p>
+<p><div class="line number66 index65 alt1">66</div></p>
+<p><div class="line number67 index66 alt2">67</div></p>
+<p><div class="line number68 index67 alt1">68</div></p>
+<p><div class="line number69 index68 alt2">69</div></p>
+<p><div class="line number70 index69 alt1">70</div></p>
+<p><div class="line number71 index70 alt2">71</div></p>
+<p><div class="line number72 index71 alt1">72</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code># /etc/ipsec.conf - Openswan IPsec configuration file# This file: /usr/local/share/doc/openswan/ipsec.conf-sample</code></div></p>
+<p><div class="line number2 index1 alt1"><code>#</code></div></p>
+<p><div class="line number3 index2 alt2"><code># Manual: ipsec.conf.5version 2.0</code></div></p>
+<p><div class="line number4 index3 alt1"><code># conforms to second version of ipsec.conf specification# basic configuration</code></div></p>
+<p><div class="line number5 index4 alt2"><code>config setup</code></div></p>
+<p><div class="line number6 index5 alt1"><code># Do not set debug options to debug configuration issues!</code></div></p>
+<p><div class="line number7 index6 alt2"><code># plutodebug / klipsdebug = &quot;all&quot;, &quot;none&quot; or a combation from below:</code></div></p>
+<p><div class="line number8 index7 alt1"><code># &quot;raw crypt parsing emitting control klips pfkey natt x509 dpd private&quot;</code></div></p>
+<p><div class="line number9 index8 alt2"><code># eg:</code></div></p>
+<p><div class="line number10 index9 alt1"><code># plutodebug=&quot;control parsing&quot;</code></div></p>
+<p><div class="line number11 index10 alt2"><code># Again: only enable plutodebug or klipsdebug when asked by a developer</code></div></p>
+<p><div class="line number12 index11 alt1"><code>#</code></div></p>
+<p><div class="line number13 index12 alt2"><code># enable to get logs per-peer</code></div></p>
+<p><div class="line number14 index13 alt1"><code># plutoopts=&quot;--perpeerlog&quot;</code></div></p>
+<p><div class="line number15 index14 alt2"><code>#</code></div></p>
+<p><div class="line number16 index15 alt1"></div></p>
+<p><div class="line number17 index16 alt2"><code># Enable core dumps (might require system changes, like ulimit -C)</code></div></p>
+<p><div class="line number18 index17 alt1"><code># This is required for abrtd to work properly</code></div></p>
+<p><div class="line number19 index18 alt2"><code># Note: incorrect SElinux policies might prevent pluto writing the core</code></div></p>
+<p><div class="line number20 index19 alt1"><code>dumpdir=``/var/run/pluto/</code></div></p>
+<p><div class="line number21 index20 alt2"><code>#</code></div></p>
+<p><div class="line number22 index21 alt1"><code># NAT-TRAVERSAL support, see README.NAT-Traversal</code></div></p>
+<p><div class="line number23 index22 alt2"><code>nat_traversal=``yes</code></div></p>
+<p><div class="line number24 index23 alt1"><code># exclude networks used on server side by adding %v4:!a.b.c.0/24</code></div></p>
+<p><div class="line number25 index24 alt2"><code># It seems that T-Mobile in the US and Rogers/Fido in Canada are</code></div></p>
+<p><div class="line number26 index25 alt1"><code># using 25/8 as &quot;private&quot; address space on their 3G network.</code></div></p>
+<p><div class="line number27 index26 alt2"><code># This range has not been announced via BGP (at least upto 2010-12-21)</code></div></p>
+<p><div class="line number28 index27 alt1"><code>virtual_private=%v4:10.0.0.0``/8``,%v4:192.168.0.0``/16``,%v4:172.16.0.0``/12``,%v4:25.0.0.0``/8``,%v6:fd00::``/8``,%v6:fe80::``/10</code></div></p>
+<p><div class="line number29 index28 alt2"><code># OE is now off by default. Uncomment and change to on, to enable.</code></div></p>
+<p><div class="line number30 index29 alt1"><code>oe=off</code></div></p>
+<p><div class="line number31 index30 alt2"><code># which IPsec stack to use. auto will try netkey, then klips then mast</code></div></p>
+<p><div class="line number32 index31 alt1"></div></p>
+<p><div class="line number33 index32 alt2"><code>protostack=netkey</code></div></p>
+<p><div class="line number34 index33 alt1"><code>#这里注释说可以用auto，但实际上不行。还得老老实实写netkey</code></div></p>
+<p><div class="line number35 index34 alt2"></div></p>
+<p><div class="line number36 index35 alt1"><code># Use this to log to a file, or disable logging on embedded systems (like openwrt)</code></div></p>
+<p><div class="line number37 index36 alt2"><code>#plutostderrlog=/dev/null</code></div></p>
+<p><div class="line number38 index37 alt1"></div></p>
+<p><div class="line number39 index38 alt2"><code># Add connections here</code></div></p>
+<p><div class="line number40 index39 alt1"></div></p>
+<p><div class="line number41 index40 alt2"><code># sample VPN connection</code></div></p>
+<p><div class="line number42 index41 alt1"><code># for more examples, see /etc/ipsec.d/examples/</code></div></p>
+<p><div class="line number43 index42 alt2"><code>#conn sample</code></div></p>
+<p><div class="line number44 index43 alt1"><code>#               # Left security gateway, subnet behind it, nexthop toward right.</code></div></p>
+<p><div class="line number45 index44 alt2"><code>#               left=10.0.0.1</code></div></p>
+<p><div class="line number46 index45 alt1"><code>#               leftsubnet=172.16.0.0/24</code></div></p>
+<p><div class="line number47 index46 alt2"><code>#               leftnexthop=10.22.33.44</code></div></p>
+<p><div class="line number48 index47 alt1"><code>#               # Right security gateway, subnet behind it, nexthop toward left.</code></div></p>
+<p><div class="line number49 index48 alt2"><code>#               right=10.12.12.1</code></div></p>
+<p><div class="line number50 index49 alt1"><code>#               rightsubnet=192.168.0.0/24</code></div></p>
+<p><div class="line number51 index50 alt2"><code>#               rightnexthop=10.101.102.103</code></div></p>
+<p><div class="line number52 index51 alt1"><code>#               # To authorize this connection, but not actually start it,</code></div></p>
+<p><div class="line number53 index52 alt2"><code>#               # at startup, uncomment this.</code></div></p>
+<p><div class="line number54 index53 alt1"><code>#               #auto=add</code></div></p>
+<p><div class="line number55 index54 alt2"></div></p>
+<p><div class="line number56 index55 alt1"><code>conn L2TP-PSK-NAT</code></div></p>
+<p><div class="line number57 index56 alt2"><code>rightsubnet=vhost:%priv</code></div></p>
+<p><div class="line number58 index57 alt1"><code>also=L2TP-PSK-noNAT</code></div></p>
+<p><div class="line number59 index58 alt2"></div></p>
+<p><div class="line number60 index59 alt1"><code>conn L2TP-PSK-noNAT</code></div></p>
+<p><div class="line number61 index60 alt2"><code>authby=secret</code></div></p>
+<p><div class="line number62 index61 alt1"><code>pfs=no</code></div></p>
+<p><div class="line number63 index62 alt2"><code>auto=add</code></div></p>
+<p><div class="line number64 index63 alt1"><code>keyingtries=3</code></div></p>
+<p><div class="line number65 index64 alt2"><code>rekey=no</code></div></p>
+<p><div class="line number66 index65 alt1"><code>ikelifetime=8h</code></div></p>
+<p><div class="line number67 index66 alt2"><code>keylife=1h</code></div></p>
+<p><div class="line number68 index67 alt1"><code>type``=transport</code></div></p>
+<p><div class="line number69 index68 alt2"><code>left=$esojourn.org ``#这里写公网IP，没固定IP的就到花生壳弄个动态域名解析。</code></div></p>
+<p><div class="line number70 index69 alt1"><code>leftid=$esojourn.org</code></div></p>
+<p><div class="line number71 index70 alt2"><code>leftprotoport=17``/1701</code></div></p>
+<p><div class="line number72 index71 alt1"><code>right=%any</code></div><br><br><br><br><br><br><br>修改 ipsec 密钥</p>
+<p><div></div></p>
+<p><div id="highlighter_419792" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>vi</code> <code>/etc/ipsec``.secretswww.esojourn.org %any: PSK ``&quot;myps&quot;</code></div></p>
+<p><div class="line number2 index1 alt1"><code>#www.esojourn.org改成公网ip，没固定IP的，就到花生壳弄个动态域名解析。http://www.oray.com/peanuthull/</code></div></p>
+<p><div class="line number3 index2 alt2"><code>#myps改成密码</code></div><br><br><br><br><br><br><br>&nbsp;</p>
+<p><strong>3. 修改/etc/sysctl.conf，开启路由功能</strong></p>
+<p><div></div></p>
+<p><div id="highlighter_973552" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>vi</code> <code>/etc/sysctl``.conf</code></div><br><br><br><br><br><br><br><a href="http://hi.baidu.com/guolibo/blog/item/e54d8101d014d6f6267fb575.html" target="_blank" rel="external">星云说</a>：将下面两项找到：</p>
+<p><div></div></p>
+<p><div id="highlighter_64407" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>net.ipv4.ip_forward = 0</code></div></p>
+<p><div class="line number2 index1 alt1"><code>net.ipv4.conf.default.rp_filter = 1</code></div><br><br><br><br><br><br><br>改为：</p>
+<p><div></div></p>
+<p><div id="highlighter_257228" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>net.ipv4.ip_forward = 1</code></div></p>
+<p><div class="line number2 index1 alt1"><code>net.ipv4.conf.default.rp_filter = 0</code></div><br><br><br><br><br><br><br>之后先让修改后的配置生效，再测试一下，</p>
+<p><div></div></p>
+<p><div id="highlighter_647575" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>sysctl -p</code></div></p>
+<p><div class="line number2 index1 alt1"><code>service ipsec start</code></div></p>
+<p><div class="line number3 index2 alt2"><code>ipsec verify</code></div><br><br><br><br><br><br><br>如果行了就这样了，但实际上，我反复测试之后，干脆在sysctl.conf最下面，加了这一段。加好后别忘了再sysctl -p一下。</p>
+<p><div></div></p>
+<p><div id="highlighter_717281" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><div class="line number6 index5 alt1">6</div></p>
+<p><div class="line number7 index6 alt2">7</div></p>
+<p><div class="line number8 index7 alt1">8</div></p>
+<p><div class="line number9 index8 alt2">9</div></p>
+<p><div class="line number10 index9 alt1">10</div></p>
+<p><div class="line number11 index10 alt2">11</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>#added for xl2tpd</code></div></p>
+<p><div class="line number2 index1 alt1"><code>net.ipv4.ip_forward = 1</code></div></p>
+<p><div class="line number3 index2 alt2"><code>net.ipv4.conf.default.rp_filter = 0</code></div></p>
+<p><div class="line number4 index3 alt1"><code>net.ipv4.conf.all.send_redirects = 0</code></div></p>
+<p><div class="line number5 index4 alt2"><code>net.ipv4.conf.default.send_redirects = 0</code></div></p>
+<p><div class="line number6 index5 alt1"><code>net.ipv4.conf.all.log_martians = 0</code></div></p>
+<p><div class="line number7 index6 alt2"><code>net.ipv4.conf.default.log_martians = 0</code></div></p>
+<p><div class="line number8 index7 alt1"><code>net.ipv4.conf.default.accept_source_route = 0</code></div></p>
+<p><div class="line number9 index8 alt2"><code>net.ipv4.conf.all.accept_redirects = 0</code></div></p>
+<p><div class="line number10 index9 alt1"><code>net.ipv4.conf.default.accept_redirects = 0</code></div></p>
+<p><div class="line number11 index10 alt2"><code>net.ipv4.icmp_ignore_bogus_error_responses = 1</code></div><br><br><br><br><br><br><br>如果 ipsec verify 返回这样，就可以了。linode</p>
+<p><div></div></p>
+<p><div id="highlighter_554407" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><div class="line number6 index5 alt1">6</div></p>
+<p><div class="line number7 index6 alt2">7</div></p>
+<p><div class="line number8 index7 alt1">8</div></p>
+<p><div class="line number9 index8 alt2">9</div></p>
+<p><div class="line number10 index9 alt1">10</div></p>
+<p><div class="line number11 index10 alt2">11</div></p>
+<p><div class="line number12 index11 alt1">12</div></p>
+<p><div class="line number13 index12 alt2">13</div></p>
+<p><div class="line number14 index13 alt1">14</div></p>
+<p><div class="line number15 index14 alt2">15</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>Checking your system to see ``if</code> <code>IPsec got installed and started correctly:</code></div></p>
+<p><div class="line number2 index1 alt1"><code>Version check and ipsec on-path                                 [OK]</code></div></p>
+<p><div class="line number3 index2 alt2"><code>Linux Openswan U2.6.24``/K2``.6.32.16-linode28 (netkey)</code></div></p>
+<p><div class="line number4 index3 alt1"><code>Checking ``for</code> <code>IPsec support ``in</code> <code>kernel                            [OK]</code></div></p>
+<p><div class="line number5 index4 alt2"><code>NETKEY detected, testing ``for</code> <code>disabled ICMP send_redirects       [OK]</code></div></p>
+<p><div class="line number6 index5 alt1"><code>NETKEY detected, testing ``for</code> <code>disabled ICMP accept_redirects     [OK]</code></div></p>
+<p><div class="line number7 index6 alt2"><code>Checking ``for</code> <code>RSA private key (``/etc/ipsec``.secrets)               [OK]</code></div></p>
+<p><div class="line number8 index7 alt1"><code>Checking that pluto is running                                  [OK]</code></div></p>
+<p><div class="line number9 index8 alt2"><code>Pluto listening ``for</code> <code>IKE on udp 500                              [OK]</code></div></p>
+<p><div class="line number10 index9 alt1"><code>Pluto listening ``for</code> <code>NAT-T on udp 4500                           [OK]</code></div></p>
+<p><div class="line number11 index10 alt2"><code>Two or ``more</code> <code>interfaces found, checking IP forwarding            [OK]</code></div></p>
+<p><div class="line number12 index11 alt1"><code>Checking NAT and MASQUERADEing</code></div></p>
+<p><div class="line number13 index12 alt2"><code>Checking ``for</code> <code>&#39;ip&#39;</code> <code>command</code>                                       <code>[OK]</code></div></p>
+<p><div class="line number14 index13 alt1"><code>Checking ``for</code> <code>&#39;iptables&#39;</code> <code>command</code>                                 <code>[OK]</code></div></p>
+<p><div class="line number15 index14 alt2"><code>Opportunistic Encryption Support                                [DISABLED]</code></div><br><br><br><br><br><br><br>我的经验中，这里可能会出这么几个故障：</p>
+<p>第一：</p>
+<p><div></div></p>
+<p><div id="highlighter_985757" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>SAref kernel support                                  [N``/A``]</code></div><br><br><br><br><br><br><br>这样的话， /etc/xl2tpd/xl2tpd.conf这个文件里</p>
+<p><div></div></p>
+<p><div id="highlighter_194208" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>[global]</code></div></p>
+<p><div class="line number2 index1 alt1"><code>ipsec saref = no</code></div><br><br><br><br><br><br><br>第二：</p>
+<p><div></div></p>
+<p><div id="highlighter_672109" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>Two or ``more</code> <code>interfaces found, checking IP forwarding      [FAILED]</code></div></p>
+<p><div class="line number2 index1 alt1"><code>Checking NAT and MASQUERADEing                                [OK]</code></div><br><br><br><br><br><br><br>ip转发检查失败。</p>
+<p><a href="https://lists.openswan.org/pipermail/users/2010-May/018841.html" target="_blank" rel="external">Paul和Steve说：</a>只要 cat /proc/sys/net/ipv4/ip_forward 返回结果是1就没事。这个我已经证实了。</p>
+<p>第三：返回结果里，就没有Two or more interfaces found, checking IP forwarding和Checking NAT and MASQUERADEing这两项。碰上这个我也没办法了。重装了系统，又瞎折腾一通之后就好了。</p>
+<p>[ 2012-7-6 ]<br>第四：更新加入一个新的情况</p>
+<p><div></div></p>
+<p><div id="highlighter_86418" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><div class="line number6 index5 alt1">6</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>Checking ``for</code> <code>IPsec support ``in</code> <code>kernel                                [OK]</code></div></p>
+<p><div class="line number2 index1 alt1"><code>SAref kernel support                                 [N``/A``]</code></div></p>
+<p><div class="line number3 index2 alt2"><code>NETKEY: Testing XFRM related proc values                                [OK]</code></div></p>
+<p><div class="line number4 index3 alt1"><code>[OK]</code></div></p>
+<p><div class="line number5 index4 alt2"><code>[FAILED] Please ``enable</code> <code>/proc/sys/net/core/xfrm_larval_drop</code></div></p>
+<p><div class="line number6 index5 alt1"><code>or NETKEY will cause non-POSIX compliant long ``time``-outsChecking that pluto is running                                [OK]</code></div><br><br><br><br><br><br><br>出这毛病，照着说明，</p>
+<p><div></div></p>
+<p><div id="highlighter_166629" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>echo</code> <code>1 &amp;gt; ``/proc/sys/net/core/xfrm_larval_drop</code></div></p>
+<p><div class="line number2 index1 alt1"><code>vi</code> <code>/etc/bashrc</code></div><br><br><br><br><br><br><br>然后把“echo 1 &gt; /proc/sys/net/core/xfrm_larval_drop”这句加进去。以后每次开机自动执行一下。</p>
+<p>&nbsp;</p>
+<p><strong>4. 编辑 /etc/xl2tpd/xl2tpd.conf</strong></p>
+<p>vi /etc/xl2tpd/xl2tpd.conf</p>
+<p><div></div></p>
+<p><div id="highlighter_290143" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><div class="line number6 index5 alt1">6</div></p>
+<p><div class="line number7 index6 alt2">7</div></p>
+<p><div class="line number8 index7 alt1">8</div></p>
+<p><div class="line number9 index8 alt2">9</div></p>
+<p><div class="line number10 index9 alt1">10</div></p>
+<p><div class="line number11 index10 alt2">11</div></p>
+<p><div class="line number12 index11 alt1">12</div></p>
+<p><div class="line number13 index12 alt2">13</div></p>
+<p><div class="line number14 index13 alt1">14</div></p>
+<p><div class="line number15 index14 alt2">15</div></p>
+<p><div class="line number16 index15 alt1">16</div></p>
+<p><div class="line number17 index16 alt2">17</div></p>
+<p><div class="line number18 index17 alt1">18</div></p>
+<p><div class="line number19 index18 alt2">19</div></p>
+<p><div class="line number20 index19 alt1">20</div></p>
+<p><div class="line number21 index20 alt2">21</div></p>
+<p><div class="line number22 index21 alt1">22</div></p>
+<p><div class="line number23 index22 alt2">23</div></p>
+<p><div class="line number24 index23 alt1">24</div></p>
+<p><div class="line number25 index24 alt2">25</div></p>
+<p><div class="line number26 index25 alt1">26</div></p>
+<p><div class="line number27 index26 alt2">27</div></p>
+<p><div class="line number28 index27 alt1">28</div></p>
+<p><div class="line number29 index28 alt2">29</div></p>
+<p><div class="line number30 index29 alt1">30</div></p>
+<p><div class="line number31 index30 alt2">31</div></p>
+<p><div class="line number32 index31 alt1">32</div></p>
+<p><div class="line number33 index32 alt2">33</div></p>
+<p><div class="line number34 index33 alt1">34</div></p>
+<p><div class="line number35 index34 alt2">35</div></p>
+<p><div class="line number36 index35 alt1">36</div></p>
+<p><div class="line number37 index36 alt2">37</div></p>
+<p><div class="line number38 index37 alt1">38</div></p>
+<p><div class="line number39 index38 alt2">39</div></p>
+<p><div class="line number40 index39 alt1">40</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>; This is a minimal sample xl2tpd configuration ``file</code> <code>for</code> <code>use</code></div></p>
+<p><div class="line number2 index1 alt1"><code>; with L2TP over IPsec.</code></div></p>
+<p><div class="line number3 index2 alt2"><code>;</code></div></p>
+<p><div class="line number4 index3 alt1"><code>; The idea is to provide an L2TP daemon to ``which</code> <code>remote Windows L2TP``/IPsec</code></div></p>
+<p><div class="line number5 index4 alt2"><code>; clients connect. In this example, the internal (protected) network</code></div></p>
+<p><div class="line number6 index5 alt1"><code>; is 192.168.1.0``/24``. A special IP range within this network is reserved</code></div></p>
+<p><div class="line number7 index6 alt2"><code>; ``for</code> <code>the remote clients: 192.168.1.128``/25</code></div></p>
+<p><div class="line number8 index7 alt1"><code>; (i.e. 192.168.1.128 ... 192.168.1.254)</code></div></p>
+<p><div class="line number9 index8 alt2"><code>;</code></div></p>
+<p><div class="line number10 index9 alt1"><code>; The listen-addr parameter can be used ``if</code> <code>you want to bind the L2TP daemon</code></div></p>
+<p><div class="line number11 index10 alt2"><code>; to a specific IP address instead of to all interfaces. For instance,</code></div></p>
+<p><div class="line number12 index11 alt1"><code>; you could bind it to the interface of the internal LAN (e.g. 192.168.1.98</code></div></p>
+<p><div class="line number13 index12 alt2"><code>; ``in</code> <code>the example below). Yet another IP address (``local</code> <code>ip, e.g. 192.168.1.99)</code></div></p>
+<p><div class="line number14 index13 alt1"><code>; will be used by xl2tpd as its address on pppX interfaces.[global]</code></div></p>
+<p><div class="line number15 index14 alt2"><code>listen-addr = esojourn.org</code></div></p>
+<p><div class="line number16 index15 alt1"><code>;这里写内网IP。或者加;注释掉也问题不大。</code></div></p>
+<p><div class="line number17 index16 alt2"><code>;</code></div></p>
+<p><div class="line number18 index17 alt1"><code>; requires openswan-2.5.18 or higher - Also does not yet work ``in</code> <code>combination</code></div></p>
+<p><div class="line number19 index18 alt2"><code>; with kernel mode l2tp as present ``in</code> <code>linux 2.6.23+</code></div></p>
+<p><div class="line number20 index19 alt1"><code>; ipsec saref = ``yes</code></div></p>
+<p><div class="line number21 index20 alt2"><code>ipsec saref = no</code></div></p>
+<p><div class="line number22 index21 alt1"><code>; 这里一般都让写``yes``，但如果刚才你的ipsec verify中，有报SAref kernel support[N``/A``]的话，这里就写no。</code></div></p>
+<p><div class="line number23 index22 alt2"><code>; Use refinfo of 22 ``if</code> <code>using an SAref kernel patch based on openswan 2.6.35 or</code></div></p>
+<p><div class="line number24 index23 alt1"><code>;when using any of the SAref kernel patches ``for</code> <code>kernels up to 2.6.35.</code></div></p>
+<p><div class="line number25 index24 alt2"><code>; ipsec refinfo = 30</code></div></p>
+<p><div class="line number26 index25 alt1"><code>;</code></div></p>
+<p><div class="line number27 index26 alt2"><code>; forceuserspace = ``yes</code></div></p>
+<p><div class="line number28 index27 alt1"><code>;</code></div></p>
+<p><div class="line number29 index28 alt2"><code>; debug tunnel = ``yes``[lns default]</code></div></p>
+<p><div class="line number30 index29 alt1"><code>ip range = 192.168.7.128-192.168.7.254</code></div></p>
+<p><div class="line number31 index30 alt2"><code>;这里写vpn client的ip段</code></div></p>
+<p><div class="line number32 index31 alt1"><code>local</code> <code>ip = 192.168.7.1</code></div></p>
+<p><div class="line number33 index32 alt2"></div></p>
+<p><div class="line number34 index33 alt1"><code>require chap = ``yes</code></div></p>
+<p><div class="line number35 index34 alt2"><code>refuse pap = ``yes</code></div></p>
+<p><div class="line number36 index35 alt1"><code>require authentication = ``yes</code></div></p>
+<p><div class="line number37 index36 alt2"><code>name = LinuxVPNserver</code></div></p>
+<p><div class="line number38 index37 alt1"><code>ppp debug = ``yes</code></div></p>
+<p><div class="line number39 index38 alt2"><code>pppoptfile = ``/etc/ppp/options``.xl2tpd</code></div></p>
+<p><div class="line number40 index39 alt1"><code>length bit = ``yes</code></div><br><br><br><br><br><br><br>&nbsp;</p>
+<p><strong>5. 修改 /etc/ppp/options.xl2tpd</strong></p>
+<p>vi /etc/ppp/options.xl2tpd</p>
+<p><div></div></p>
+<p><div id="highlighter_100842" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><div class="line number6 index5 alt1">6</div></p>
+<p><div class="line number7 index6 alt2">7</div></p>
+<p><div class="line number8 index7 alt1">8</div></p>
+<p><div class="line number9 index8 alt2">9</div></p>
+<p><div class="line number10 index9 alt1">10</div></p>
+<p><div class="line number11 index10 alt2">11</div></p>
+<p><div class="line number12 index11 alt1">12</div></p>
+<p><div class="line number13 index12 alt2">13</div></p>
+<p><div class="line number14 index13 alt1">14</div></p>
+<p><div class="line number15 index14 alt2">15</div></p>
+<p><div class="line number16 index15 alt1">16</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>require-mschap-v2</code></div></p>
+<p><div class="line number2 index1 alt1"><code>ipcp-accept-``local</code></div></p>
+<p><div class="line number3 index2 alt2"><code>ipcp-accept-remote</code></div></p>
+<p><div class="line number4 index3 alt1"><code>ms-dns 8.8.4.4</code></div></p>
+<p><div class="line number5 index4 alt2"><code>ms-dns 8.8.8.8</code></div></p>
+<p><div class="line number6 index5 alt1"><code>noccp</code></div></p>
+<p><div class="line number7 index6 alt2"><code>auth</code></div></p>
+<p><div class="line number8 index7 alt1"><code>crtscts</code></div></p>
+<p><div class="line number9 index8 alt2"><code>idle 1800</code></div></p>
+<p><div class="line number10 index9 alt1"><code>mtu 1410</code></div></p>
+<p><div class="line number11 index10 alt2"><code>mru 1410</code></div></p>
+<p><div class="line number12 index11 alt1"><code>nodefaultroute</code></div></p>
+<p><div class="line number13 index12 alt2"><code>debug</code></div></p>
+<p><div class="line number14 index13 alt1"><code>lock</code></div></p>
+<p><div class="line number15 index14 alt2"><code>proxyarp</code></div></p>
+<p><div class="line number16 index15 alt1"><code>connect-delay 5000</code></div><br><br><br><br><br><br><br>vi /etc/ppp/chap-secrets</p>
+<p><div></div></p>
+<p><div id="highlighter_46133" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>#文件格式</code></div></p>
+<p><div class="line number2 index1 alt1"><code># user server password ip</code></div></p>
+<p><div class="line number3 index2 alt2"><code>username * userpass * ``#改成你的用户名 密码</code></div><br><br><br><br><br><br><br>&nbsp;</p>
+<p><strong>6. 最关键的iptables配置</strong></p>
+<p>做完上面这堆步骤之后，客户端建个连接就可以验证进入vpn主机了。但是无法访问内外网。我就是在这里卡了一个多星期。网上的资料，有的没说这一步。有的说了也没说全。我发个权威的吧。</p>
+<p><div></div></p>
+<p><div id="highlighter_703315" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>iptables -t nat -A POSTROUTING -s 192.168.7.0``/24</code> <code>-o eth0 -j MASQUERADE</code></div></p>
+<p><div class="line number2 index1 alt1"><code>iptables -I FORWARD -s 192.168.7.0``/24</code> <code>-j ACCEPT</code></div></p>
+<p><div class="line number3 index2 alt2"><code>iptables -I FORWARD -d 192.168.7.0``/24</code> <code>-j ACCEPT</code></div></p>
+<p><div class="line number4 index3 alt1"><code>iptables-save</code></div></p>
+<p><div class="line number5 index4 alt2"><code>service iptables restart</code></div><br><br><br><br><br><br><br>192.168.7.0/24根据实际情况替换。</p>
+<p>vi /etc/sysconfig/iptables 看到的应该是类似这样。<br>最上面先是nat规则，下面是filter规则。<br>下面filter表里，先把VPN要用到的udp端口1701，500，4500都打开。要用openvp的话，还要开1194。<br>另外filter表里，一定要有FORWARD规则。这点在网上好几个教程里都没说！坑死人。</p>
+<p><div></div></p>
+<p><div id="highlighter_657828" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><div class="line number6 index5 alt1">6</div></p>
+<p><div class="line number7 index6 alt2">7</div></p>
+<p><div class="line number8 index7 alt1">8</div></p>
+<p><div class="line number9 index8 alt2">9</div></p>
+<p><div class="line number10 index9 alt1">10</div></p>
+<p><div class="line number11 index10 alt2">11</div></p>
+<p><div class="line number12 index11 alt1">12</div></p>
+<p><div class="line number13 index12 alt2">13</div></p>
+<p><div class="line number14 index13 alt1">14</div></p>
+<p><div class="line number15 index14 alt2">15</div></p>
+<p><div class="line number16 index15 alt1">16</div></p>
+<p><div class="line number17 index16 alt2">17</div></p>
+<p><div class="line number18 index17 alt1">18</div></p>
+<p><div class="line number19 index18 alt2">19</div></p>
+<p><div class="line number20 index19 alt1">20</div></p>
+<p><div class="line number21 index20 alt2">21</div></p>
+<p><div class="line number22 index21 alt1">22</div></p>
+<p><div class="line number23 index22 alt2">23</div></p>
+<p><div class="line number24 index23 alt1">24</div></p>
+<p><div class="line number25 index24 alt2">25</div></p>
+<p><div class="line number26 index25 alt1">26</div></p>
+<p><div class="line number27 index26 alt2">27</div></p>
+<p><div class="line number28 index27 alt1">28</div></p>
+<p><div class="line number29 index28 alt2">29</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>#下面规则做参考啊，新手别完全照抄。</code></div></p>
+<p><div class="line number2 index1 alt1"><code>*nat</code></div></p>
+<p><div class="line number3 index2 alt2"><code>:PREROUTING ACCEPT [39:3503]</code></div></p>
+<p><div class="line number4 index3 alt1"><code>:POSTROUTING ACCEPT [0:0]</code></div></p>
+<p><div class="line number5 index4 alt2"><code>:OUTPUT ACCEPT [0:0]</code></div></p>
+<p><div class="line number6 index5 alt1"><code>-A POSTROUTING -s 192.168.7.0``/24</code> <code>-o eth0 -j MASQUERADE</code></div></p>
+<p><div class="line number7 index6 alt2"><code>COMMIT</code></div></p>
+<p><div class="line number8 index7 alt1"><code># Completed on Thu Jun 28 15:50:40 2012</code></div></p>
+<p><div class="line number9 index8 alt2"><code># Generated by iptables-save v1.4.7 on Thu Jun 28 15:50:40 2012</code></div></p>
+<p><div class="line number10 index9 alt1"><code>*filter</code></div></p>
+<p><div class="line number11 index10 alt2"><code>:INPUT ACCEPT [0:0]</code></div></p>
+<p><div class="line number12 index11 alt1"><code>:FORWARD ACCEPT [0:0]</code></div></p>
+<p><div class="line number13 index12 alt2"><code>:OUTPUT ACCEPT [121:13264]</code></div></p>
+<p><div class="line number14 index13 alt1"><code>-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT</code></div></p>
+<p><div class="line number15 index14 alt2"><code>-A INPUT -p icmp -j ACCEPT</code></div></p>
+<p><div class="line number16 index15 alt1"><code>-A INPUT -i lo -j ACCEPT</code></div></p>
+<p><div class="line number17 index16 alt2"><code>-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT</code></div></p>
+<p><div class="line number18 index17 alt1"><code>-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT</code></div></p>
+<p><div class="line number19 index18 alt2"><code>-A INPUT -p tcp -m state --state NEW -m tcp --dport 53 -j ACCEPT</code></div></p>
+<p><div class="line number20 index19 alt1"><code>-A INPUT -p udp -m state --state NEW -m udp --dport 53 -j ACCEPT</code></div></p>
+<p><div class="line number21 index20 alt2"><code>-A INPUT -p tcp -m state --state NEW -m tcp --dport 1194 -j ACCEPT</code></div></p>
+<p><div class="line number22 index21 alt1"><code>-A INPUT -p udp -m state --state NEW -m udp --dport 1701 -j ACCEPT</code></div></p>
+<p><div class="line number23 index22 alt2"><code>-A INPUT -p udp -m state --state NEW -m udp --dport 500 -j ACCEPT</code></div></p>
+<p><div class="line number24 index23 alt1"><code>-A INPUT -p udp -m state --state NEW -m udp --dport 4500 -j ACCEPT-A INPUT -j REJECT --reject-with icmp-host-prohibited</code></div></p>
+<p><div class="line number25 index24 alt2"><code>-A FORWARD -d 192.168.7.0``/24</code> <code>-j ACCEPT</code></div></p>
+<p><div class="line number26 index25 alt1"><code>-A FORWARD -s 192.168.7.0``/24</code> <code>-j ACCEPT</code></div></p>
+<p><div class="line number27 index26 alt2"><code>-A FORWARD -j REJECT --reject-with icmp-host-prohibited</code></div></p>
+<p><div class="line number28 index27 alt1"><code>COMMIT</code></div></p>
+<p><div class="line number29 index28 alt2"><code># Completed on Thu Jun 28 15:50:40 2012</code></div><br><br><br><br><br><br><br>最后</p>
+<p><div></div></p>
+<p><div id="highlighter_717937" class="syntaxhighlighter notranslate shell"></div></p>
+<p><table border="0" cellspacing="0" cellpadding="0"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td class="gutter"></td></p>
+<p><div class="line number1 index0 alt2">1</div></p>
+<p><div class="line number2 index1 alt1">2</div></p>
+<p><div class="line number3 index2 alt2">3</div></p>
+<p><div class="line number4 index3 alt1">4</div></p>
+<p><div class="line number5 index4 alt2">5</div></p>
+<p><td class="code"></td></p>
+<p><div class="container"></div></p>
+<p><div class="line number1 index0 alt2"><code>service xl2tpd restart</code></div></p>
+<p><div class="line number2 index1 alt1"><code>service iptables restart</code></div></p>
+<p><div class="line number3 index2 alt2"><code>chkconfig xl2tpd on</code></div></p>
+<p><div class="line number4 index3 alt1"><code>chkconfig iptables on</code></div></p>
+<p><div class="line number5 index4 alt2"><code>chkconfig ipsec on</code></div><br><br><br><br><br><br><br>&nbsp;</p>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+    <section id="comment">
+        <div class="card">
+            <div class="card-content">
+                <!-- Duoshuo Comment BEGIN -->
+                <div class="ds-thread" data-thread-key="2015-10-04-e5-9c-a8centos-6-e4-b8-8b-e9-85-8d-e7-bd-ae-l2tp-ipsec-vpn-e6-9c-8d-e5-8a-a1-e5-99-a8-e7-9a-84-e5-85-ad-e6-ad-a5-e8-bd-ac.html" data-title="在CentOS 6下配置 L2TP IPsec VPN服务器的六步(转)" data-url="http://www.linux52.com/2015-10-04-e5-9c-a8centos-6-e4-b8-8b-e9-85-8d-e7-bd-ae-l2tp-ipsec-vpn-e6-9c-8d-e5-8a-a1-e5-99-a8-e7-9a-84-e5-85-ad-e6-ad-a5-e8-bd-ac.html"></div>
+
+                <script type="text/javascript">
+                    console.log(document.querySelector('.ds-thread'));
+                    var duoshuoQuery = {
+                        short_name: 'hacksw'
+                    };
+                    (function() {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:'
+                            ? 'https:'
+                            : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- Duoshuo Comment END -->
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large green">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect blue" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse orange"  data-activates="main-menu" title="menu"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer indigo darken-1">
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="social-group col m3 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+            </div>
+            
+
+            
+            <div class="col m9 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http:www.linux52.com" target="_blank">主题</a>
+                
+                    <a class="social-link" href="https://github.com/" target="_blank">github</a>
+                
+                    <a class="social-link" href="http://www.5cc.xyz" target="_blank">老博客</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright indigo-link-context">
+        <div class="container">
+            © 2016 www.linux52.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="http://www.linux52.com">home</a> 强力驱动 | 主题 <a href="https://github.com/">TEST</a></p>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('green lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-reading, .menu-about').append('<span class="new badge pink"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword indigo lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+</body>
+</html>
